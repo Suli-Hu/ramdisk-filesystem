@@ -9,18 +9,25 @@
 
 MODULE_LICENSE("GPL");
 
+static int pseudo_device_ioctl(struct inode *inode, struct file *file,
+			       unsigned int cmd, unsigned long arg);
+
+static struct file_operations pseudo_dev_proc_operations;
+
+static struct proc_dir_entry *proc_entry;
+
 /************************INIT AND EXIT ROUTINES*****************************/
 
 static int __init initialization_routine(void) {
-  printk("<1> Loading module\n");
+  printk("<1> Loading RAMDISK filesystem\n");
 
   pseudo_dev_proc_operations.ioctl = pseudo_device_ioctl;
 
   /* Start create proc entry */
-  proc_entry = create_proc_entry("ioctl_test", 0444, NULL);
+  proc_entry = create_proc_entry("ramdisk", 0444, NULL);
   if(!proc_entry)
   {
-    printk("<1> Error creating /proc entry.\n");
+    printk("<1> Error creating /proc entry for ramdisk.\n");
     return 1;
   }
 
@@ -33,8 +40,8 @@ static int __init initialization_routine(void) {
 // Clean up routine
 static void __exit cleanup_routine(void) {
 
-  printk("<1> Dumping module\n");
-  remove_proc_entry("ioctl_test", NULL);
+  printk("<1> Dumping Ramdisk module\n");
+  remove_proc_entry("ramdisk", NULL);
 
   return;
 }
