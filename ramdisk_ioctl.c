@@ -9,7 +9,7 @@
 
 MODULE_LICENSE("GPL");
 
-static int pseudo_device_ioctl(struct inode *inode, struct file *file,
+static int ramdisk_ioctl(struct inode *inode, struct file *file,
 			       unsigned int cmd, unsigned long arg);
 
 static struct file_operations pseudo_dev_proc_operations;
@@ -21,7 +21,7 @@ static struct proc_dir_entry *proc_entry;
 static int __init initialization_routine(void) {
   printk("<1> Loading RAMDISK filesystem\n");
 
-  pseudo_dev_proc_operations.ioctl = pseudo_device_ioctl;
+  pseudo_dev_proc_operations.ioctl = ramdisk_ioctl;
 
   /* Start create proc entry */
   proc_entry = create_proc_entry("ramdisk", 0444, NULL);
@@ -34,13 +34,15 @@ static int __init initialization_routine(void) {
   //proc_entry->owner = THIS_MODULE; <-- This is now deprecated
   proc_entry->proc_fops = &pseudo_dev_proc_operations;
 
+  // Initialize the ramdisk here now
+
   return 0;
 }
 
 // Clean up routine
 static void __exit cleanup_routine(void) {
 
-  printk("<1> Dumping Ramdisk module\n");
+  printk("<1> Dumping RAMDISK module\n");
   remove_proc_entry("ramdisk", NULL);
 
   return;
@@ -48,7 +50,7 @@ static void __exit cleanup_routine(void) {
 
 /****************************IOCTL ENTRY POINT********************************/
 
-static int pseudo_device_ioctl(struct inode *inode, struct file *file,
+static int ramdisk_ioctl(struct inode *inode, struct file *file,
 				unsigned int cmd, unsigned long arg)
 {
   struct ioctl_test_t ioc;
