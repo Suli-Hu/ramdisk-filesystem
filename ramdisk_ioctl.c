@@ -6,7 +6,6 @@
 
 #include "defines.h"
 
-
 MODULE_LICENSE("GPL");
 
 static int ramdisk_ioctl(struct inode *inode, struct file *file,

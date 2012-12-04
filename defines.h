@@ -6,6 +6,18 @@
 #include <linux/sched.h>
 #include <linux/interrupt.h>
 
+/****************************IOCTL DECLARATIONS*******************************/
+
+#define CREATE _IORW(0, 6, struct path)
+#define MKDIR _IORW(1, 7, struct path)
+#define OPEN _IORW(1, 8, struct path)
+#define CLOSE _IORW(1, 9, struct file)
+#define READ _IORW(1, 10, struct accessFile)
+#define WRITE _IORW(1, 11, struct accessFile)
+#define LSEEK _IORW(1, 12, struct file)
+#define UNLINK _IORW(1, 13, struct path)
+#define READDIR _IORW(1, 14, struct accessFile)
+
 /*********************FILE SYSTEM STRUCTURE************************/
 #define BLOCK_SIZE 256  // Size in bytes
 #define INDEX_NODE_SIZE 64  // Size in bytes
@@ -57,6 +69,22 @@
 #define INODE_NUM_OFFSET 14 // Offset in file_info to get the inode
 
 
-/**************************IOCTL DECLARATIONS*******************************/
+/*****************************IOCTL STRUCTURES*******************************/
 
-// This will be where all of the filesystem functions are defined
+struct path{
+	char *name;  // Pathname for the file
+	int ret;          // Return value, will be used for a variety of reasons
+};
+
+struct file {
+	int fd;       // File descriptor
+	int offset;  // Only used for seek, not for close.  Offset into data requested
+	int ret;      // Return value
+};
+
+struct accessFile {
+	int fd;               // File descriptor
+	char *address;  // User space address to which to send data
+	int numBytes;    // Number of bytes to transfer into userspace (Used if regular file)
+	int ret;              // Return value
+};
