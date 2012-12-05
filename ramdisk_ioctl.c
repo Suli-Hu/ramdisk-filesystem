@@ -20,17 +20,17 @@ static struct proc_dir_entry *proc_entry;
 // @var The ramdisk memory in the kernel */
 static char *RAM_memory; 
 
-void my_printk(char *string)
-{
-  struct tty_struct *my_tty;
+// void my_printk(char *string)
+// {
+//   struct tty_struct *my_tty;
 
-  my_tty = current->signal->tty;
+//   my_tty = current->signal->tty;
 
-  if (my_tty != NULL) {
-    (*my_tty->driver->ops->write)(my_tty, string, strlen(string));
-    (*my_tty->driver->ops->write)(my_tty, "\015\012", 2);
-  }
-} 
+//   if (my_tty != NULL) {
+//     (*my_tty->driver->ops->write)(my_tty, string, strlen(string));
+//     (*my_tty->driver->ops->write)(my_tty, "\015\012", 2);
+//   }
+// } 
 
 /**
  * Utility function to set a specified bit within a byte
@@ -54,7 +54,7 @@ void setBit(int index, int bit) {
  * @remark  The most significant bit is 7, while the least significant bit is 0
  */
 void checkBit(int index, int bit) {
-  my_printk ("Checking bit\n");
+  //printk ("Checking bit\n");
 }
 
 /**
@@ -146,39 +146,39 @@ static int ramdisk_ioctl(struct inode *inode, struct file *file,
   switch (cmd){
 
     case RAM_CREATE:
-      my_printk ("Creating file...\n");
+      printk ("Creating file...\n");
       break;
 
     case RAM_MKDIR:
-      my_printk ("Making directory...\n");
+      printk ("Making directory...\n");
       break;
 
     case RAM_OPEN:
-      my_printk ("Opening file...\n");
+      printk ("Opening file...\n");
       break;
     
     case RAM_CLOSE:
-      my_printk ("Closing file...\n");
+      printk ("Closing file...\n");
       break;
   
     case RAM_READ:
-      my_printk ("Reading file...\n");
+      printk ("Reading file...\n");
       break;
 
     case RAM_WRITE:
-      my_printk ("Writing file...\n");
+      printk ("Writing file...\n");
       break;
     
     case RAM_LSEEK:
-      my_printk ("Seeking into file...\n");
+      printk ("Seeking into file...\n");
       break;
 
     case RAM_UNLINK:
-      my_printk ("Unlinking file...\n");
+      printk ("Unlinking file...\n");
       break;
 
     case RAM_READDIR:
-      my_printk ("Reading file from directory...\n");
+      printk ("Reading file from directory...\n");
       break;
 
     default:
