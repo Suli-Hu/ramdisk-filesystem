@@ -76,6 +76,11 @@ void init_ramdisk(void) {
   memcpy(RAM_memory+4, &data, sizeof(int));
   // For now, thats all that our superblock contains, may expand more in the future
 
+  /****** Set up the block bitmap *******/
+  // Set the first bit to be 1 to indicate that this spot is full, endianness won't matter since we 
+  // will be consistent with out assignment of bits here
+  setBit(BLOCK_BITMAP_OFFSET, 7);  
+
   /****** Set up the root index node *******/
   // Set the type
   strcpy(RAM_memory+INDEX_NODE_ARRAY_OFFSET+INODE_TYPE,"dir");
@@ -85,11 +90,6 @@ void init_ramdisk(void) {
   // Set the file count
   memcpy(RAM_memory+INDEX_NODE_ARRAY_OFFSET+FILE_COUNT, &data, sizeof(int));
   strcpy(RAM_memory+INDEX_NODE_ARRAY_OFFSET+INODE_FILE_NAME, "/");
-
-  /****** Set up the block bitmap *******/
-  // Set the first bit to be 1 to indicate that this spot is full, endianness won't matter since we 
-  // will be consistent with out assignment of bits here
-  setBit(BLOCK_BITMAP_OFFSET, 7);  
 
   /****** At start, root directory has no files, so its block is empty (but claimed) at the moment ******/
   printk("RAMDISK has been initialized with memory\n");
