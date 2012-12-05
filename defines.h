@@ -23,20 +23,25 @@
 #define FS_SIZE 2097152 // Exactly 2 MB
 
 #define BLOCK_SIZE 256  // Size in bytes
+
 #define INDEX_NODE_SIZE 64  // Size in bytes
 #define INDEX_NODE_ARRAY_LENGTH 256  // Number of blocks
 #define INDEX_NODE_COUNT INDEX_NODE_ARRAY_LENGTH*(INDEX_NODE_ARRAY_LENGTH/INDEX_NODE_SIZE)
-#define BLOCK_BITMAP_SIZE 4*BLOCK_SIZE
+#define BLOCK_BITMAP_BLOCK_COUNT 4
+#define BLOCK_BITMAP_SIZE BLOCK_BITMAP_BLOCK_COUNT*BLOCK_SIZE
 
 #define SUPERBLOCK_OFFSET 0
 #define INDEX_NODE_ARRAY_OFFSET BLOCK_SIZE
 
 // I'm indexing the fs via block size
-#define BLOCK_BITMAP_OFFSET (INDEX_NODE_ARRAY_LENGTH+1)*BLOCK_SIZE
+#define BLOCK_BITMAP_OFFSET BLOCK_SIZE*(INDEX_NODE_ARRAY_LENGTH+1)
 
 // This is the index into the root dir in bytes
-#define ROOT_DIR BLOCK_SIZE*(BLOCK_BITMAP_OFFSET+BLOCK_BITMAP_SIZE)
+#define ROOT_DIR_OFFSET BLOCK_SIZE*(BLOCK_BITMAP_OFFSET+BLOCK_BITMAP_SIZE)
 #define ROOT_INDEX_NODE 0 // Simply to make this access clearer
+
+// The total number of available blocks in the filesystem, excluding the Root Dir since that is always occupied
+#define TOT_AVAILABLE_BLOCKS FS_SIZE/BLOCK_SIZE-1-INDEX_NODE_ARRAY_LENGTH-BLOCK_BITMAP_BLOCK_COUNT-1
 
 /*********************INDEX NODE STRUCTURE************************/
 // Indexes into an inode are in bytes, must be cast into an int or pointer

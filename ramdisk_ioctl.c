@@ -18,7 +18,32 @@ static struct file_operations pseudo_dev_proc_operations;
 static struct proc_dir_entry *proc_entry;
 
 // @var The ramdisk memory in the kernel */
-static char *RAM_memory;
+static char *RAM_memory; 
+
+/**
+ * RAMDISK initialization
+ * Initializes the ramdisk superblock, indexnodes, and bitmap to include the root directory and nothing else
+ *
+ */
+void init_ramdisk();
+
+/**
+ * Utility function to set a specified bit within a byte
+ *
+ * @param[in]  index  The byte index into RAM_memory for which to set the bit
+ * @param[in]  bit  the specified bit to set
+ * @remark  The most significant bit is 7, while the least significant bit is 0
+ */
+void setBit(int index, int bit);
+
+/**
+ * Utility function to check if a specified bit is set within a byte
+ *
+ * @param[in]  index  The byte index into RAM_memory for which to check the bit
+ * @param[in]  bit  the specified bit to check
+ * @remark  The most significant bit is 7, while the least significant bit is 0
+ */
+ void checkBit(int index, int bit);
 
 /************************INIT AND EXIT ROUTINES*****************************/
 
@@ -45,6 +70,7 @@ static int __init initialization_routine(void) {
   RAM_memory = (char *)vmalloc(FS_SIZE);
 
   // Initialize the superblock and all other memory segments
+  init_ramdisk();
 
   return 0;
 }
@@ -58,6 +84,46 @@ static void __exit cleanup_routine(void) {
   remove_proc_entry("ramdisk", NULL);
 
   return;
+}
+
+/****************************RAMDISK INITIALIZE*********************************/
+void init_ramdisk() {
+  // First, we must clear all of the bits of RAM_memory to ensure they are all 0
+  int ii, index;
+  for (ii = 0 ; ii < FS_SIZE ; ii++)
+    RAM_memory[ii] = '\0';  // Null terminator is 0
+
+  /****** Set up the superblock *******/
+  // Consists of two values, a 4 byte value containing the free block count
+  // and a 4 byte value containing the number of free index nodes
+  RAM_memory[0] = (int)TOT_AVAILABLE_BLOCKS;
+  RAM_memory[4] = (int)(INDEX_NODE_COUNT - 1)
+
+  // For now, thats all that our superblock contains, may expand more in the future
+
+  /****** Set up the root index node *******/
+  // Set the type
+  RAM_memory[INDEX_NODE_ARRAY_OFFSET+INODE_TYPE] = "dir\0";
+  // Transfer 4 bytes into char array for the size
+  memcpy(RAM_memory+INDEX_NODE_ARRAY_OFFSET+INODE_SIZE, 0, sizeof(int));
+  // Set the file count
+  memcpy(RAM_memory+INDEX_NODE_ARRAY_OFFSET+FILE_COUNT, 0, sizeof(int));
+  RAM_memory[INDEX_NODE_ARRAY_OFFSET+INODE_FILE_NAME] = '/\0';
+
+  /****** Set up the block bitmap *******/
+  // Set the first bit to be 1 to indicate that this spot is full, endianness won't matter since we 
+  // will be consistent with out assignment of bits here
+  setBit(BLOCK_BITMAP_OFFSET, 7);  
+
+  /****** At start, root directory has no files, so its block is empty (but claimed) at the moment ******/
+}
+
+/****************************BIT UTIL FUNCTIONS*********************************/
+
+void setBit(int index, int bit) {
+  int mask = 1; // 00000001b
+  mask << bit;  // Shift the one to specified position
+  RAM_memory[index] |= mask; // Set the bit using OR
 }
 
 /****************************IOCTL ENTRY POINT********************************/
