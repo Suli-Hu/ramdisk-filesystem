@@ -91,7 +91,7 @@ struct RAM_file {
 };
 
 struct RAM_accessFile {
-	char *address;  /** User space address to which to send data */
+	//char *add;  /** User space address to which to send data */
 	int fd;               /** File descriptor */
 	int numBytes;    /** Number of bytes to transfer into userspace (Used if regular file) */
 	int ret;              /** Return value */
