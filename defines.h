@@ -1,3 +1,12 @@
+#include <linux/module.h>
+#include <linux/kernel.h>
+#include <linux/init.h>
+#include <linux/vmalloc.h>
+#include <linux/errno.h> /* error codes */
+#include <linux/proc_fs.h>
+#include <asm/uaccess.h>
+#include <linux/tty.h>
+
 /****************************IOCTL DECLARATIONS*******************************/
 
 #define RAM_CREATE _IOWR(0, 6, struct path)
