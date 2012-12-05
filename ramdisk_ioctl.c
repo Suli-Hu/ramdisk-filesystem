@@ -95,6 +95,16 @@ void init_ramdisk(void) {
   printk("RAMDISK has been initialized with memory\n");
 }
 
+
+/************************MEMORY MANAGEMENT*****************************/
+
+char* getFreeBlock() {
+
+}
+
+void freeBlock(char *blockaddr) {
+
+}
 /************************INIT AND EXIT ROUTINES*****************************/
 
 /** 
