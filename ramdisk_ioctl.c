@@ -50,10 +50,14 @@ void setBit(int index, int bit) {
  *
  * @param[in]  index  The byte index into RAM_memory for which to check the bit
  * @param[in]  bit  the specified bit to check
+ * @return  int   returns 1 if the bit is set, 0 if it is empty
  * @remark  The most significant bit is 7, while the least significant bit is 0
  */
-void checkBit(int index, int bit) {
-  my_printk ("Checking bit\n");
+int checkBit(int index, int bit) {
+  int mask;
+  mask = 1;
+  mask = mask << bit;
+  return (mask & RAM_memory[index]);
 }
 
 /**
