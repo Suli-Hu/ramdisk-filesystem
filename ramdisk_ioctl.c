@@ -89,14 +89,13 @@ static void __exit cleanup_routine(void) {
 /****************************RAMDISK INITIALIZE*********************************/
 void init_ramdisk(void) {
   // First, we must clear all of the bits of RAM_memory to ensure they are all 0
-  int ii;
+  int ii, data;
   for (ii = 0 ; ii < FS_SIZE ; ii++)
     RAM_memory[ii] = '\0';  // Null terminator is 0
 
   /****** Set up the superblock *******/
   // Consists of two values, a 4 byte value containing the free block count
   // and a 4 byte value containing the number of free index nodes
-  int data;
   data = TOT_AVAILABLE_BLOCKS;
   memcpy(RAM_memory, &data, sizeof(int));
   data = INDEX_NODE_COUNT - 1;
@@ -124,8 +123,9 @@ void init_ramdisk(void) {
 /****************************BIT UTIL FUNCTIONS*********************************/
 
 void setBit(int index, int bit) {
-  int mask = 1; // 00000001b
-  mask << bit;  // Shift the one to specified position
+  int mask; 
+  mask = 1;// 00000001b
+  mask = mask << bit;  // Shift the one to specified position
   RAM_memory[index] |= mask; // Set the bit using OR
 }
 

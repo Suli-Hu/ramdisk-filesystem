@@ -80,8 +80,8 @@
 /*****************************IOCTL STRUCTURES*******************************/
 
 struct RAM_path{
-	char *name;  /** Pathname for the file */
 	int ret;          /** Return value, will be used for a variety of reasons */
+	char *name;  /** Pathname for the file */
 };
 
 struct RAM_file {
@@ -92,9 +92,9 @@ struct RAM_file {
 
 struct RAM_accessFile {
 	int fd;               /** File descriptor */
-	char *address;  /** User space address to which to send data */
 	int numBytes;    /** Number of bytes to transfer into userspace (Used if regular file) */
 	int ret;              /** Return value */
+	char *address;  /** User space address to which to send data */
 };
 
 /***************************KERNEL FS FUNCTION PROTOTYPES********************/
