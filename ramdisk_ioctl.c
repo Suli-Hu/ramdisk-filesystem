@@ -8,7 +8,14 @@
   * @author Raphael Landaverde
   * @author Chenkai Liu
   */
-
+#include <linux/module.h>
+#include <linux/kernel.h>
+#include <linux/init.h>
+#include <linux/vmalloc.h>
+#include <linux/errno.h> /* error codes */
+#include <linux/proc_fs.h>
+#include <asm/uaccess.h>
+#include <linux/tty.h>
 #include "defines.h"
 
 MODULE_LICENSE("GPL");
