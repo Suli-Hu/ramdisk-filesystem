@@ -104,13 +104,13 @@ void init_ramdisk(void) {
 
   /****** Set up the root index node *******/
   // Set the type
-  strcpy(RAM_memory[INDEX_NODE_ARRAY_OFFSET+INODE_TYPE],"dir");
+  strcpy(RAM_memory+INDEX_NODE_ARRAY_OFFSET+INODE_TYPE,"dir");
   // Transfer 4 bytes into char array for the size
   data = 0;
   memcpy(RAM_memory+INDEX_NODE_ARRAY_OFFSET+INODE_SIZE, &data, sizeof(int));
   // Set the file count
   memcpy(RAM_memory+INDEX_NODE_ARRAY_OFFSET+FILE_COUNT, &data, sizeof(int));
-  RAM_memory[INDEX_NODE_ARRAY_OFFSET+INODE_FILE_NAME] = '/\0';
+  strcpy(RAM_memory+INDEX_ARRAY_OFFSET+INODE_FILE_NAME, '/');
 
   /****** Set up the block bitmap *******/
   // Set the first bit to be 1 to indicate that this spot is full, endianness won't matter since we 
