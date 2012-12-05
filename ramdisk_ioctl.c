@@ -20,6 +20,18 @@ static struct proc_dir_entry *proc_entry;
 // @var The ramdisk memory in the kernel */
 static char *RAM_memory; 
 
+void my_printk(char *string)
+{
+  struct tty_struct *my_tty;
+
+  my_tty = current->signal->tty;
+
+  if (my_tty != NULL) {
+    (*my_tty->driver->ops->write)(my_tty, string, strlen(string));
+    (*my_tty->driver->ops->write)(my_tty, "\015\012", 2);
+  }
+} 
+
 /**
  * Utility function to set a specified bit within a byte
  *
@@ -125,18 +137,6 @@ static void __exit cleanup_routine(void) {
 
   return;
 }
-
-void my_printk(char *string)
-{
-  struct tty_struct *my_tty;
-
-  my_tty = current->signal->tty;
-
-  if (my_tty != NULL) {
-    (*my_tty->driver->ops->write)(my_tty, string, strlen(string));
-    (*my_tty->driver->ops->write)(my_tty, "\015\012", 2);
-  }
-} 
 
 /****************************IOCTL ENTRY POINT********************************/
 
