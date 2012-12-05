@@ -9,16 +9,16 @@
 
 /****************************IOCTL DECLARATIONS*******************************/
 
-#define RAM_CREATE _IORW(0, 6, struct path)
-#define RAM_MKDIR _IORW(1, 7, struct path)
-#define RAM_OPEN _IORW(1, 8, struct path)
+#define RAM_CREATE _IOWR(0, 6, struct path)
+#define RAM_MKDIR _IOWR(1, 7, struct path)
+#define RAM_OPEN _IOWR(1, 8, struct path)
 /** @todo Close may not need a kernel call? */
-#define RAM_CLOSE _IORW(1, 9, struct file)
-#define RAM_READ _IORW(1, 10, struct accessFile)
-#define RAM_WRITE _IORW(1, 11, struct accessFile)
-#define RAM_LSEEK _IORW(1, 12, struct file)
-#define RAM_UNLINK _IORW(1, 13, struct path)
-#define RAM_READDIR _IORW(1, 14, struct accessFile)
+#define RAM_CLOSE _IOWR(1, 9, struct file)
+#define RAM_READ _IOWR(1, 10, struct accessFile)
+#define RAM_WRITE _IOWR(1, 11, struct accessFile)
+#define RAM_LSEEK _IOWR(1, 12, struct file)
+#define RAM_UNLINK _IOWR(1, 13, struct path)
+#define RAM_READDIR _IOWR(1, 14, struct accessFile)
 
 /*********************FILE SYSTEM STRUCTURE************************/
 #define FS_SIZE 2097152 // Exactly 2 MB
