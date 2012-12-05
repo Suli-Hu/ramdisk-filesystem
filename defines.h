@@ -1,4 +1,5 @@
 #include <linux/module.h>
+#include <linux/vmalloc.h>
 #include <linux/errno.h> /* error codes */
 #include <linux/proc_fs.h>
 #include <asm/uaccess.h>
@@ -8,21 +9,21 @@
 
 /****************************IOCTL DECLARATIONS*******************************/
 
-#define CREATE _IORW(0, 6, struct path)
-#define MKDIR _IORW(1, 7, struct path)
-#define OPEN _IORW(1, 8, struct path)
+#define RAM_CREATE _IORW(0, 6, struct path)
+#define RAM_MKDIR _IORW(1, 7, struct path)
+#define RAM_OPEN _IORW(1, 8, struct path)
 /** @todo Close may not need a kernel call? */
-#define CLOSE _IORW(1, 9, struct file)
-#define READ _IORW(1, 10, struct accessFile)
-#define WRITE _IORW(1, 11, struct accessFile)
-#define LSEEK _IORW(1, 12, struct file)
-#define UNLINK _IORW(1, 13, struct path)
-#define READDIR _IORW(1, 14, struct accessFile)
+#define RAM_CLOSE _IORW(1, 9, struct file)
+#define RAM_READ _IORW(1, 10, struct accessFile)
+#define RAM_WRITE _IORW(1, 11, struct accessFile)
+#define RAM_LSEEK _IORW(1, 12, struct file)
+#define RAM_UNLINK _IORW(1, 13, struct path)
+#define RAM_READDIR _IORW(1, 14, struct accessFile)
 
 /*********************FILE SYSTEM STRUCTURE************************/
 #define FS_SIZE 2097152 // Exactly 2 MB
 
-#define BLOCK_SIZE 256  // Size in bytes
+#define RAM_BLOCK_SIZE 256  // Size in bytes
 
 #define INDEX_NODE_SIZE 64  // Size in bytes
 #define INDEX_NODE_ARRAY_LENGTH 256  // Number of blocks
@@ -78,18 +79,18 @@
 
 /*****************************IOCTL STRUCTURES*******************************/
 
-struct path{
+struct RAM_path{
 	char *name;  /** Pathname for the file */
 	int ret;          /** Return value, will be used for a variety of reasons */
 };
 
-struct file {
+struct RAM_file {
 	int fd;       /** File descriptor */
 	int offset;  /** Only used for seek, not for close.  Offset into data requested */
 	int ret;      /** Return value */
 };
 
-struct accessFile {
+struct RAM_accessFile {
 	int fd;               /** File descriptor */
 	char *address;  /** User space address to which to send data */
 	int numBytes;    /** Number of bytes to transfer into userspace (Used if regular file) */
@@ -101,23 +102,23 @@ struct accessFile {
 /**
  * Kernel pair for the create function
  *
- * @param[in]	input	The path struct for creating the file
+ * @param[in]	input	The RAM_path struct for creating the file
  */
-void kr_creat(struct path input);
+void kr_creat(struct RAM_path input);
 
 /**
  * Kernel pair for making a new directory
  *
- * @param[in]	input	The path struct for creating the file
+ * @param[in]	input	The RAM_path struct for creating the file
  */
-void kr_mkdir(struct path input);
+void kr_mkdir(struct RAM_path input);
 
 /**
  * Kernel pair for opening a file
  *
- * @param[in]	input	The path struct for opening the file
+ * @param[in]	input	The RAM_path struct for opening the file
  */
-void kr_open(struct path input);
+void kr_open(struct RAM_path input);
 
 /**
  * Kernel pair for closing a file
@@ -125,39 +126,39 @@ void kr_open(struct path input);
  *
  * @param[in]	input	The file struct for closing the file
  */
-void kr_close(struct file input);
+void kr_close(struct RAM_file input);
 
 /**
  * Kernel pair for reading a file
  *
  * @param[in]	input	The accessfile struct.  Output read is placed into this struct
  */
-void kr_read(struct accessFile input);
+void kr_read(struct RAM_accessFile input);
 
 /**
  * Kernel pair for the write function
  *
  * @param[in]	input	The accessfile struct.  Input for writing is in this struct
  */
-void kr_write(struct accessFile input);
+void kr_write(struct RAM_accessFile input);
 
 /**
  * Kernel pair for the seeking function
  *
  * @param[in]	input	input, use offset in here to index into file
  */
-void kr_lseek(struct file input);
+void kr_lseek(struct RAM_file input);
 
 /**
  * Kernel pair for unlinking a file from the filesystem
  *
- * @param[in]	input	Path struct.  Will delete file at the desired path
+ * @param[in]	input	Path struct.  Will delete file at the desired RAM_path
  */
-void kr_unlink(struct path input);
+void kr_unlink(struct RAM_path input);
 
 /**
  * Kernel pair for the readdir function
  *
  * @param[in]	input	Accessfile struct.  Used to read the relevant directory
  */
-void kr_readdir(struct accessFile input);
+void kr_readdir(struct RAM_accessFile input);

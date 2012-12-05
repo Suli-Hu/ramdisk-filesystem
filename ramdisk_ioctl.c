@@ -25,7 +25,7 @@ static char *RAM_memory;
  * Initializes the ramdisk superblock, indexnodes, and bitmap to include the root directory and nothing else
  *
  */
-void init_ramdisk();
+void init_ramdisk(void);
 
 /**
  * Utility function to set a specified bit within a byte
@@ -53,7 +53,7 @@ void setBit(int index, int bit);
 static int __init initialization_routine(void) {
   printk("<1> Loading RAMDISK filesystem\n");
 
-  pseudo_dev_proc_operations.ioctl = ramdisk_ioctl;
+  pseudo_dev_proc_operations.ioctl = &ramdisk_ioctl;
 
   /* Start create proc entry */
   proc_entry = create_proc_entry("ramdisk", 0444, NULL);
@@ -87,27 +87,30 @@ static void __exit cleanup_routine(void) {
 }
 
 /****************************RAMDISK INITIALIZE*********************************/
-void init_ramdisk() {
+void init_ramdisk(void) {
   // First, we must clear all of the bits of RAM_memory to ensure they are all 0
-  int ii, index;
+  int ii;
   for (ii = 0 ; ii < FS_SIZE ; ii++)
     RAM_memory[ii] = '\0';  // Null terminator is 0
 
   /****** Set up the superblock *******/
   // Consists of two values, a 4 byte value containing the free block count
   // and a 4 byte value containing the number of free index nodes
-  RAM_memory[0] = (int)TOT_AVAILABLE_BLOCKS;
-  RAM_memory[4] = (int)(INDEX_NODE_COUNT - 1)
-
+  int data;
+  data = TOT_AVAILABLE_BLOCKS;
+  memcpy(RAM_memory, &data, sizeof(int));
+  data = INDEX_NODE_COUNT - 1;
+  memcpy(RAM_memory+4, &data, sizeof(int));
   // For now, thats all that our superblock contains, may expand more in the future
 
   /****** Set up the root index node *******/
   // Set the type
   RAM_memory[INDEX_NODE_ARRAY_OFFSET+INODE_TYPE] = "dir\0";
   // Transfer 4 bytes into char array for the size
-  memcpy(RAM_memory+INDEX_NODE_ARRAY_OFFSET+INODE_SIZE, 0, sizeof(int));
+  data = 0;
+  memcpy(RAM_memory+INDEX_NODE_ARRAY_OFFSET+INODE_SIZE, &data, sizeof(int));
   // Set the file count
-  memcpy(RAM_memory+INDEX_NODE_ARRAY_OFFSET+FILE_COUNT, 0, sizeof(int));
+  memcpy(RAM_memory+INDEX_NODE_ARRAY_OFFSET+FILE_COUNT, &data, sizeof(int));
   RAM_memory[INDEX_NODE_ARRAY_OFFSET+INODE_FILE_NAME] = '/\0';
 
   /****** Set up the block bitmap *******/
@@ -126,49 +129,58 @@ void setBit(int index, int bit) {
   RAM_memory[index] |= mask; // Set the bit using OR
 }
 
+void my_printk(char *string)
+{
+  struct tty_struct *my_tty;
+
+  my_tty = current->signal->tty;
+
+  if (my_tty != NULL) {
+    (*my_tty->driver->ops->write)(my_tty, string, strlen(string));
+    (*my_tty->driver->ops->write)(my_tty, "\015\012", 2);
+  }
+} 
+
 /****************************IOCTL ENTRY POINT********************************/
 
 static int ramdisk_ioctl(struct inode *inode, struct file *file,
 				unsigned int cmd, unsigned long arg)
-{
-  struct ioctl_test_t ioc;
-  struct keyboard_struct key;
-  
+{ 
   switch (cmd){
 
-    case CREATE:
+    case RAM_CREATE:
       my_printk ("Creating file...\n");
       break;
 
-    case MKDIR:
+    case RAM_MKDIR:
       my_printk ("Making directory...\n");
       break;
 
-    case OPEN:
+    case RAM_OPEN:
       my_printk ("Opening file...\n");
       break;
     
-    case CLOSE:
+    case RAM_CLOSE:
       my_printk ("Closing file...\n");
       break;
   
-    case READ:
+    case RAM_READ:
       my_printk ("Reading file...\n");
       break;
 
-    case WRITE:
+    case RAM_WRITE:
       my_printk ("Writing file...\n");
       break;
     
-    case LSEEK:
+    case RAM_LSEEK:
       my_printk ("Seeking into file...\n");
       break;
 
-    case UNLINK:
+    case RAM_UNLINK:
       my_printk ("Unlinking file...\n");
       break;
 
-    case READDIR:
+    case RAM_READDIR:
       my_printk ("Reading file from directory...\n");
       break;
 
