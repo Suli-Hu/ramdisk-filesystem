@@ -41,8 +41,23 @@ void my_printk(char *string)
 void setBit(int index, int bit) {
   int mask; 
   mask = 1;// 00000001b
-  mask = mask << bit;  // Shift the one to specified position
+  mask <<= bit;  // Shift the one to specified position
   RAM_memory[index] |= mask; // Set the bit using OR
+}
+
+/**
+ * Utility function to clear a specified bit within a byte
+ *
+ * @param[in]  index  The byte index into RAM_memory for which to clear the bit
+ * @param[in]  bit  the specified bit to clear
+ * @remark  The most significant bit is 7, while the least significant bit is 0
+ */
+void clearBit(int index, int bit) {
+  int mask; 
+  mask = 1;// 00000001b
+  mask <<= bit;  // Shift the one to specified position
+  mask = ~mask;
+  RAM_memory[index] &= mask; // Set the bit using OR
 }
 
 /**
@@ -56,7 +71,7 @@ void setBit(int index, int bit) {
 int checkBit(int index, int bit) {
   int mask;
   mask = 1;
-  mask = mask << bit;
+  mask <<= bit;
   return (mask & RAM_memory[index]);
 }
 
@@ -95,28 +110,48 @@ void init_ramdisk(void) {
   memcpy(RAM_memory+INDEX_NODE_ARRAY_OFFSET+FILE_COUNT, &data, sizeof(int));
   strcpy(RAM_memory+INDEX_NODE_ARRAY_OFFSET+INODE_FILE_NAME, "/");
 
+
   /****** At start, root directory has no files, so its block is empty (but claimed) at the moment ******/
   printk("RAMDISK has been initialized with memory\n");
 }
 
 
 /************************MEMORY MANAGEMENT*****************************/
+/**
+ * Get free block from memory region
+ *
+ * @return  blocknumber
+ * @param[in-out]  
+ */
+int getFreeBlock() {
 
-char* getFreeBlock() {
+  char *startOfBitMap;
+  int i, j;
 
-  char *startOfBitMap = RAM_memory+BLOCK_BITMAP_OFFSET;
-  for (int i=0; i<TOT_AVAILABLE_BLOCKS/32; i++) {
-    for (int j=0; j<31; j++) {
-      // if checkBit(startOfBitMap, )
+  for (i=0; i<BLOCK_BITMAP_SIZE; i++) {
+    for (j=7; j>=0; j--) {
+      if (!checkBit(BLOCK_BITMAP_OFFSET+i, j)) {
+        // Return block number
+        setBit(BLOCK_BITMAP_OFFSET+i, j);
+
+        return i*8 + (8-j);
+      }
         
     }
 
   }
 
+  // No free blocks
+  return -1;
 }
 
-void freeBlock(char *blockaddr) {
+void freeBlock(int blockindex) {
 
+  int major, minor;
+  major = blockindex / 8;
+  minor = blockindex % 8;
+  minor = 7 - minor;
+  clearBit(BLOCK_BITMAP_OFFSET+major, minor);
 }
 
 /************************INIT AND EXIT ROUTINES*****************************/
