@@ -21,20 +21,18 @@ static struct proc_dir_entry *proc_entry;
 static char *RAM_memory; 
 
 /**
- * RAMDISK initialization
- * Initializes the ramdisk superblock, indexnodes, and bitmap to include the root directory and nothing else
- *
- */
-void init_ramdisk(void);
-
-/**
  * Utility function to set a specified bit within a byte
  *
  * @param[in]  index  The byte index into RAM_memory for which to set the bit
  * @param[in]  bit  the specified bit to set
  * @remark  The most significant bit is 7, while the least significant bit is 0
  */
-void setBit(int index, int bit);
+void setBit(int index, int bit) {
+  int mask; 
+  mask = 1;// 00000001b
+  mask = mask << bit;  // Shift the one to specified position
+  RAM_memory[index] |= mask; // Set the bit using OR
+}
 
 /**
  * Utility function to check if a specified bit is set within a byte
@@ -43,50 +41,15 @@ void setBit(int index, int bit);
  * @param[in]  bit  the specified bit to check
  * @remark  The most significant bit is 7, while the least significant bit is 0
  */
- void checkBit(int index, int bit);
-
-/************************INIT AND EXIT ROUTINES*****************************/
-
-/** 
-* The main init routine for the kernel module.  Initializes proc entry 
-*/
-static int __init initialization_routine(void) {
-  printk("<1> Loading RAMDISK filesystem\n");
-
-  pseudo_dev_proc_operations.ioctl = &ramdisk_ioctl;
-
-  /* Start create proc entry */
-  proc_entry = create_proc_entry("ramdisk", 0444, NULL);
-  if(!proc_entry)
-  {
-    printk("<1> Error creating /proc entry for ramdisk.\n");
-    return 1;
-  }
-
-  //proc_entry->owner = THIS_MODULE; <-- This is now deprecated
-  proc_entry->proc_fops = &pseudo_dev_proc_operations;
-
-  // Initialize the ramdisk here now
-  RAM_memory = (char *)vmalloc(FS_SIZE);
-
-  // Initialize the superblock and all other memory segments
-  init_ramdisk();
-
-  return 0;
+void checkBit(int index, int bit) {
+  my_printk ("Checking bit\n");
 }
 
 /**
-* Clean up routine 
-*/
-static void __exit cleanup_routine(void) {
-
-  printk("<1> Dumping RAMDISK module\n");
-  remove_proc_entry("ramdisk", NULL);
-
-  return;
-}
-
-/****************************RAMDISK INITIALIZE*********************************/
+ * RAMDISK initialization
+ * Initializes the ramdisk superblock, indexnodes, and bitmap to include the root directory and nothing else
+ *
+ */
 void init_ramdisk(void) {
   // First, we must clear all of the bits of RAM_memory to ensure they are all 0
   int ii, data;
@@ -120,13 +83,47 @@ void init_ramdisk(void) {
   /****** At start, root directory has no files, so its block is empty (but claimed) at the moment ******/
 }
 
-/****************************BIT UTIL FUNCTIONS*********************************/
+/************************INIT AND EXIT ROUTINES*****************************/
 
-void setBit(int index, int bit) {
-  int mask; 
-  mask = 1;// 00000001b
-  mask = mask << bit;  // Shift the one to specified position
-  RAM_memory[index] |= mask; // Set the bit using OR
+/** 
+* The main init routine for the kernel module.  Initializes proc entry 
+*/
+static int __init initialization_routine(void) {
+  printk("<1> Loading RAMDISK filesystem\n");
+
+  pseudo_dev_proc_operations.ioctl = &ramdisk_ioctl;
+
+  /* Start create proc entry */
+  proc_entry = create_proc_entry("ramdisk", 0444, NULL);
+  if(!proc_entry)
+  {
+    printk("<1> Error creating /proc entry for ramdisk.\n");
+    return 1;
+  }
+
+  //proc_entry->owner = THIS_MODULE; <-- This is now deprecated
+  proc_entry->proc_fops = &pseudo_dev_proc_operations;
+
+  // Initialize the ramdisk here now
+  RAM_memory = (char *)vmalloc(FS_SIZE);
+
+  // Initialize the superblock and all other memory segments
+  init_ramdisk();
+
+  // Verify that memory is correctly set up initially
+
+  return 0;
+}
+
+/**
+* Clean up routine 
+*/
+static void __exit cleanup_routine(void) {
+
+  printk("<1> Dumping RAMDISK module\n");
+  remove_proc_entry("ramdisk", NULL);
+
+  return;
 }
 
 void my_printk(char *string)
