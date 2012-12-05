@@ -53,7 +53,7 @@ void setBit(int index, int bit) {
  * @remark  The most significant bit is 7, while the least significant bit is 0
  */
 void checkBit(int index, int bit) {
-  //printk ("Checking bit\n");
+  my_printk ("Checking bit\n");
 }
 
 /**
@@ -92,6 +92,7 @@ void init_ramdisk(void) {
   setBit(BLOCK_BITMAP_OFFSET, 7);  
 
   /****** At start, root directory has no files, so its block is empty (but claimed) at the moment ******/
+  printk("RAMDISK has been initialized with memory\n");
 }
 
 /************************INIT AND EXIT ROUTINES*****************************/
@@ -145,39 +146,39 @@ static int ramdisk_ioctl(struct inode *inode, struct file *file,
   switch (cmd){
 
     case RAM_CREATE:
-      printk ("Creating file...\n");
+      my_printk("Creating file...\n");
       break;
 
     case RAM_MKDIR:
-      printk ("Making directory...\n");
+      my_printk("Making directory...\n");
       break;
 
     case RAM_OPEN:
-      printk ("Opening file...\n");
+      my_printk("Opening file...\n");
       break;
     
     case RAM_CLOSE:
-      printk ("Closing file...\n");
+      my_printk("Closing file...\n");
       break;
   
     case RAM_READ:
-      printk ("Reading file...\n");
+      my_printk("Reading file...\n");
       break;
 
     case RAM_WRITE:
-      printk ("Writing file...\n");
+      my_printk("Writing file...\n");
       break;
     
     case RAM_LSEEK:
-      printk ("Seeking into file...\n");
+      my_printk("Seeking into file...\n");
       break;
 
     case RAM_UNLINK:
-      printk ("Unlinking file...\n");
+      my_printk("Unlinking file...\n");
       break;
 
     case RAM_READDIR:
-      printk ("Reading file from directory...\n");
+      my_printk("Reading file from directory...\n");
       break;
 
     default:
