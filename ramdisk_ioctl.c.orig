@@ -50,14 +50,10 @@ void setBit(int index, int bit) {
  *
  * @param[in]  index  The byte index into RAM_memory for which to check the bit
  * @param[in]  bit  the specified bit to check
- * @return  int   returns 1 if the bit is set, 0 if it is empty
  * @remark  The most significant bit is 7, while the least significant bit is 0
  */
-int checkBit(int index, int bit) {
-  int mask;
-  mask = 1;
-  mask = mask << bit;
-  return (mask & RAM_memory[index]);
+void checkBit(int index, int bit) {
+  my_printk ("Checking bit\n");
 }
 
 /**
@@ -99,26 +95,6 @@ void init_ramdisk(void) {
   printk("RAMDISK has been initialized with memory\n");
 }
 
-
-/************************MEMORY MANAGEMENT*****************************/
-
-char* getFreeBlock() {
-
-  char *startOfBitMap = RAM_memory+BLOCK_BITMAP_OFFSET;
-  for (int i=0; i<TOT_AVAILABLE_BLOCKS/32; i++) {
-    for (int j=0; j<31; j++) {
-      // if checkBit(startOfBitMap, )
-        
-    }
-
-  }
-
-}
-
-void freeBlock(char *blockaddr) {
-
-}
-
 /************************INIT AND EXIT ROUTINES*****************************/
 
 /** 
@@ -129,7 +105,7 @@ static int __init initialization_routine(void) {
 
   pseudo_dev_proc_operations.ioctl = &ramdisk_ioctl;
 
-  /* Start create proc entry */
+  /* Start create proc entry  create_proc_entry(name, mode, parent)  */
   proc_entry = create_proc_entry("ramdisk", 0444, NULL);
   if(!proc_entry)
   {
@@ -162,6 +138,59 @@ static void __exit cleanup_routine(void) {
   return;
 }
 
+<<<<<<< HEAD
+=======
+/****************************RAMDISK INITIALIZE*********************************/
+void init_ramdisk() {
+  // First, we must clear all of the bits of RAM_memory to ensure they are all 0
+  int ii, index;
+  for (ii = 0 ; ii < FS_SIZE ; ii++)
+    RAM_memory[ii] = '\0';  // Null terminator is 0
+
+  /****** Set up the superblock *******/
+  // Consists of two values, a 4 byte value containing the free block count
+  // and a 4 byte value containing the number of free index nodes
+  RAM_memory[0] = (int)TOT_AVAILABLE_BLOCKS;
+  RAM_memory[4] = (int)(INDEX_NODE_COUNT - 1)
+
+  // For now, thats all that our superblock contains, may expand more in the future
+
+  /****** Set up the root index node *******/
+  // Set the type
+  RAM_memory[INDEX_NODE_ARRAY_OFFSET+INODE_TYPE] = "dir\0";
+  // Transfer 4 bytes into char array for the size
+  memcpy(RAM_memory+INDEX_NODE_ARRAY_OFFSET+INODE_SIZE, 0, sizeof(int));
+  // Set the file count
+  memcpy(RAM_memory+INDEX_NODE_ARRAY_OFFSET+FILE_COUNT, 0, sizeof(int));
+  RAM_memory[INDEX_NODE_ARRAY_OFFSET+INODE_FILE_NAME] = '/\0';
+
+  /****** Set up the block bitmap *******/
+  // Set the first bit to be 1 to indicate that this spot is full, endianness won't matter since we 
+  // will be consistent with out assignment of bits here
+  setBit(BLOCK_BITMAP_OFFSET, 7);  
+
+  /****** At start, root directory has no files, so its block is empty (but claimed) at the moment ******/
+}
+
+/****************************BIT UTIL FUNCTIONS*********************************/
+
+void setBit(int index, int bit) {
+  int mask = 1; // 00000001b
+  mask << bit;  // Shift the one to specified position
+  RAM_memory[index] |= mask; // Set the bit using OR
+}
+
+/**************************MEMORY MANAGEMENT***********************************/
+
+char* getFreeBlock() {
+
+}
+
+void freeBlock(char *blockaddr) {
+
+}
+
+>>>>>>> chenkaiBranch
 /****************************IOCTL ENTRY POINT********************************/
 
 static int ramdisk_ioctl(struct inode *inode, struct file *file,
