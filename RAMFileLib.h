@@ -70,7 +70,7 @@ int rd_write(int fd, char *address, int num_bytes);
  *
  * @return	int	0 on success, -1 on failure
  * @param[in]	fd	file descriptor of the file to seek into
- * @param[int]	offset	offset into file desired
+ * @param[in]	offset	offset into file desired
  * @remark	sets file position to EOF if offset larger than remaining size
  */
 int rd_lseek(int fd, int offset);
