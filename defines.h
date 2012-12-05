@@ -11,6 +11,7 @@
 #define CREATE _IORW(0, 6, struct path)
 #define MKDIR _IORW(1, 7, struct path)
 #define OPEN _IORW(1, 8, struct path)
+/** @todo Close may not need a kernel call? */
 #define CLOSE _IORW(1, 9, struct file)
 #define READ _IORW(1, 10, struct accessFile)
 #define WRITE _IORW(1, 11, struct accessFile)
@@ -19,6 +20,8 @@
 #define READDIR _IORW(1, 14, struct accessFile)
 
 /*********************FILE SYSTEM STRUCTURE************************/
+#define FS_SIZE 2097152 // Exactly 2 MB
+
 #define BLOCK_SIZE 256  // Size in bytes
 #define INDEX_NODE_SIZE 64  // Size in bytes
 #define INDEX_NODE_ARRAY_LENGTH 256  // Number of blocks
@@ -68,23 +71,88 @@
 #define FILE_INFO_SIZE 16
 #define INODE_NUM_OFFSET 14 // Offset in file_info to get the inode
 
-
 /*****************************IOCTL STRUCTURES*******************************/
 
 struct path{
-	char *name;  // Pathname for the file
-	int ret;          // Return value, will be used for a variety of reasons
+	char *name;  /** Pathname for the file */
+	int ret;          /** Return value, will be used for a variety of reasons */
 };
 
 struct file {
-	int fd;       // File descriptor
-	int offset;  // Only used for seek, not for close.  Offset into data requested
-	int ret;      // Return value
+	int fd;       /** File descriptor */
+	int offset;  /** Only used for seek, not for close.  Offset into data requested */
+	int ret;      /** Return value */
 };
 
 struct accessFile {
-	int fd;               // File descriptor
-	char *address;  // User space address to which to send data
-	int numBytes;    // Number of bytes to transfer into userspace (Used if regular file)
-	int ret;              // Return value
+	int fd;               /** File descriptor */
+	char *address;  /** User space address to which to send data */
+	int numBytes;    /** Number of bytes to transfer into userspace (Used if regular file) */
+	int ret;              /** Return value */
 };
+
+/***************************KERNEL FS FUNCTION PROTOTYPES********************/
+
+/**
+ * Kernel pair for the create function
+ *
+ * @param[in]	input	The path struct for creating the file
+ */
+void kr_creat(struct path input);
+
+/**
+ * Kernel pair for making a new directory
+ *
+ * @param[in]	input	The path struct for creating the file
+ */
+void kr_mkdir(struct path input);
+
+/**
+ * Kernel pair for opening a file
+ *
+ * @param[in]	input	The path struct for opening the file
+ */
+void kr_open(struct path input);
+
+/**
+ * Kernel pair for closing a file
+ * @todo may not be necessary, not sure yet
+ *
+ * @param[in]	input	The file struct for closing the file
+ */
+void kr_close(struct file input);
+
+/**
+ * Kernel pair for reading a file
+ *
+ * @param[in]	input	The accessfile struct.  Output read is placed into this struct
+ */
+void kr_read(struct accessFile input);
+
+/**
+ * Kernel pair for the write function
+ *
+ * @param[in]	input	The accessfile struct.  Input for writing is in this struct
+ */
+void kr_write(struct accessFile input);
+
+/**
+ * Kernel pair for the seeking function
+ *
+ * @param[in]	input	input, use offset in here to index into file
+ */
+void kr_lseek(struct file input);
+
+/**
+ * Kernel pair for unlinking a file from the filesystem
+ *
+ * @param[in]	input	Path struct.  Will delete file at the desired path
+ */
+void kr_unlink(struct path input);
+
+/**
+ * Kernel pair for the readdir function
+ *
+ * @param[in]	input	Accessfile struct.  Used to read the relevant directory
+ */
+void kr_readdir(struct accessFile input);

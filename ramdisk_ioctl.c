@@ -1,22 +1,30 @@
 /**************************************************************************/
 /**** Ramdisk IOCTL module for HW3 in Operating systems                ****/
 /**** The actual file system functions are stored in a separate file   ****/
-/**** This file contains initialization and the entry point            ****/
+/**** This file contains initialization and the entry point             ****/
 /**************************************************************************/
+
+/**
+  * @author Raphael Landaverde
+  * @author Chenkai Liu
+  */
 
 #include "defines.h"
 
 MODULE_LICENSE("GPL");
 
-static int ramdisk_ioctl(struct inode *inode, struct file *file,
-			       unsigned int cmd, unsigned long arg);
-
+static int ramdisk_ioctl(struct inode *inode, struct file *file, unsigned int cmd, unsigned long arg);
 static struct file_operations pseudo_dev_proc_operations;
-
 static struct proc_dir_entry *proc_entry;
+
+// @var The ramdisk memory in the kernel */
+static char *RAM_memory;
 
 /************************INIT AND EXIT ROUTINES*****************************/
 
+/** 
+* The main init routine for the kernel module.  Initializes proc entry 
+*/
 static int __init initialization_routine(void) {
   printk("<1> Loading RAMDISK filesystem\n");
 
@@ -34,11 +42,16 @@ static int __init initialization_routine(void) {
   proc_entry->proc_fops = &pseudo_dev_proc_operations;
 
   // Initialize the ramdisk here now
+  RAM_memory = (char *)vmalloc(FS_SIZE);
+
+  // Initialize the superblock and all other memory segments
 
   return 0;
 }
 
-// Clean up routine
+/**
+* Clean up routine 
+*/
 static void __exit cleanup_routine(void) {
 
   printk("<1> Dumping RAMDISK module\n");
@@ -57,23 +70,45 @@ static int ramdisk_ioctl(struct inode *inode, struct file *file,
   
   switch (cmd){
 
-  case IOCTL_TEST:
-    copy_from_user(&ioc, (struct ioctl_test_t *)arg, 
-		   sizeof(struct ioctl_test_t));
-    printk("<1> ioctl: call to IOCTL_TEST (%d,%c)!\n", 
-	   ioc.field1, ioc.field2);
+    case CREATE:
+      my_printk ("Creating file...\n");
+      break;
 
-    my_printk ("Got msg in kernel\n");
-    break;
+    case MKDIR:
+      my_printk ("Making directory...\n");
+      break;
 
-  case KEYBOARD:
-    key.letter = my_getchar();
-    copy_to_user((struct keyboard_struct *)arg, &key, sizeof(struct keyboard_struct));
-    break;
+    case OPEN:
+      my_printk ("Opening file...\n");
+      break;
+    
+    case CLOSE:
+      my_printk ("Closing file...\n");
+      break;
   
-  default:
-    return -EINVAL;
-    break;
+    case READ:
+      my_printk ("Reading file...\n");
+      break;
+
+    case WRITE:
+      my_printk ("Writing file...\n");
+      break;
+    
+    case LSEEK:
+      my_printk ("Seeking into file...\n");
+      break;
+
+    case UNLINK:
+      my_printk ("Unlinking file...\n");
+      break;
+
+    case READDIR:
+      my_printk ("Reading file from directory...\n");
+      break;
+
+    default:
+      return -EINVAL;
+      break;
   }
   
   return 0;
