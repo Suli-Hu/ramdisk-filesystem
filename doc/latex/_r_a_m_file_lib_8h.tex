@@ -1,0 +1,266 @@
+\hypertarget{_r_a_m_file_lib_8h}{\section{R\-A\-M\-File\-Lib.\-h File Reference}
+\label{_r_a_m_file_lib_8h}\index{R\-A\-M\-File\-Lib.\-h@{R\-A\-M\-File\-Lib.\-h}}
+}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+int \hyperlink{_r_a_m_file_lib_8h_ac8cd9a3d1c4fab64e86551fa48117d06}{rd\-\_\-creat} (char $\ast$pathname)
+\item 
+int \hyperlink{_r_a_m_file_lib_8h_a2f8c14cce1d9a12e84394f5d0a7e90d9}{rd\-\_\-mkdir} (char $\ast$pathname)
+\item 
+int \hyperlink{_r_a_m_file_lib_8h_acae117c51314a3d124c2e080b1202c33}{rd\-\_\-open} (char $\ast$pathname)
+\item 
+int \hyperlink{_r_a_m_file_lib_8h_a66fefb5d0f64c8373ed98fe3517c91e4}{rd\-\_\-close} (int fd)
+\item 
+int \hyperlink{_r_a_m_file_lib_8h_a23d1eacc3a020171c538d8b3b82f3cc0}{rd\-\_\-read} (int fd, char $\ast$address, int num\-\_\-bytes)
+\item 
+int \hyperlink{_r_a_m_file_lib_8h_aeb3e97aa241f7b5fb9db4ce914859481}{rd\-\_\-write} (int fd, char $\ast$address, int num\-\_\-bytes)
+\item 
+int \hyperlink{_r_a_m_file_lib_8h_a20fb7e3a4e0a85ef953bbfcf9d8924f1}{rd\-\_\-lseek} (int fd, int offset)
+\item 
+int \hyperlink{_r_a_m_file_lib_8h_af4213a21e51f92e48a75e743740a9b46}{rd\-\_\-unlink} (char $\ast$pathname)
+\item 
+int \hyperlink{_r_a_m_file_lib_8h_a95fff0fc11f82df031e1fb7462eb8687}{rd\-\_\-readdir} (int fd, char $\ast$address)
+\end{DoxyCompactItemize}
+
+
+\subsection{Function Documentation}
+\hypertarget{_r_a_m_file_lib_8h_a66fefb5d0f64c8373ed98fe3517c91e4}{\index{R\-A\-M\-File\-Lib.\-h@{R\-A\-M\-File\-Lib.\-h}!rd\-\_\-close@{rd\-\_\-close}}
+\index{rd\-\_\-close@{rd\-\_\-close}!RAMFileLib.h@{R\-A\-M\-File\-Lib.\-h}}
+\subsubsection[{rd\-\_\-close}]{\setlength{\rightskip}{0pt plus 5cm}int rd\-\_\-close (
+\begin{DoxyParamCaption}
+\item[{int}]{fd}
+\end{DoxyParamCaption}
+)}}\label{_r_a_m_file_lib_8h_a66fefb5d0f64c8373ed98fe3517c91e4}
+Close a currently opened file
+
+\begin{DoxyReturn}{Returns}
+int 0 on success, -\/1 on error 
+\end{DoxyReturn}
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em fd} & the file descriptor of the file to close \\
+\hline
+\end{DoxyParams}
+\begin{DoxyRemark}{Remarks}
+Fails if file descriptor is not valid 
+\end{DoxyRemark}
+
+
+Definition at line 15 of file R\-A\-M\-File\-Lib.\-c.
+
+\hypertarget{_r_a_m_file_lib_8h_ac8cd9a3d1c4fab64e86551fa48117d06}{\index{R\-A\-M\-File\-Lib.\-h@{R\-A\-M\-File\-Lib.\-h}!rd\-\_\-creat@{rd\-\_\-creat}}
+\index{rd\-\_\-creat@{rd\-\_\-creat}!RAMFileLib.h@{R\-A\-M\-File\-Lib.\-h}}
+\subsubsection[{rd\-\_\-creat}]{\setlength{\rightskip}{0pt plus 5cm}int rd\-\_\-creat (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{pathname}
+\end{DoxyParamCaption}
+)}}\label{_r_a_m_file_lib_8h_ac8cd9a3d1c4fab64e86551fa48117d06}
+R\-A\-M Filesystem Library for the ramdisk kernel module
+
+\begin{DoxyAuthor}{Author}
+Raphael Landaverde
+\end{DoxyAuthor}
+This is for use in userspace, not kernel space Creates a new full file at pathname
+
+\begin{DoxyReturn}{Returns}
+int 0 on success, -\/1 on error 
+\end{DoxyReturn}
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em pathname} & the absolute path of the file to create \\
+\hline
+\end{DoxyParams}
+\begin{DoxyRemark}{Remarks}
+Fails if directory for new file does not exist 
+\end{DoxyRemark}
+
+
+Definition at line 3 of file R\-A\-M\-File\-Lib.\-c.
+
+\hypertarget{_r_a_m_file_lib_8h_a20fb7e3a4e0a85ef953bbfcf9d8924f1}{\index{R\-A\-M\-File\-Lib.\-h@{R\-A\-M\-File\-Lib.\-h}!rd\-\_\-lseek@{rd\-\_\-lseek}}
+\index{rd\-\_\-lseek@{rd\-\_\-lseek}!RAMFileLib.h@{R\-A\-M\-File\-Lib.\-h}}
+\subsubsection[{rd\-\_\-lseek}]{\setlength{\rightskip}{0pt plus 5cm}int rd\-\_\-lseek (
+\begin{DoxyParamCaption}
+\item[{int}]{fd, }
+\item[{int}]{offset}
+\end{DoxyParamCaption}
+)}}\label{_r_a_m_file_lib_8h_a20fb7e3a4e0a85ef953bbfcf9d8924f1}
+Seeks into a currently opened file
+
+\begin{DoxyReturn}{Returns}
+int 0 on success, -\/1 on failure 
+\end{DoxyReturn}
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em fd} & file descriptor of the file to seek into \\
+\hline
+ & {\em int\mbox{]}} & offset offset into file desired \\
+\hline
+\end{DoxyParams}
+\begin{DoxyRemark}{Remarks}
+sets file position to E\-O\-F if offset larger than remaining size 
+\end{DoxyRemark}
+
+
+Definition at line 27 of file R\-A\-M\-File\-Lib.\-c.
+
+\hypertarget{_r_a_m_file_lib_8h_a2f8c14cce1d9a12e84394f5d0a7e90d9}{\index{R\-A\-M\-File\-Lib.\-h@{R\-A\-M\-File\-Lib.\-h}!rd\-\_\-mkdir@{rd\-\_\-mkdir}}
+\index{rd\-\_\-mkdir@{rd\-\_\-mkdir}!RAMFileLib.h@{R\-A\-M\-File\-Lib.\-h}}
+\subsubsection[{rd\-\_\-mkdir}]{\setlength{\rightskip}{0pt plus 5cm}int rd\-\_\-mkdir (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{pathname}
+\end{DoxyParamCaption}
+)}}\label{_r_a_m_file_lib_8h_a2f8c14cce1d9a12e84394f5d0a7e90d9}
+Creates a new directory at pathname
+
+\begin{DoxyReturn}{Returns}
+int 0 on success, -\/1 on fail 
+\end{DoxyReturn}
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em pathname} & the absolute path of the directory \\
+\hline
+\end{DoxyParams}
+\begin{DoxyRemark}{Remarks}
+Fails if directory for new directory does not exist 
+\end{DoxyRemark}
+
+
+Definition at line 7 of file R\-A\-M\-File\-Lib.\-c.
+
+\hypertarget{_r_a_m_file_lib_8h_acae117c51314a3d124c2e080b1202c33}{\index{R\-A\-M\-File\-Lib.\-h@{R\-A\-M\-File\-Lib.\-h}!rd\-\_\-open@{rd\-\_\-open}}
+\index{rd\-\_\-open@{rd\-\_\-open}!RAMFileLib.h@{R\-A\-M\-File\-Lib.\-h}}
+\subsubsection[{rd\-\_\-open}]{\setlength{\rightskip}{0pt plus 5cm}int rd\-\_\-open (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{pathname}
+\end{DoxyParamCaption}
+)}}\label{_r_a_m_file_lib_8h_acae117c51314a3d124c2e080b1202c33}
+Opens a file for reading
+
+\begin{DoxyReturn}{Returns}
+int the file descriptor handle for the file or -\/1 on fail 
+\end{DoxyReturn}
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em pathname} & the absolute path of the file \\
+\hline
+\end{DoxyParams}
+\begin{DoxyRemark}{Remarks}
+Fails if file does not exist 
+\end{DoxyRemark}
+
+
+Definition at line 11 of file R\-A\-M\-File\-Lib.\-c.
+
+\hypertarget{_r_a_m_file_lib_8h_a23d1eacc3a020171c538d8b3b82f3cc0}{\index{R\-A\-M\-File\-Lib.\-h@{R\-A\-M\-File\-Lib.\-h}!rd\-\_\-read@{rd\-\_\-read}}
+\index{rd\-\_\-read@{rd\-\_\-read}!RAMFileLib.h@{R\-A\-M\-File\-Lib.\-h}}
+\subsubsection[{rd\-\_\-read}]{\setlength{\rightskip}{0pt plus 5cm}int rd\-\_\-read (
+\begin{DoxyParamCaption}
+\item[{int}]{fd, }
+\item[{char $\ast$}]{address, }
+\item[{int}]{num\-\_\-bytes}
+\end{DoxyParamCaption}
+)}}\label{_r_a_m_file_lib_8h_a23d1eacc3a020171c538d8b3b82f3cc0}
+Read a currently opened file
+
+\begin{DoxyReturn}{Returns}
+int Number of bytes actually read, or -\/1 on fail 
+\end{DoxyReturn}
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em fd} & the file descriptor of the file to read \\
+\hline
+\mbox{\tt out}  & {\em address} & pointer to the data in userspace \\
+\hline
+\mbox{\tt in}  & {\em num\-\_\-bytes} & number of bytes to read from file \\
+\hline
+\end{DoxyParams}
+\begin{DoxyRemark}{Remarks}
+Fails if file descriptor is invalid or a directory 
+\end{DoxyRemark}
+
+
+Definition at line 19 of file R\-A\-M\-File\-Lib.\-c.
+
+\hypertarget{_r_a_m_file_lib_8h_a95fff0fc11f82df031e1fb7462eb8687}{\index{R\-A\-M\-File\-Lib.\-h@{R\-A\-M\-File\-Lib.\-h}!rd\-\_\-readdir@{rd\-\_\-readdir}}
+\index{rd\-\_\-readdir@{rd\-\_\-readdir}!RAMFileLib.h@{R\-A\-M\-File\-Lib.\-h}}
+\subsubsection[{rd\-\_\-readdir}]{\setlength{\rightskip}{0pt plus 5cm}int rd\-\_\-readdir (
+\begin{DoxyParamCaption}
+\item[{int}]{fd, }
+\item[{char $\ast$}]{address}
+\end{DoxyParamCaption}
+)}}\label{_r_a_m_file_lib_8h_a95fff0fc11f82df031e1fb7462eb8687}
+Read one entry from the directory file
+
+\begin{DoxyReturn}{Returns}
+int 1 on success, -\/1 on failure 
+\end{DoxyReturn}
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em fd} & file descriptor of directory to read \\
+\hline
+\mbox{\tt out}  & {\em address} & 16 byte output, 14 bytes filename, 2 bytesindex\-\_\-node num \\
+\hline
+\end{DoxyParams}
+\begin{DoxyRemark}{Remarks}
+Fails if fd is a regular file. On each call, file position of fd incremented by 1 
+\end{DoxyRemark}
+
+
+Definition at line 35 of file R\-A\-M\-File\-Lib.\-c.
+
+\hypertarget{_r_a_m_file_lib_8h_af4213a21e51f92e48a75e743740a9b46}{\index{R\-A\-M\-File\-Lib.\-h@{R\-A\-M\-File\-Lib.\-h}!rd\-\_\-unlink@{rd\-\_\-unlink}}
+\index{rd\-\_\-unlink@{rd\-\_\-unlink}!RAMFileLib.h@{R\-A\-M\-File\-Lib.\-h}}
+\subsubsection[{rd\-\_\-unlink}]{\setlength{\rightskip}{0pt plus 5cm}int rd\-\_\-unlink (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{pathname}
+\end{DoxyParamCaption}
+)}}\label{_r_a_m_file_lib_8h_af4213a21e51f92e48a75e743740a9b46}
+Unlinks the file from ramdisk memory
+
+\begin{DoxyReturn}{Returns}
+int 0 on success, -\/1 on failure 
+\end{DoxyReturn}
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em pathname} & absolute path of the file or directory to unlink \\
+\hline
+\end{DoxyParams}
+\begin{DoxyRemark}{Remarks}
+Error occurs if file does not exist, file is open, file is a directory, or file is root 
+\end{DoxyRemark}
+
+
+Definition at line 31 of file R\-A\-M\-File\-Lib.\-c.
+
+\hypertarget{_r_a_m_file_lib_8h_aeb3e97aa241f7b5fb9db4ce914859481}{\index{R\-A\-M\-File\-Lib.\-h@{R\-A\-M\-File\-Lib.\-h}!rd\-\_\-write@{rd\-\_\-write}}
+\index{rd\-\_\-write@{rd\-\_\-write}!RAMFileLib.h@{R\-A\-M\-File\-Lib.\-h}}
+\subsubsection[{rd\-\_\-write}]{\setlength{\rightskip}{0pt plus 5cm}int rd\-\_\-write (
+\begin{DoxyParamCaption}
+\item[{int}]{fd, }
+\item[{char $\ast$}]{address, }
+\item[{int}]{num\-\_\-bytes}
+\end{DoxyParamCaption}
+)}}\label{_r_a_m_file_lib_8h_aeb3e97aa241f7b5fb9db4ce914859481}
+Write to a currently opened file
+
+\begin{DoxyReturn}{Returns}
+int Number of bytes return, or -\/1 on error 
+\end{DoxyReturn}
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em fd} & the file descriptor of the file to read \\
+\hline
+\mbox{\tt in}  & {\em address} & data to write to memory \\
+\hline
+\mbox{\tt in}  & {\em num\-\_\-bytes} & number of bytes to write \\
+\hline
+\end{DoxyParams}
+\begin{DoxyRemark}{Remarks}
+Fails if file descriptor is invalid or a directory 
+\end{DoxyRemark}
+
+
+Definition at line 23 of file R\-A\-M\-File\-Lib.\-c.
+

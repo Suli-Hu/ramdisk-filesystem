@@ -38,6 +38,8 @@ struct \hyperlink{structaccess_file}{access\-File}
 \item 
 \#define \hyperlink{defines_8h_a82f77fa5f9c3fa9e1f3521bbb2cfad6a}{R\-E\-A\-D\-D\-I\-R}~\-\_\-\-I\-O\-R\-W(1, 14, struct \hyperlink{structaccess_file}{access\-File})
 \item 
+\#define \hyperlink{defines_8h_a3167e1c51bc79684fdfb78c181075d11}{F\-S\-\_\-\-S\-I\-Z\-E}~2097152
+\item 
 \#define \hyperlink{defines_8h_ad51ded0bbd705f02f73fc60c0b721ced}{B\-L\-O\-C\-K\-\_\-\-S\-I\-Z\-E}~256
 \item 
 \#define \hyperlink{defines_8h_a629824d26fc98ae1a4a7e33c08903410}{I\-N\-D\-E\-X\-\_\-\-N\-O\-D\-E\-\_\-\-S\-I\-Z\-E}~64
@@ -90,6 +92,27 @@ struct \hyperlink{structaccess_file}{access\-File}
 \item 
 \#define \hyperlink{defines_8h_af6ab1d1a545490ed2f61a7e04c1b0a5b}{I\-N\-O\-D\-E\-\_\-\-N\-U\-M\-\_\-\-O\-F\-F\-S\-E\-T}~14
 \end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \hyperlink{defines_8h_a4d520ed004364b7547281ea486543812}{kr\-\_\-creat} (struct \hyperlink{structpath}{path} input)
+\item 
+void \hyperlink{defines_8h_a5f0208c8df29095bd437b706444bcf18}{kr\-\_\-mkdir} (struct \hyperlink{structpath}{path} input)
+\item 
+void \hyperlink{defines_8h_aa682788ce8cedeb98e7116ab13e9495a}{kr\-\_\-open} (struct \hyperlink{structpath}{path} input)
+\item 
+void \hyperlink{defines_8h_a858ad5c03d98c58c2b0436294e7751c4}{kr\-\_\-close} (struct \hyperlink{structfile}{file} input)
+\item 
+void \hyperlink{defines_8h_aa37a477f0706105b89f31b85d7eff168}{kr\-\_\-read} (struct \hyperlink{structaccess_file}{access\-File} input)
+\item 
+void \hyperlink{defines_8h_a8167e0d644cb94348065bd8378a7110b}{kr\-\_\-write} (struct \hyperlink{structaccess_file}{access\-File} input)
+\item 
+void \hyperlink{defines_8h_aabf3deda604b85c2788f5feccd2ddd54}{kr\-\_\-lseek} (struct \hyperlink{structfile}{file} input)
+\item 
+void \hyperlink{defines_8h_ac8b7c76f76baf1d4b417d907ddcedcd6}{kr\-\_\-unlink} (struct \hyperlink{structpath}{path} input)
+\item 
+void \hyperlink{defines_8h_ad023ce5575b1ed90d42110b1e5cf9792}{kr\-\_\-readdir} (struct \hyperlink{structaccess_file}{access\-File} input)
+\end{DoxyCompactItemize}
 
 
 \subsection{Macro Definition Documentation}
@@ -98,28 +121,30 @@ struct \hyperlink{structaccess_file}{access\-File}
 \subsubsection[{B\-L\-O\-C\-K\-\_\-\-B\-I\-T\-M\-A\-P\-\_\-\-O\-F\-F\-S\-E\-T}]{\setlength{\rightskip}{0pt plus 5cm}\#define B\-L\-O\-C\-K\-\_\-\-B\-I\-T\-M\-A\-P\-\_\-\-O\-F\-F\-S\-E\-T~({\bf I\-N\-D\-E\-X\-\_\-\-N\-O\-D\-E\-\_\-\-A\-R\-R\-A\-Y\-\_\-\-L\-E\-N\-G\-T\-H}+1)$\ast${\bf B\-L\-O\-C\-K\-\_\-\-S\-I\-Z\-E}}}\label{defines_8h_ab9b6f109a6de8a02776f531652006296}
 
 
-Definition at line 32 of file defines.\-h.
+Definition at line 35 of file defines.\-h.
 
 \hypertarget{defines_8h_a53c9b2f427bfb998d4b820209cca03cd}{\index{defines.\-h@{defines.\-h}!B\-L\-O\-C\-K\-\_\-\-B\-I\-T\-M\-A\-P\-\_\-\-S\-I\-Z\-E@{B\-L\-O\-C\-K\-\_\-\-B\-I\-T\-M\-A\-P\-\_\-\-S\-I\-Z\-E}}
 \index{B\-L\-O\-C\-K\-\_\-\-B\-I\-T\-M\-A\-P\-\_\-\-S\-I\-Z\-E@{B\-L\-O\-C\-K\-\_\-\-B\-I\-T\-M\-A\-P\-\_\-\-S\-I\-Z\-E}!defines.h@{defines.\-h}}
 \subsubsection[{B\-L\-O\-C\-K\-\_\-\-B\-I\-T\-M\-A\-P\-\_\-\-S\-I\-Z\-E}]{\setlength{\rightskip}{0pt plus 5cm}\#define B\-L\-O\-C\-K\-\_\-\-B\-I\-T\-M\-A\-P\-\_\-\-S\-I\-Z\-E~4$\ast${\bf B\-L\-O\-C\-K\-\_\-\-S\-I\-Z\-E}}}\label{defines_8h_a53c9b2f427bfb998d4b820209cca03cd}
 
 
-Definition at line 26 of file defines.\-h.
+Definition at line 29 of file defines.\-h.
 
 \hypertarget{defines_8h_ad51ded0bbd705f02f73fc60c0b721ced}{\index{defines.\-h@{defines.\-h}!B\-L\-O\-C\-K\-\_\-\-S\-I\-Z\-E@{B\-L\-O\-C\-K\-\_\-\-S\-I\-Z\-E}}
 \index{B\-L\-O\-C\-K\-\_\-\-S\-I\-Z\-E@{B\-L\-O\-C\-K\-\_\-\-S\-I\-Z\-E}!defines.h@{defines.\-h}}
 \subsubsection[{B\-L\-O\-C\-K\-\_\-\-S\-I\-Z\-E}]{\setlength{\rightskip}{0pt plus 5cm}\#define B\-L\-O\-C\-K\-\_\-\-S\-I\-Z\-E~256}}\label{defines_8h_ad51ded0bbd705f02f73fc60c0b721ced}
 
 
-Definition at line 22 of file defines.\-h.
+Definition at line 25 of file defines.\-h.
 
 \hypertarget{defines_8h_a0e29f488071372aa0530842e60b64511}{\index{defines.\-h@{defines.\-h}!C\-L\-O\-S\-E@{C\-L\-O\-S\-E}}
 \index{C\-L\-O\-S\-E@{C\-L\-O\-S\-E}!defines.h@{defines.\-h}}
 \subsubsection[{C\-L\-O\-S\-E}]{\setlength{\rightskip}{0pt plus 5cm}\#define C\-L\-O\-S\-E~\-\_\-\-I\-O\-R\-W(1, 9, struct {\bf file})}}\label{defines_8h_a0e29f488071372aa0530842e60b64511}
+\begin{DoxyRefDesc}{Todo}
+\item[\hyperlink{todo__todo000001}{Todo}]Close may not need a kernel call? \end{DoxyRefDesc}
 
 
-Definition at line 14 of file defines.\-h.
+Definition at line 15 of file defines.\-h.
 
 \hypertarget{defines_8h_a4c6b87853cbaf189fe1e484706ae1875}{\index{defines.\-h@{defines.\-h}!C\-R\-E\-A\-T\-E@{C\-R\-E\-A\-T\-E}}
 \index{C\-R\-E\-A\-T\-E@{C\-R\-E\-A\-T\-E}!defines.h@{defines.\-h}}
@@ -133,140 +158,147 @@ Definition at line 11 of file defines.\-h.
 \subsubsection[{D\-I\-R\-E\-C\-T\-\_\-1}]{\setlength{\rightskip}{0pt plus 5cm}\#define D\-I\-R\-E\-C\-T\-\_\-1~8}}\label{defines_8h_a905598653bf870e3e958acf0380a77e7}
 
 
-Definition at line 44 of file defines.\-h.
+Definition at line 47 of file defines.\-h.
 
 \hypertarget{defines_8h_a965f8604e02513e91ef6c9162742d810}{\index{defines.\-h@{defines.\-h}!D\-I\-R\-E\-C\-T\-\_\-2@{D\-I\-R\-E\-C\-T\-\_\-2}}
 \index{D\-I\-R\-E\-C\-T\-\_\-2@{D\-I\-R\-E\-C\-T\-\_\-2}!defines.h@{defines.\-h}}
 \subsubsection[{D\-I\-R\-E\-C\-T\-\_\-2}]{\setlength{\rightskip}{0pt plus 5cm}\#define D\-I\-R\-E\-C\-T\-\_\-2~12}}\label{defines_8h_a965f8604e02513e91ef6c9162742d810}
 
 
-Definition at line 45 of file defines.\-h.
+Definition at line 48 of file defines.\-h.
 
 \hypertarget{defines_8h_a0dfbc44dec94b531056459343fba8503}{\index{defines.\-h@{defines.\-h}!D\-I\-R\-E\-C\-T\-\_\-3@{D\-I\-R\-E\-C\-T\-\_\-3}}
 \index{D\-I\-R\-E\-C\-T\-\_\-3@{D\-I\-R\-E\-C\-T\-\_\-3}!defines.h@{defines.\-h}}
 \subsubsection[{D\-I\-R\-E\-C\-T\-\_\-3}]{\setlength{\rightskip}{0pt plus 5cm}\#define D\-I\-R\-E\-C\-T\-\_\-3~16}}\label{defines_8h_a0dfbc44dec94b531056459343fba8503}
 
 
-Definition at line 46 of file defines.\-h.
+Definition at line 49 of file defines.\-h.
 
 \hypertarget{defines_8h_a6839369f1b71648927c5cbb54f6be24c}{\index{defines.\-h@{defines.\-h}!D\-I\-R\-E\-C\-T\-\_\-4@{D\-I\-R\-E\-C\-T\-\_\-4}}
 \index{D\-I\-R\-E\-C\-T\-\_\-4@{D\-I\-R\-E\-C\-T\-\_\-4}!defines.h@{defines.\-h}}
 \subsubsection[{D\-I\-R\-E\-C\-T\-\_\-4}]{\setlength{\rightskip}{0pt plus 5cm}\#define D\-I\-R\-E\-C\-T\-\_\-4~20}}\label{defines_8h_a6839369f1b71648927c5cbb54f6be24c}
 
 
-Definition at line 47 of file defines.\-h.
+Definition at line 50 of file defines.\-h.
 
 \hypertarget{defines_8h_af5e65433e08cbbd9a613d1a3cd6d9b22}{\index{defines.\-h@{defines.\-h}!D\-I\-R\-E\-C\-T\-\_\-5@{D\-I\-R\-E\-C\-T\-\_\-5}}
 \index{D\-I\-R\-E\-C\-T\-\_\-5@{D\-I\-R\-E\-C\-T\-\_\-5}!defines.h@{defines.\-h}}
 \subsubsection[{D\-I\-R\-E\-C\-T\-\_\-5}]{\setlength{\rightskip}{0pt plus 5cm}\#define D\-I\-R\-E\-C\-T\-\_\-5~24}}\label{defines_8h_af5e65433e08cbbd9a613d1a3cd6d9b22}
 
 
-Definition at line 48 of file defines.\-h.
+Definition at line 51 of file defines.\-h.
 
 \hypertarget{defines_8h_aa2445e929732869089d3081276d1ddc1}{\index{defines.\-h@{defines.\-h}!D\-I\-R\-E\-C\-T\-\_\-6@{D\-I\-R\-E\-C\-T\-\_\-6}}
 \index{D\-I\-R\-E\-C\-T\-\_\-6@{D\-I\-R\-E\-C\-T\-\_\-6}!defines.h@{defines.\-h}}
 \subsubsection[{D\-I\-R\-E\-C\-T\-\_\-6}]{\setlength{\rightskip}{0pt plus 5cm}\#define D\-I\-R\-E\-C\-T\-\_\-6~28}}\label{defines_8h_aa2445e929732869089d3081276d1ddc1}
 
 
-Definition at line 49 of file defines.\-h.
+Definition at line 52 of file defines.\-h.
 
 \hypertarget{defines_8h_adbdb5fb58f757840cdaef27b7866e49d}{\index{defines.\-h@{defines.\-h}!D\-I\-R\-E\-C\-T\-\_\-7@{D\-I\-R\-E\-C\-T\-\_\-7}}
 \index{D\-I\-R\-E\-C\-T\-\_\-7@{D\-I\-R\-E\-C\-T\-\_\-7}!defines.h@{defines.\-h}}
 \subsubsection[{D\-I\-R\-E\-C\-T\-\_\-7}]{\setlength{\rightskip}{0pt plus 5cm}\#define D\-I\-R\-E\-C\-T\-\_\-7~32}}\label{defines_8h_adbdb5fb58f757840cdaef27b7866e49d}
 
 
-Definition at line 50 of file defines.\-h.
+Definition at line 53 of file defines.\-h.
 
 \hypertarget{defines_8h_a43cc89a83d10925c225b325f7e5d3a00}{\index{defines.\-h@{defines.\-h}!D\-I\-R\-E\-C\-T\-\_\-8@{D\-I\-R\-E\-C\-T\-\_\-8}}
 \index{D\-I\-R\-E\-C\-T\-\_\-8@{D\-I\-R\-E\-C\-T\-\_\-8}!defines.h@{defines.\-h}}
 \subsubsection[{D\-I\-R\-E\-C\-T\-\_\-8}]{\setlength{\rightskip}{0pt plus 5cm}\#define D\-I\-R\-E\-C\-T\-\_\-8~36}}\label{defines_8h_a43cc89a83d10925c225b325f7e5d3a00}
 
 
-Definition at line 51 of file defines.\-h.
+Definition at line 54 of file defines.\-h.
 
 \hypertarget{defines_8h_a2a129c797c5e972e51d89a0c6cf6d1bd}{\index{defines.\-h@{defines.\-h}!D\-O\-U\-B\-L\-E\-\_\-\-I\-N\-D\-I\-R@{D\-O\-U\-B\-L\-E\-\_\-\-I\-N\-D\-I\-R}}
 \index{D\-O\-U\-B\-L\-E\-\_\-\-I\-N\-D\-I\-R@{D\-O\-U\-B\-L\-E\-\_\-\-I\-N\-D\-I\-R}!defines.h@{defines.\-h}}
 \subsubsection[{D\-O\-U\-B\-L\-E\-\_\-\-I\-N\-D\-I\-R}]{\setlength{\rightskip}{0pt plus 5cm}\#define D\-O\-U\-B\-L\-E\-\_\-\-I\-N\-D\-I\-R~44}}\label{defines_8h_a2a129c797c5e972e51d89a0c6cf6d1bd}
 
 
-Definition at line 53 of file defines.\-h.
+Definition at line 56 of file defines.\-h.
 
 \hypertarget{defines_8h_a7ee3b243ddbfbae35ee2b5af95e069b5}{\index{defines.\-h@{defines.\-h}!F\-I\-L\-E\-\_\-\-C\-O\-U\-N\-T@{F\-I\-L\-E\-\_\-\-C\-O\-U\-N\-T}}
 \index{F\-I\-L\-E\-\_\-\-C\-O\-U\-N\-T@{F\-I\-L\-E\-\_\-\-C\-O\-U\-N\-T}!defines.h@{defines.\-h}}
 \subsubsection[{F\-I\-L\-E\-\_\-\-C\-O\-U\-N\-T}]{\setlength{\rightskip}{0pt plus 5cm}\#define F\-I\-L\-E\-\_\-\-C\-O\-U\-N\-T~48}}\label{defines_8h_a7ee3b243ddbfbae35ee2b5af95e069b5}
 
 
-Definition at line 57 of file defines.\-h.
+Definition at line 60 of file defines.\-h.
 
 \hypertarget{defines_8h_a9c3c179c039c3f784e9effdf15399e28}{\index{defines.\-h@{defines.\-h}!F\-I\-L\-E\-\_\-\-I\-N\-F\-O\-\_\-\-S\-I\-Z\-E@{F\-I\-L\-E\-\_\-\-I\-N\-F\-O\-\_\-\-S\-I\-Z\-E}}
 \index{F\-I\-L\-E\-\_\-\-I\-N\-F\-O\-\_\-\-S\-I\-Z\-E@{F\-I\-L\-E\-\_\-\-I\-N\-F\-O\-\_\-\-S\-I\-Z\-E}!defines.h@{defines.\-h}}
 \subsubsection[{F\-I\-L\-E\-\_\-\-I\-N\-F\-O\-\_\-\-S\-I\-Z\-E}]{\setlength{\rightskip}{0pt plus 5cm}\#define F\-I\-L\-E\-\_\-\-I\-N\-F\-O\-\_\-\-S\-I\-Z\-E~16}}\label{defines_8h_a9c3c179c039c3f784e9effdf15399e28}
 
 
-Definition at line 68 of file defines.\-h.
+Definition at line 71 of file defines.\-h.
+
+\hypertarget{defines_8h_a3167e1c51bc79684fdfb78c181075d11}{\index{defines.\-h@{defines.\-h}!F\-S\-\_\-\-S\-I\-Z\-E@{F\-S\-\_\-\-S\-I\-Z\-E}}
+\index{F\-S\-\_\-\-S\-I\-Z\-E@{F\-S\-\_\-\-S\-I\-Z\-E}!defines.h@{defines.\-h}}
+\subsubsection[{F\-S\-\_\-\-S\-I\-Z\-E}]{\setlength{\rightskip}{0pt plus 5cm}\#define F\-S\-\_\-\-S\-I\-Z\-E~2097152}}\label{defines_8h_a3167e1c51bc79684fdfb78c181075d11}
+
+
+Definition at line 23 of file defines.\-h.
 
 \hypertarget{defines_8h_abebe0858f8264d8a3f9bd90687ed2c4c}{\index{defines.\-h@{defines.\-h}!I\-N\-D\-E\-X\-\_\-\-N\-O\-D\-E\-\_\-\-A\-R\-R\-A\-Y\-\_\-\-L\-E\-N\-G\-T\-H@{I\-N\-D\-E\-X\-\_\-\-N\-O\-D\-E\-\_\-\-A\-R\-R\-A\-Y\-\_\-\-L\-E\-N\-G\-T\-H}}
 \index{I\-N\-D\-E\-X\-\_\-\-N\-O\-D\-E\-\_\-\-A\-R\-R\-A\-Y\-\_\-\-L\-E\-N\-G\-T\-H@{I\-N\-D\-E\-X\-\_\-\-N\-O\-D\-E\-\_\-\-A\-R\-R\-A\-Y\-\_\-\-L\-E\-N\-G\-T\-H}!defines.h@{defines.\-h}}
 \subsubsection[{I\-N\-D\-E\-X\-\_\-\-N\-O\-D\-E\-\_\-\-A\-R\-R\-A\-Y\-\_\-\-L\-E\-N\-G\-T\-H}]{\setlength{\rightskip}{0pt plus 5cm}\#define I\-N\-D\-E\-X\-\_\-\-N\-O\-D\-E\-\_\-\-A\-R\-R\-A\-Y\-\_\-\-L\-E\-N\-G\-T\-H~256}}\label{defines_8h_abebe0858f8264d8a3f9bd90687ed2c4c}
 
 
-Definition at line 24 of file defines.\-h.
+Definition at line 27 of file defines.\-h.
 
 \hypertarget{defines_8h_a6ffbc015c0f283f08a80ed7979f5b9c2}{\index{defines.\-h@{defines.\-h}!I\-N\-D\-E\-X\-\_\-\-N\-O\-D\-E\-\_\-\-A\-R\-R\-A\-Y\-\_\-\-O\-F\-F\-S\-E\-T@{I\-N\-D\-E\-X\-\_\-\-N\-O\-D\-E\-\_\-\-A\-R\-R\-A\-Y\-\_\-\-O\-F\-F\-S\-E\-T}}
 \index{I\-N\-D\-E\-X\-\_\-\-N\-O\-D\-E\-\_\-\-A\-R\-R\-A\-Y\-\_\-\-O\-F\-F\-S\-E\-T@{I\-N\-D\-E\-X\-\_\-\-N\-O\-D\-E\-\_\-\-A\-R\-R\-A\-Y\-\_\-\-O\-F\-F\-S\-E\-T}!defines.h@{defines.\-h}}
 \subsubsection[{I\-N\-D\-E\-X\-\_\-\-N\-O\-D\-E\-\_\-\-A\-R\-R\-A\-Y\-\_\-\-O\-F\-F\-S\-E\-T}]{\setlength{\rightskip}{0pt plus 5cm}\#define I\-N\-D\-E\-X\-\_\-\-N\-O\-D\-E\-\_\-\-A\-R\-R\-A\-Y\-\_\-\-O\-F\-F\-S\-E\-T~{\bf B\-L\-O\-C\-K\-\_\-\-S\-I\-Z\-E}}}\label{defines_8h_a6ffbc015c0f283f08a80ed7979f5b9c2}
 
 
-Definition at line 29 of file defines.\-h.
+Definition at line 32 of file defines.\-h.
 
 \hypertarget{defines_8h_aa176c9f94fa2316acb019041f495d100}{\index{defines.\-h@{defines.\-h}!I\-N\-D\-E\-X\-\_\-\-N\-O\-D\-E\-\_\-\-C\-O\-U\-N\-T@{I\-N\-D\-E\-X\-\_\-\-N\-O\-D\-E\-\_\-\-C\-O\-U\-N\-T}}
 \index{I\-N\-D\-E\-X\-\_\-\-N\-O\-D\-E\-\_\-\-C\-O\-U\-N\-T@{I\-N\-D\-E\-X\-\_\-\-N\-O\-D\-E\-\_\-\-C\-O\-U\-N\-T}!defines.h@{defines.\-h}}
 \subsubsection[{I\-N\-D\-E\-X\-\_\-\-N\-O\-D\-E\-\_\-\-C\-O\-U\-N\-T}]{\setlength{\rightskip}{0pt plus 5cm}\#define I\-N\-D\-E\-X\-\_\-\-N\-O\-D\-E\-\_\-\-C\-O\-U\-N\-T~{\bf I\-N\-D\-E\-X\-\_\-\-N\-O\-D\-E\-\_\-\-A\-R\-R\-A\-Y\-\_\-\-L\-E\-N\-G\-T\-H}$\ast$({\bf I\-N\-D\-E\-X\-\_\-\-N\-O\-D\-E\-\_\-\-A\-R\-R\-A\-Y\-\_\-\-L\-E\-N\-G\-T\-H}/{\bf I\-N\-D\-E\-X\-\_\-\-N\-O\-D\-E\-\_\-\-S\-I\-Z\-E})}}\label{defines_8h_aa176c9f94fa2316acb019041f495d100}
 
 
-Definition at line 25 of file defines.\-h.
+Definition at line 28 of file defines.\-h.
 
 \hypertarget{defines_8h_a629824d26fc98ae1a4a7e33c08903410}{\index{defines.\-h@{defines.\-h}!I\-N\-D\-E\-X\-\_\-\-N\-O\-D\-E\-\_\-\-S\-I\-Z\-E@{I\-N\-D\-E\-X\-\_\-\-N\-O\-D\-E\-\_\-\-S\-I\-Z\-E}}
 \index{I\-N\-D\-E\-X\-\_\-\-N\-O\-D\-E\-\_\-\-S\-I\-Z\-E@{I\-N\-D\-E\-X\-\_\-\-N\-O\-D\-E\-\_\-\-S\-I\-Z\-E}!defines.h@{defines.\-h}}
 \subsubsection[{I\-N\-D\-E\-X\-\_\-\-N\-O\-D\-E\-\_\-\-S\-I\-Z\-E}]{\setlength{\rightskip}{0pt plus 5cm}\#define I\-N\-D\-E\-X\-\_\-\-N\-O\-D\-E\-\_\-\-S\-I\-Z\-E~64}}\label{defines_8h_a629824d26fc98ae1a4a7e33c08903410}
 
 
-Definition at line 23 of file defines.\-h.
+Definition at line 26 of file defines.\-h.
 
 \hypertarget{defines_8h_ab2643d41f4160853e5744931081850ff}{\index{defines.\-h@{defines.\-h}!I\-N\-O\-D\-E\-\_\-\-F\-I\-L\-E\-\_\-\-N\-A\-M\-E@{I\-N\-O\-D\-E\-\_\-\-F\-I\-L\-E\-\_\-\-N\-A\-M\-E}}
 \index{I\-N\-O\-D\-E\-\_\-\-F\-I\-L\-E\-\_\-\-N\-A\-M\-E@{I\-N\-O\-D\-E\-\_\-\-F\-I\-L\-E\-\_\-\-N\-A\-M\-E}!defines.h@{defines.\-h}}
 \subsubsection[{I\-N\-O\-D\-E\-\_\-\-F\-I\-L\-E\-\_\-\-N\-A\-M\-E}]{\setlength{\rightskip}{0pt plus 5cm}\#define I\-N\-O\-D\-E\-\_\-\-F\-I\-L\-E\-\_\-\-N\-A\-M\-E~50}}\label{defines_8h_ab2643d41f4160853e5744931081850ff}
 
 
-Definition at line 61 of file defines.\-h.
+Definition at line 64 of file defines.\-h.
 
 \hypertarget{defines_8h_af6ab1d1a545490ed2f61a7e04c1b0a5b}{\index{defines.\-h@{defines.\-h}!I\-N\-O\-D\-E\-\_\-\-N\-U\-M\-\_\-\-O\-F\-F\-S\-E\-T@{I\-N\-O\-D\-E\-\_\-\-N\-U\-M\-\_\-\-O\-F\-F\-S\-E\-T}}
 \index{I\-N\-O\-D\-E\-\_\-\-N\-U\-M\-\_\-\-O\-F\-F\-S\-E\-T@{I\-N\-O\-D\-E\-\_\-\-N\-U\-M\-\_\-\-O\-F\-F\-S\-E\-T}!defines.h@{defines.\-h}}
 \subsubsection[{I\-N\-O\-D\-E\-\_\-\-N\-U\-M\-\_\-\-O\-F\-F\-S\-E\-T}]{\setlength{\rightskip}{0pt plus 5cm}\#define I\-N\-O\-D\-E\-\_\-\-N\-U\-M\-\_\-\-O\-F\-F\-S\-E\-T~14}}\label{defines_8h_af6ab1d1a545490ed2f61a7e04c1b0a5b}
 
 
-Definition at line 69 of file defines.\-h.
+Definition at line 72 of file defines.\-h.
 
 \hypertarget{defines_8h_a34a3a3e2e3a4bd30b993bce5b19f3d73}{\index{defines.\-h@{defines.\-h}!I\-N\-O\-D\-E\-\_\-\-S\-I\-Z\-E@{I\-N\-O\-D\-E\-\_\-\-S\-I\-Z\-E}}
 \index{I\-N\-O\-D\-E\-\_\-\-S\-I\-Z\-E@{I\-N\-O\-D\-E\-\_\-\-S\-I\-Z\-E}!defines.h@{defines.\-h}}
 \subsubsection[{I\-N\-O\-D\-E\-\_\-\-S\-I\-Z\-E}]{\setlength{\rightskip}{0pt plus 5cm}\#define I\-N\-O\-D\-E\-\_\-\-S\-I\-Z\-E~4}}\label{defines_8h_a34a3a3e2e3a4bd30b993bce5b19f3d73}
 
 
-Definition at line 43 of file defines.\-h.
+Definition at line 46 of file defines.\-h.
 
 \hypertarget{defines_8h_a5837260343c8eaf0f7e8a2ee8123129e}{\index{defines.\-h@{defines.\-h}!I\-N\-O\-D\-E\-\_\-\-T\-Y\-P\-E@{I\-N\-O\-D\-E\-\_\-\-T\-Y\-P\-E}}
 \index{I\-N\-O\-D\-E\-\_\-\-T\-Y\-P\-E@{I\-N\-O\-D\-E\-\_\-\-T\-Y\-P\-E}!defines.h@{defines.\-h}}
 \subsubsection[{I\-N\-O\-D\-E\-\_\-\-T\-Y\-P\-E}]{\setlength{\rightskip}{0pt plus 5cm}\#define I\-N\-O\-D\-E\-\_\-\-T\-Y\-P\-E~0}}\label{defines_8h_a5837260343c8eaf0f7e8a2ee8123129e}
 
 
-Definition at line 42 of file defines.\-h.
+Definition at line 45 of file defines.\-h.
 
 \hypertarget{defines_8h_ad9ef8c774e19ef27832f682082179824}{\index{defines.\-h@{defines.\-h}!L\-S\-E\-E\-K@{L\-S\-E\-E\-K}}
 \index{L\-S\-E\-E\-K@{L\-S\-E\-E\-K}!defines.h@{defines.\-h}}
 \subsubsection[{L\-S\-E\-E\-K}]{\setlength{\rightskip}{0pt plus 5cm}\#define L\-S\-E\-E\-K~\-\_\-\-I\-O\-R\-W(1, 12, struct {\bf file})}}\label{defines_8h_ad9ef8c774e19ef27832f682082179824}
 
 
-Definition at line 17 of file defines.\-h.
+Definition at line 18 of file defines.\-h.
 
 \hypertarget{defines_8h_a9165713ff17c8ca8fc2951e82d1a6e57}{\index{defines.\-h@{defines.\-h}!M\-K\-D\-I\-R@{M\-K\-D\-I\-R}}
 \index{M\-K\-D\-I\-R@{M\-K\-D\-I\-R}!defines.h@{defines.\-h}}
@@ -287,54 +319,185 @@ Definition at line 13 of file defines.\-h.
 \subsubsection[{R\-E\-A\-D}]{\setlength{\rightskip}{0pt plus 5cm}\#define R\-E\-A\-D~\-\_\-\-I\-O\-R\-W(1, 10, struct {\bf access\-File})}}\label{defines_8h_ada74e7db007a68e763f20c17f2985356}
 
 
-Definition at line 15 of file defines.\-h.
+Definition at line 16 of file defines.\-h.
 
 \hypertarget{defines_8h_a82f77fa5f9c3fa9e1f3521bbb2cfad6a}{\index{defines.\-h@{defines.\-h}!R\-E\-A\-D\-D\-I\-R@{R\-E\-A\-D\-D\-I\-R}}
 \index{R\-E\-A\-D\-D\-I\-R@{R\-E\-A\-D\-D\-I\-R}!defines.h@{defines.\-h}}
 \subsubsection[{R\-E\-A\-D\-D\-I\-R}]{\setlength{\rightskip}{0pt plus 5cm}\#define R\-E\-A\-D\-D\-I\-R~\-\_\-\-I\-O\-R\-W(1, 14, struct {\bf access\-File})}}\label{defines_8h_a82f77fa5f9c3fa9e1f3521bbb2cfad6a}
 
 
-Definition at line 19 of file defines.\-h.
+Definition at line 20 of file defines.\-h.
 
 \hypertarget{defines_8h_a62b075ec29b7b301c68f539d8aafd029}{\index{defines.\-h@{defines.\-h}!R\-O\-O\-T\-\_\-\-D\-I\-R@{R\-O\-O\-T\-\_\-\-D\-I\-R}}
 \index{R\-O\-O\-T\-\_\-\-D\-I\-R@{R\-O\-O\-T\-\_\-\-D\-I\-R}!defines.h@{defines.\-h}}
 \subsubsection[{R\-O\-O\-T\-\_\-\-D\-I\-R}]{\setlength{\rightskip}{0pt plus 5cm}\#define R\-O\-O\-T\-\_\-\-D\-I\-R~{\bf B\-L\-O\-C\-K\-\_\-\-S\-I\-Z\-E}$\ast$({\bf B\-L\-O\-C\-K\-\_\-\-B\-I\-T\-M\-A\-P\-\_\-\-O\-F\-F\-S\-E\-T}+{\bf B\-L\-O\-C\-K\-\_\-\-B\-I\-T\-M\-A\-P\-\_\-\-S\-I\-Z\-E})}}\label{defines_8h_a62b075ec29b7b301c68f539d8aafd029}
 
 
-Definition at line 35 of file defines.\-h.
+Definition at line 38 of file defines.\-h.
 
 \hypertarget{defines_8h_a1c40273eaeeaee04089b6a60b541c5bf}{\index{defines.\-h@{defines.\-h}!R\-O\-O\-T\-\_\-\-I\-N\-D\-E\-X\-\_\-\-N\-O\-D\-E@{R\-O\-O\-T\-\_\-\-I\-N\-D\-E\-X\-\_\-\-N\-O\-D\-E}}
 \index{R\-O\-O\-T\-\_\-\-I\-N\-D\-E\-X\-\_\-\-N\-O\-D\-E@{R\-O\-O\-T\-\_\-\-I\-N\-D\-E\-X\-\_\-\-N\-O\-D\-E}!defines.h@{defines.\-h}}
 \subsubsection[{R\-O\-O\-T\-\_\-\-I\-N\-D\-E\-X\-\_\-\-N\-O\-D\-E}]{\setlength{\rightskip}{0pt plus 5cm}\#define R\-O\-O\-T\-\_\-\-I\-N\-D\-E\-X\-\_\-\-N\-O\-D\-E~0}}\label{defines_8h_a1c40273eaeeaee04089b6a60b541c5bf}
 
 
-Definition at line 36 of file defines.\-h.
+Definition at line 39 of file defines.\-h.
 
 \hypertarget{defines_8h_aeaf02f5499e1df5d26d49a0869abcad8}{\index{defines.\-h@{defines.\-h}!S\-I\-N\-G\-L\-E\-\_\-\-I\-N\-D\-I\-R@{S\-I\-N\-G\-L\-E\-\_\-\-I\-N\-D\-I\-R}}
 \index{S\-I\-N\-G\-L\-E\-\_\-\-I\-N\-D\-I\-R@{S\-I\-N\-G\-L\-E\-\_\-\-I\-N\-D\-I\-R}!defines.h@{defines.\-h}}
 \subsubsection[{S\-I\-N\-G\-L\-E\-\_\-\-I\-N\-D\-I\-R}]{\setlength{\rightskip}{0pt plus 5cm}\#define S\-I\-N\-G\-L\-E\-\_\-\-I\-N\-D\-I\-R~40}}\label{defines_8h_aeaf02f5499e1df5d26d49a0869abcad8}
 
 
-Definition at line 52 of file defines.\-h.
+Definition at line 55 of file defines.\-h.
 
 \hypertarget{defines_8h_ae9e5bed110d8e9128d5d07f8cbe9896b}{\index{defines.\-h@{defines.\-h}!S\-U\-P\-E\-R\-B\-L\-O\-C\-K\-\_\-\-O\-F\-F\-S\-E\-T@{S\-U\-P\-E\-R\-B\-L\-O\-C\-K\-\_\-\-O\-F\-F\-S\-E\-T}}
 \index{S\-U\-P\-E\-R\-B\-L\-O\-C\-K\-\_\-\-O\-F\-F\-S\-E\-T@{S\-U\-P\-E\-R\-B\-L\-O\-C\-K\-\_\-\-O\-F\-F\-S\-E\-T}!defines.h@{defines.\-h}}
 \subsubsection[{S\-U\-P\-E\-R\-B\-L\-O\-C\-K\-\_\-\-O\-F\-F\-S\-E\-T}]{\setlength{\rightskip}{0pt plus 5cm}\#define S\-U\-P\-E\-R\-B\-L\-O\-C\-K\-\_\-\-O\-F\-F\-S\-E\-T~0}}\label{defines_8h_ae9e5bed110d8e9128d5d07f8cbe9896b}
 
 
-Definition at line 28 of file defines.\-h.
+Definition at line 31 of file defines.\-h.
 
 \hypertarget{defines_8h_a70c455687eb4a0f89b7bd0a5ea3ef6bf}{\index{defines.\-h@{defines.\-h}!U\-N\-L\-I\-N\-K@{U\-N\-L\-I\-N\-K}}
 \index{U\-N\-L\-I\-N\-K@{U\-N\-L\-I\-N\-K}!defines.h@{defines.\-h}}
 \subsubsection[{U\-N\-L\-I\-N\-K}]{\setlength{\rightskip}{0pt plus 5cm}\#define U\-N\-L\-I\-N\-K~\-\_\-\-I\-O\-R\-W(1, 13, struct {\bf path})}}\label{defines_8h_a70c455687eb4a0f89b7bd0a5ea3ef6bf}
 
 
-Definition at line 18 of file defines.\-h.
+Definition at line 19 of file defines.\-h.
 
 \hypertarget{defines_8h_aa10f470e996d0f51210d24f442d25e1e}{\index{defines.\-h@{defines.\-h}!W\-R\-I\-T\-E@{W\-R\-I\-T\-E}}
 \index{W\-R\-I\-T\-E@{W\-R\-I\-T\-E}!defines.h@{defines.\-h}}
 \subsubsection[{W\-R\-I\-T\-E}]{\setlength{\rightskip}{0pt plus 5cm}\#define W\-R\-I\-T\-E~\-\_\-\-I\-O\-R\-W(1, 11, struct {\bf access\-File})}}\label{defines_8h_aa10f470e996d0f51210d24f442d25e1e}
 
 
-Definition at line 16 of file defines.\-h.
+Definition at line 17 of file defines.\-h.
 
+
+
+\subsection{Function Documentation}
+\hypertarget{defines_8h_a858ad5c03d98c58c2b0436294e7751c4}{\index{defines.\-h@{defines.\-h}!kr\-\_\-close@{kr\-\_\-close}}
+\index{kr\-\_\-close@{kr\-\_\-close}!defines.h@{defines.\-h}}
+\subsubsection[{kr\-\_\-close}]{\setlength{\rightskip}{0pt plus 5cm}void kr\-\_\-close (
+\begin{DoxyParamCaption}
+\item[{struct {\bf file}}]{input}
+\end{DoxyParamCaption}
+)}}\label{defines_8h_a858ad5c03d98c58c2b0436294e7751c4}
+Kernel pair for closing a file \begin{DoxyRefDesc}{Todo}
+\item[\hyperlink{todo__todo000002}{Todo}]may not be necessary, not sure yet\end{DoxyRefDesc}
+
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em input} & The file struct for closing the file \\
+\hline
+\end{DoxyParams}
+\hypertarget{defines_8h_a4d520ed004364b7547281ea486543812}{\index{defines.\-h@{defines.\-h}!kr\-\_\-creat@{kr\-\_\-creat}}
+\index{kr\-\_\-creat@{kr\-\_\-creat}!defines.h@{defines.\-h}}
+\subsubsection[{kr\-\_\-creat}]{\setlength{\rightskip}{0pt plus 5cm}void kr\-\_\-creat (
+\begin{DoxyParamCaption}
+\item[{struct {\bf path}}]{input}
+\end{DoxyParamCaption}
+)}}\label{defines_8h_a4d520ed004364b7547281ea486543812}
+Kernel pair for the create function
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em input} & The path struct for creating the file \\
+\hline
+\end{DoxyParams}
+\hypertarget{defines_8h_aabf3deda604b85c2788f5feccd2ddd54}{\index{defines.\-h@{defines.\-h}!kr\-\_\-lseek@{kr\-\_\-lseek}}
+\index{kr\-\_\-lseek@{kr\-\_\-lseek}!defines.h@{defines.\-h}}
+\subsubsection[{kr\-\_\-lseek}]{\setlength{\rightskip}{0pt plus 5cm}void kr\-\_\-lseek (
+\begin{DoxyParamCaption}
+\item[{struct {\bf file}}]{input}
+\end{DoxyParamCaption}
+)}}\label{defines_8h_aabf3deda604b85c2788f5feccd2ddd54}
+Kernel pair for the seeking function
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em input} & input, use offset in here to index into file \\
+\hline
+\end{DoxyParams}
+\hypertarget{defines_8h_a5f0208c8df29095bd437b706444bcf18}{\index{defines.\-h@{defines.\-h}!kr\-\_\-mkdir@{kr\-\_\-mkdir}}
+\index{kr\-\_\-mkdir@{kr\-\_\-mkdir}!defines.h@{defines.\-h}}
+\subsubsection[{kr\-\_\-mkdir}]{\setlength{\rightskip}{0pt plus 5cm}void kr\-\_\-mkdir (
+\begin{DoxyParamCaption}
+\item[{struct {\bf path}}]{input}
+\end{DoxyParamCaption}
+)}}\label{defines_8h_a5f0208c8df29095bd437b706444bcf18}
+Kernel pair for making a new directory
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em input} & The path struct for creating the file \\
+\hline
+\end{DoxyParams}
+\hypertarget{defines_8h_aa682788ce8cedeb98e7116ab13e9495a}{\index{defines.\-h@{defines.\-h}!kr\-\_\-open@{kr\-\_\-open}}
+\index{kr\-\_\-open@{kr\-\_\-open}!defines.h@{defines.\-h}}
+\subsubsection[{kr\-\_\-open}]{\setlength{\rightskip}{0pt plus 5cm}void kr\-\_\-open (
+\begin{DoxyParamCaption}
+\item[{struct {\bf path}}]{input}
+\end{DoxyParamCaption}
+)}}\label{defines_8h_aa682788ce8cedeb98e7116ab13e9495a}
+Kernel pair for opening a file
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em input} & The path struct for opening the file \\
+\hline
+\end{DoxyParams}
+\hypertarget{defines_8h_aa37a477f0706105b89f31b85d7eff168}{\index{defines.\-h@{defines.\-h}!kr\-\_\-read@{kr\-\_\-read}}
+\index{kr\-\_\-read@{kr\-\_\-read}!defines.h@{defines.\-h}}
+\subsubsection[{kr\-\_\-read}]{\setlength{\rightskip}{0pt plus 5cm}void kr\-\_\-read (
+\begin{DoxyParamCaption}
+\item[{struct {\bf access\-File}}]{input}
+\end{DoxyParamCaption}
+)}}\label{defines_8h_aa37a477f0706105b89f31b85d7eff168}
+Kernel pair for reading a file
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em input} & The accessfile struct. Output read is placed into this struct \\
+\hline
+\end{DoxyParams}
+\hypertarget{defines_8h_ad023ce5575b1ed90d42110b1e5cf9792}{\index{defines.\-h@{defines.\-h}!kr\-\_\-readdir@{kr\-\_\-readdir}}
+\index{kr\-\_\-readdir@{kr\-\_\-readdir}!defines.h@{defines.\-h}}
+\subsubsection[{kr\-\_\-readdir}]{\setlength{\rightskip}{0pt plus 5cm}void kr\-\_\-readdir (
+\begin{DoxyParamCaption}
+\item[{struct {\bf access\-File}}]{input}
+\end{DoxyParamCaption}
+)}}\label{defines_8h_ad023ce5575b1ed90d42110b1e5cf9792}
+Kernel pair for the readdir function
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em input} & Accessfile struct. Used to read the relevant directory \\
+\hline
+\end{DoxyParams}
+\hypertarget{defines_8h_ac8b7c76f76baf1d4b417d907ddcedcd6}{\index{defines.\-h@{defines.\-h}!kr\-\_\-unlink@{kr\-\_\-unlink}}
+\index{kr\-\_\-unlink@{kr\-\_\-unlink}!defines.h@{defines.\-h}}
+\subsubsection[{kr\-\_\-unlink}]{\setlength{\rightskip}{0pt plus 5cm}void kr\-\_\-unlink (
+\begin{DoxyParamCaption}
+\item[{struct {\bf path}}]{input}
+\end{DoxyParamCaption}
+)}}\label{defines_8h_ac8b7c76f76baf1d4b417d907ddcedcd6}
+Kernel pair for unlinking a file from the filesystem
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em input} & Path struct. Will delete file at the desired path \\
+\hline
+\end{DoxyParams}
+\hypertarget{defines_8h_a8167e0d644cb94348065bd8378a7110b}{\index{defines.\-h@{defines.\-h}!kr\-\_\-write@{kr\-\_\-write}}
+\index{kr\-\_\-write@{kr\-\_\-write}!defines.h@{defines.\-h}}
+\subsubsection[{kr\-\_\-write}]{\setlength{\rightskip}{0pt plus 5cm}void kr\-\_\-write (
+\begin{DoxyParamCaption}
+\item[{struct {\bf access\-File}}]{input}
+\end{DoxyParamCaption}
+)}}\label{defines_8h_a8167e0d644cb94348065bd8378a7110b}
+Kernel pair for the write function
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em input} & The accessfile struct. Input for writing is in this struct \\
+\hline
+\end{DoxyParams}

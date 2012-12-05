@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
-<title>My Project: file Struct Reference</title>
+<title>My Project: RAMFileLib.h Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -37,8 +37,8 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
     <ul class="tablist">
       <li><a href="index.html"><span>Main&#160;Page</span></a></li>
       <li><a href="pages.html"><span>Related&#160;Pages</span></a></li>
-      <li class="current"><a href="annotated.html"><span>Classes</span></a></li>
-      <li><a href="files.html"><span>Files</span></a></li>
+      <li><a href="annotated.html"><span>Classes</span></a></li>
+      <li class="current"><a href="files.html"><span>Files</span></a></li>
       <li>
         <div id="MSearchBox" class="MSearchBoxInactive">
         <span class="left">
@@ -59,11 +59,11 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   </div>
   <div id="navrow2" class="tabs2">
     <ul class="tablist">
-      <li><a href="annotated.html"><span>Class&#160;List</span></a></li>
-      <li><a href="classes.html"><span>Class&#160;Index</span></a></li>
-      <li><a href="functions.html"><span>Class&#160;Members</span></a></li>
+      <li><a href="files.html"><span>File&#160;List</span></a></li>
+      <li><a href="globals.html"><span>File&#160;Members</span></a></li>
     </ul>
   </div>
+</div><!-- top -->
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -78,79 +78,30 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </iframe>
 </div>
 
-</div><!-- top -->
 <div class="header">
-  <div class="summary">
-<a href="#pub-attribs">Public Attributes</a> &#124;
-<a href="structfile-members.html">List of all members</a>  </div>
   <div class="headertitle">
-<div class="title">file Struct Reference</div>  </div>
+<div class="title">RAMFileLib.h</div>  </div>
 </div><!--header-->
 <div class="contents">
-
-<p><code>#include &lt;<a class="el" href="defines_8h_source.html">defines.h</a>&gt;</code></p>
-<table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
-Public Attributes</h2></td></tr>
-<tr class="memitem:abcdc3058fcb2b789cd4ce5f62f274363"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structfile.html#abcdc3058fcb2b789cd4ce5f62f274363">fd</a></td></tr>
-<tr class="separator:abcdc3058fcb2b789cd4ce5f62f274363"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad056d2081f3cab9ed4668689a02acaaf"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structfile.html#ad056d2081f3cab9ed4668689a02acaaf">offset</a></td></tr>
-<tr class="separator:ad056d2081f3cab9ed4668689a02acaaf"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6d285b7a32eb853a1dcb00014942d8ae"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structfile.html#a6d285b7a32eb853a1dcb00014942d8ae">ret</a></td></tr>
-<tr class="separator:a6d285b7a32eb853a1dcb00014942d8ae"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table>
-<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock">
-<p>Definition at line <a class="el" href="defines_8h_source.html#l00081">81</a> of file <a class="el" href="defines_8h_source.html">defines.h</a>.</p>
-</div><h2 class="groupheader">Member Data Documentation</h2>
-<a class="anchor" id="abcdc3058fcb2b789cd4ce5f62f274363"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">int file::fd</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Definition at line <a class="el" href="defines_8h_source.html#l00082">82</a> of file <a class="el" href="defines_8h_source.html">defines.h</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="ad056d2081f3cab9ed4668689a02acaaf"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">int file::offset</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>File descriptor </p>
-
-<p>Definition at line <a class="el" href="defines_8h_source.html#l00083">83</a> of file <a class="el" href="defines_8h_source.html">defines.h</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a6d285b7a32eb853a1dcb00014942d8ae"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">int file::ret</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>Only used for seek, not for close. Offset into data requested </p>
-
-<p>Definition at line <a class="el" href="defines_8h_source.html#l00084">84</a> of file <a class="el" href="defines_8h_source.html">defines.h</a>.</p>
-
-</div>
-</div>
-<hr/>The documentation for this struct was generated from the following file:<ul>
-<li><a class="el" href="defines_8h_source.html">defines.h</a></li>
-</ul>
-</div><!-- contents -->
+<a href="_r_a_m_file_lib_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;</div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="keywordtype">int</span> <a class="code" href="_r_a_m_file_lib_8c.html#ac8cd9a3d1c4fab64e86551fa48117d06">rd_creat</a>(<span class="keywordtype">char</span> *pathname);</div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="keywordtype">int</span> <a class="code" href="_r_a_m_file_lib_8c.html#a2f8c14cce1d9a12e84394f5d0a7e90d9">rd_mkdir</a>(<span class="keywordtype">char</span> *pathname);</div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="keywordtype">int</span> <a class="code" href="_r_a_m_file_lib_8c.html#acae117c51314a3d124c2e080b1202c33">rd_open</a>(<span class="keywordtype">char</span> *pathname);</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="keywordtype">int</span> <a class="code" href="_r_a_m_file_lib_8c.html#a66fefb5d0f64c8373ed98fe3517c91e4">rd_close</a>(<span class="keywordtype">int</span> fd);</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;<span class="keywordtype">int</span> <a class="code" href="_r_a_m_file_lib_8c.html#a23d1eacc3a020171c538d8b3b82f3cc0">rd_read</a>(<span class="keywordtype">int</span> fd, <span class="keywordtype">char</span> *address, <span class="keywordtype">int</span> num_bytes);</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;<span class="keywordtype">int</span> <a class="code" href="_r_a_m_file_lib_8c.html#aeb3e97aa241f7b5fb9db4ce914859481">rd_write</a>(<span class="keywordtype">int</span> fd, <span class="keywordtype">char</span> *address, <span class="keywordtype">int</span> num_bytes);</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;<span class="keywordtype">int</span> <a class="code" href="_r_a_m_file_lib_8c.html#a20fb7e3a4e0a85ef953bbfcf9d8924f1">rd_lseek</a>(<span class="keywordtype">int</span> fd, <span class="keywordtype">int</span> offset);</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;<span class="keywordtype">int</span> <a class="code" href="_r_a_m_file_lib_8c.html#af4213a21e51f92e48a75e743740a9b46">rd_unlink</a>(<span class="keywordtype">char</span> *pathname); </div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;</div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;<span class="keywordtype">int</span> <a class="code" href="_r_a_m_file_lib_8c.html#a95fff0fc11f82df031e1fb7462eb8687">rd_readdir</a>(<span class="keywordtype">int</span> fd, <span class="keywordtype">char</span> *address);</div>
+</div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Generated on Tue Dec 4 2012 21:03:09 for My Project by &#160;<a href="http://www.doxygen.org/index.html">

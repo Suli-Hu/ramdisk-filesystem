@@ -90,19 +90,18 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">/**************************************************************************/</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;</div>
 <div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="defines_8h.html">defines.h</a>&quot;</span></div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;</div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;</div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<a class="code" href="ramdisk__ioctl_8c.html#ad94b36675e7eb067ea3ce6ff9e244a44">MODULE_LICENSE</a>(<span class="stringliteral">&quot;GPL&quot;</span>);</div>
 <div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;</div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<a class="code" href="ramdisk__ioctl_8c.html#ad94b36675e7eb067ea3ce6ff9e244a44">MODULE_LICENSE</a>(<span class="stringliteral">&quot;GPL&quot;</span>);</div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;</div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="keyword">static</span> <span class="keywordtype">int</span> ramdisk_ioctl(<span class="keyword">struct</span> inode *inode, <span class="keyword">struct</span> <a class="code" href="structfile.html">file</a> *<a class="code" href="structfile.html">file</a>,</div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;                   <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> cmd, <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> arg);</div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;</div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="keyword">static</span> <span class="keyword">struct </span>file_operations pseudo_dev_proc_operations;</div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="keyword">static</span> <span class="keywordtype">int</span> ramdisk_ioctl(<span class="keyword">struct</span> inode *inode, <span class="keyword">struct</span> <a class="code" href="structfile.html">file</a> *<a class="code" href="structfile.html">file</a>, <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> cmd, <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> arg);</div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="keyword">static</span> <span class="keyword">struct </span>file_operations pseudo_dev_proc_operations;</div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="keyword">static</span> <span class="keyword">struct </span>proc_dir_entry *proc_entry;</div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;</div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="comment">// @var The ramdisk memory in the kernel */</span></div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="keyword">static</span> <span class="keywordtype">char</span> *RAM_memory;</div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;</div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="keyword">static</span> <span class="keyword">struct </span>proc_dir_entry *proc_entry;</div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="comment">/************************INIT AND EXIT ROUTINES*****************************/</span></div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;</div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="comment">/************************INIT AND EXIT ROUTINES*****************************/</span></div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;</div>
 <div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="keyword">static</span> <span class="keywordtype">int</span> __init initialization_routine(<span class="keywordtype">void</span>) {</div>
 <div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;  printk(<span class="stringliteral">&quot;&lt;1&gt; Loading RAMDISK filesystem\n&quot;</span>);</div>
 <div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;</div>
@@ -120,57 +119,82 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;  proc_entry-&gt;proc_fops = &amp;pseudo_dev_proc_operations;</div>
 <div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;</div>
 <div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;  <span class="comment">// Initialize the ramdisk here now</span></div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;  <span class="keywordflow">return</span> 0;</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;}</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;  RAM_memory = (<span class="keywordtype">char</span> *)vmalloc(<a class="code" href="defines_8h.html#a3167e1c51bc79684fdfb78c181075d11">FS_SIZE</a>);</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;  <span class="comment">// Initialize the superblock and all other memory segments</span></div>
 <div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<span class="keyword">static</span> <span class="keywordtype">void</span> __exit cleanup_routine(<span class="keywordtype">void</span>) {</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;  <span class="keywordflow">return</span> 0;</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;}</div>
 <div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;  printk(<span class="stringliteral">&quot;&lt;1&gt; Dumping RAMDISK module\n&quot;</span>);</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;  remove_proc_entry(<span class="stringliteral">&quot;ramdisk&quot;</span>, NULL);</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;  <span class="keywordflow">return</span>;</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;}</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;<span class="comment">/****************************IOCTL ENTRY POINT********************************/</span></div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;<span class="keyword">static</span> <span class="keywordtype">void</span> __exit cleanup_routine(<span class="keywordtype">void</span>) {</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;  printk(<span class="stringliteral">&quot;&lt;1&gt; Dumping RAMDISK module\n&quot;</span>);</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;  remove_proc_entry(<span class="stringliteral">&quot;ramdisk&quot;</span>, NULL);</div>
 <div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;<span class="keyword">static</span> <span class="keywordtype">int</span> ramdisk_ioctl(<span class="keyword">struct</span> inode *inode, <span class="keyword">struct</span> <a class="code" href="structfile.html">file</a> *<a class="code" href="structfile.html">file</a>,</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;                <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> cmd, <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> arg)</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;{</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;  <span class="keyword">struct </span>ioctl_test_t ioc;</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;  <span class="keyword">struct </span>keyboard_struct key;</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;  </div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;  <span class="keywordflow">switch</span> (cmd){</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;  <span class="keywordflow">case</span> IOCTL_TEST:</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;    copy_from_user(&amp;ioc, (<span class="keyword">struct</span> ioctl_test_t *)arg, </div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;           <span class="keyword">sizeof</span>(<span class="keyword">struct</span> ioctl_test_t));</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    printk(<span class="stringliteral">&quot;&lt;1&gt; ioctl: call to IOCTL_TEST (%d,%c)!\n&quot;</span>, </div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;       ioc.field1, ioc.field2);</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    my_printk (<span class="stringliteral">&quot;Got msg in kernel\n&quot;</span>);</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    <span class="keywordflow">break</span>;</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;  <span class="keywordflow">case</span> KEYBOARD:</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;    key.letter = my_getchar();</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;    copy_to_user((<span class="keyword">struct</span> keyboard_struct *)arg, &amp;key, <span class="keyword">sizeof</span>(<span class="keyword">struct</span> keyboard_struct));</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;    <span class="keywordflow">break</span>;</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;  </div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;  <span class="keywordflow">default</span>:</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    <span class="keywordflow">return</span> -EINVAL;</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;    <span class="keywordflow">break</span>;</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;  }</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;  </div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;  <span class="keywordflow">return</span> 0;</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;}</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;<span class="comment">// Init and Exit declaration</span></div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;<a class="code" href="ramdisk__ioctl_8c.html#a424f990a513b1875436547f7ef17c622">module_init</a>(initialization_routine); </div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;<a class="code" href="ramdisk__ioctl_8c.html#a39d4cb9a64be1783fd1da532f904f5d4">module_exit</a>(cleanup_routine); </div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;  <span class="keywordflow">return</span>;</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;}</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;<span class="comment">/****************************IOCTL ENTRY POINT********************************/</span></div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;<span class="keyword">static</span> <span class="keywordtype">int</span> ramdisk_ioctl(<span class="keyword">struct</span> inode *inode, <span class="keyword">struct</span> <a class="code" href="structfile.html">file</a> *<a class="code" href="structfile.html">file</a>,</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;                <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> cmd, <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> arg)</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;{</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;  <span class="keyword">struct </span>ioctl_test_t ioc;</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;  <span class="keyword">struct </span>keyboard_struct key;</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;  </div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;  <span class="keywordflow">switch</span> (cmd){</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;    <span class="keywordflow">case</span> <a class="code" href="defines_8h.html#a4c6b87853cbaf189fe1e484706ae1875">CREATE</a>:</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;      my_printk (<span class="stringliteral">&quot;Creating file...\n&quot;</span>);</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;      <span class="keywordflow">break</span>;</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;    <span class="keywordflow">case</span> <a class="code" href="defines_8h.html#a9165713ff17c8ca8fc2951e82d1a6e57">MKDIR</a>:</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;      my_printk (<span class="stringliteral">&quot;Making directory...\n&quot;</span>);</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;      <span class="keywordflow">break</span>;</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;    <span class="keywordflow">case</span> <a class="code" href="defines_8h.html#a1354b70ac6803a06beebe84f61b5f95b">OPEN</a>:</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;      my_printk (<span class="stringliteral">&quot;Opening file...\n&quot;</span>);</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;      <span class="keywordflow">break</span>;</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    </div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;    <span class="keywordflow">case</span> <a class="code" href="defines_8h.html#a0e29f488071372aa0530842e60b64511">CLOSE</a>:</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;      my_printk (<span class="stringliteral">&quot;Closing file...\n&quot;</span>);</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;      <span class="keywordflow">break</span>;</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;  </div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;    <span class="keywordflow">case</span> <a class="code" href="defines_8h.html#ada74e7db007a68e763f20c17f2985356">READ</a>:</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;      my_printk (<span class="stringliteral">&quot;Reading file...\n&quot;</span>);</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;      <span class="keywordflow">break</span>;</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;    <span class="keywordflow">case</span> <a class="code" href="defines_8h.html#aa10f470e996d0f51210d24f442d25e1e">WRITE</a>:</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;      my_printk (<span class="stringliteral">&quot;Writing file...\n&quot;</span>);</div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;      <span class="keywordflow">break</span>;</div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;    </div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;    <span class="keywordflow">case</span> <a class="code" href="defines_8h.html#ad9ef8c774e19ef27832f682082179824">LSEEK</a>:</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;      my_printk (<span class="stringliteral">&quot;Seeking into file...\n&quot;</span>);</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;      <span class="keywordflow">break</span>;</div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;</div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;    <span class="keywordflow">case</span> <a class="code" href="defines_8h.html#a70c455687eb4a0f89b7bd0a5ea3ef6bf">UNLINK</a>:</div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;      my_printk (<span class="stringliteral">&quot;Unlinking file...\n&quot;</span>);</div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;      <span class="keywordflow">break</span>;</div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;</div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;    <span class="keywordflow">case</span> <a class="code" href="defines_8h.html#a82f77fa5f9c3fa9e1f3521bbb2cfad6a">READDIR</a>:</div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;      my_printk (<span class="stringliteral">&quot;Reading file from directory...\n&quot;</span>);</div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;      <span class="keywordflow">break</span>;</div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;</div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;    <span class="keywordflow">default</span>:</div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;      <span class="keywordflow">return</span> -EINVAL;</div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;      <span class="keywordflow">break</span>;</div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;  }</div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;  </div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;  <span class="keywordflow">return</span> 0;</div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;}</div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;</div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;<span class="comment">// Init and Exit declaration</span></div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;<a class="code" href="ramdisk__ioctl_8c.html#a424f990a513b1875436547f7ef17c622">module_init</a>(initialization_routine); </div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;<a class="code" href="ramdisk__ioctl_8c.html#a39d4cb9a64be1783fd1da532f904f5d4">module_exit</a>(cleanup_routine); </div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Dec 4 2012 19:00:32 for My Project by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Tue Dec 4 2012 21:03:09 for My Project by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.2
 </small></address>
