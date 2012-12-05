@@ -6,6 +6,8 @@
 #include <linux/proc_fs.h>
 #include <asm/uaccess.h>
 #include <linux/tty.h>
+#include <linux/sched.h>
+#include <linux/interrupt.h>
 
 /****************************IOCTL DECLARATIONS*******************************/
 
