@@ -167,12 +167,12 @@ void printBitmap(int numberOfBits) {
         return;
 
       if (bitCount%25==0)
-          printk("Printing %d - %d bitmaps\n", bitCount, bitCount+24)
+          printk("Printing %d - %d bitmaps\n", bitCount, bitCount+24);
 
       if (!checkBit(BLOCK_BITMAP_OFFSET+i, j)) 
-        printk("0 ")
+        printk("0 ");
       else 
-        printk("1 ")        
+        printk("1 ");
       
       if (bitCount%25==0)
         printk("\n");
