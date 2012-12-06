@@ -98,7 +98,9 @@ void init_ramdisk(void) {
   /****** Set up the block bitmap *******/
   // Set the first bit to be 1 to indicate that this spot is full, endianness won't matter since we 
   // will be consistent with out assignment of bits here
-  setBit(BLOCK_BITMAP_OFFSET, 7);  
+  data = 0;
+  setBit(BLOCK_BITMAP_OFFSET, 7); 
+  memcpy(RAM_memory+INDEX_NODE_ARRAY_OFFSET+DIRECT_1, &data, sizeof(int));
 
   /****** Set up the root index node *******/
   // Set the type
@@ -154,6 +156,12 @@ void freeBlock(int blockindex) {
 
 /************************ DEBUGGING FUNCTIONS *****************************/
 
+/**
+ * This debugging function prints the specified number of bitmap numberOfBits
+ *
+ * @return  void prints the bitmap bits in 25 bit chunks
+ * @param[in-out]  numberOfBits specifies the number of bits to print
+ */
 void printBitmap(int numberOfBits) {
   int i, j, bitCount;
   
@@ -184,6 +192,17 @@ void printBitmap(int numberOfBits) {
   }
 }
 
+void printIndexNode(int nodeIndex) {
+
+  printk("--Printing indexNode %d--\n", nodeIndex);
+  char *indexNodeStart = RAM_memory+INDEX_NODE_ARRAY_OFFSET+nodeIndex*INDEX_NODE_SIZE;
+  
+  printf("NODE TYPE:%.4s\n", indexNodeStart+INODE_TYPE);
+  printf("NODE SIZE:%d\n", (int)(*(indexNodeStart+INODE_SIZE)));
+  printf("FILE COUNT:%d\n", (int)(*(indexNodeStart+FILE_COUNT)));  
+
+}
+
 /************************INIT AND EXIT ROUTINES*****************************/
 
 /** 
@@ -209,26 +228,7 @@ static int __init initialization_routine(void) {
   RAM_memory = (char *)vmalloc(FS_SIZE);
 
   // Initialize the superblock and all other memory segments
-  init_ramdisk();
-
-  // Test bitmaps
-  printk("Block Number: %d\n", getFreeBlock());
-  printk("Block Number: %d\n", getFreeBlock());
-  printk("Block Number: %d\n", getFreeBlock());
-  printk("Block Number: %d\n", getFreeBlock());
-  printk("Block Number: %d\n", getFreeBlock());
-  printk("Block Number: %d\n", getFreeBlock());
-  printk("Block Number: %d\n", getFreeBlock());
-  printk("Block Number: %d\n", getFreeBlock());
-  printk("Block Number: %d\n", getFreeBlock());
-  printk("Block Number: %d\n", getFreeBlock());
-  printk("Block Number: %d\n", getFreeBlock());
-  printk("Block Number: %d\n", getFreeBlock());      
-
-  freeBlock(10);
-  freeBlock(11);
-
-  printk("Block Number: %d\n", getFreeBlock());        
+  init_ramdisk();    
 
   printBitmap(200);
 
