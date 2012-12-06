@@ -212,9 +212,12 @@ static int __init initialization_routine(void) {
   init_ramdisk();
 
   // Test bitmaps
-  getFreeBlock();
-  getFreeBlock();
-  getFreeBlock();
+  printk("Block Number: %d", getFreeBlock());
+  printk("Block Number: %d", getFreeBlock());
+  printk("Block Number: %d", getFreeBlock());
+
+  freeBlock(2);
+  freeBlock(3);
   
   printBitmap(200);
 
