@@ -212,6 +212,10 @@ static int __init initialization_routine(void) {
   init_ramdisk();
 
   // Test bitmaps
+  getFreeBlock();
+  getFreeBlock();
+  getFreeBlock();
+  
   printBitmap(200);
 
   // Verify that memory is correctly set up initially
