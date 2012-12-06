@@ -10,6 +10,7 @@
 #include <linux/interrupt.h>
 #include <string>
 #include <stdio.h>
+#include <unistd.h>
 
 /****************************IOCTL DECLARATIONS*******************************/
 
