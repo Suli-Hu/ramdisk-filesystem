@@ -133,7 +133,7 @@ int getFreeBlock() {
         // Return block number
         setBit(BLOCK_BITMAP_OFFSET+i, j);
 
-        return i*8 + (8-j);
+        return i*8 + (7-j);
       }
         
     }
@@ -212,13 +212,13 @@ static int __init initialization_routine(void) {
   init_ramdisk();
 
   // Test bitmaps
-  printk("Block Number: %d", getFreeBlock());
-  printk("Block Number: %d", getFreeBlock());
-  printk("Block Number: %d", getFreeBlock());
+  printk("Block Number: %d\n", getFreeBlock());
+  printk("Block Number: %d\n", getFreeBlock());
+  printk("Block Number: %d\n", getFreeBlock());
 
   freeBlock(2);
   freeBlock(3);
-  
+
   printBitmap(200);
 
   // Verify that memory is correctly set up initially
