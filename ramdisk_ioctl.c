@@ -308,6 +308,8 @@ static int __init initialization_routine(void) {
   printIndexNode(0);
   printBitmap(200);
 
+  createIndexNode("reg\0", "myfile.txt\n",  300);
+
   // Verify that memory is correctly set up initially
 
   return 0;
