@@ -126,20 +126,45 @@ void init_ramdisk(void) {
  * @param[in-out]  memorysize  size of the file or dir in bytes
  */
 
+int getNewIndexNodeNumber() {
+
+  int i;
+  char *indexNodeType;
+
+  for (i=0; i<INDEX_NODE_COUNT; i++) {
+
+    indexNodeType = RAM_memory+INDEX_NODE_ARRAY_OFFSET+i*INDEX_NODE_SIZE+INODE_TYPE;
+    printk("TYPE: %s\n", indexNodeType);
+    if (indexNodeType=="dir\0" || indexNodeType=="reg\0") {
+      printk("Index Node %d is occupied\n");
+    }
+    else {
+      printk("Found empty index node.\n");
+    }
+
+  }
+}
+
 int createIndexNode(char *type, char *filename, int memorysize) {
-  // data = 0;
-  // setBit(BLOCK_BITMAP_OFFSET, 7); 
+
+  getNewIndexNodeNumber();
+  // int data;
+  // int numberOfBlocksRequired = (memorysize/RAM_BLOCK_SIZE)+1;
+  // data = getFreeBlock();
   // memcpy(RAM_memory+INDEX_NODE_ARRAY_OFFSET+DIRECT_1, &data, sizeof(int));
 
   // /****** Set up the root index node *******/
   // // Set the type
-  // strcpy(RAM_memory+INDEX_NODE_ARRAY_OFFSET+INODE_TYPE,"dir");
-  // // Transfer 4 bytes into char array for the size
-  // data = 0;
+  // strcpy(RAM_memory+INDEX_NODE_ARRAY_OFFSET+INODE_TYPE,type);
+  // // Set indexNode size
+  // data = memorysize;
   // memcpy(RAM_memory+INDEX_NODE_ARRAY_OFFSET+INODE_SIZE, &data, sizeof(int));
-  // // Set the file count
+  // // Set the file count, default to 0
+  // data = 0;
   // memcpy(RAM_memory+INDEX_NODE_ARRAY_OFFSET+FILE_COUNT, &data, sizeof(int));
-  // strcpy(RAM_memory+INDEX_NODE_ARRAY_OFFSET+INODE_FILE_NAME, "/");
+  // strcpy(RAM_memory+INDEX_NODE_ARRAY_OFFSET+INODE_FILE_NAME, filename);
+
+  return 0;
 }
 
 
@@ -166,6 +191,7 @@ int getFreeBlock() {
     }
 
   }
+
 
   // No free blocks
   return -1;
