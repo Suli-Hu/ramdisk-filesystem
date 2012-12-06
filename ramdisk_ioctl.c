@@ -203,7 +203,7 @@ void allocMemoryForIndexNode(int indexNodeNumber, int numberOfBlocks) {
 
   char *indexNodeStart;
   int i, blockNumber;
-  indexNodeStart = RAM_memory+INDEX_NODE_ARRAY_OFFSET+indexNodeStart*INDEX_NODE_SIZE;
+  indexNodeStart = RAM_memory+INDEX_NODE_ARRAY_OFFSET+indexNodeNumber*INDEX_NODE_SIZE;
 
   // Allocate memory for direct blocks first
   for (i=0; i<8; i++) {
