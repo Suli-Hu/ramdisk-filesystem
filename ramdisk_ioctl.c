@@ -195,11 +195,12 @@ void printBitmap(int numberOfBits) {
 void printIndexNode(int nodeIndex) {
 
   printk("--Printing indexNode %d--\n", nodeIndex);
-  char *indexNodeStart = RAM_memory+INDEX_NODE_ARRAY_OFFSET+nodeIndex*INDEX_NODE_SIZE;
+  char *indexNodeStart;
+  indexNodeStart = RAM_memory+INDEX_NODE_ARRAY_OFFSET+nodeIndex*INDEX_NODE_SIZE;
   
-  printf("NODE TYPE:%.4s\n", indexNodeStart+INODE_TYPE);
-  printf("NODE SIZE:%d\n", (int)(*(indexNodeStart+INODE_SIZE)));
-  printf("FILE COUNT:%d\n", (int)(*(indexNodeStart+FILE_COUNT)));  
+  printk("NODE TYPE:%.4s\n", indexNodeStart+INODE_TYPE);
+  printk("NODE SIZE:%d\n", (int)(*(indexNodeStart+INODE_SIZE)));
+  printk("FILE COUNT:%d\n", (int)(*(indexNodeStart+FILE_COUNT)));  
 
 }
 
@@ -230,7 +231,8 @@ static int __init initialization_routine(void) {
   // Initialize the superblock and all other memory segments
   init_ramdisk();    
 
-  printBitmap(200);
+  // Debugging indexNode
+  printIndexNode(0);
 
   // Verify that memory is correctly set up initially
 
