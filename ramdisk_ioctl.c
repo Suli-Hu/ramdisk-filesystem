@@ -133,10 +133,10 @@ int getNewIndexNodeNumber() {
     indexNodeType = RAM_memory+INDEX_NODE_ARRAY_OFFSET+i*INDEX_NODE_SIZE+INODE_TYPE;
     printk("TYPE: %s\n", indexNodeType);
     if (strlen(indexNodeType)>1) {
-      printk("Index Node %d is occupied\n", i);
+      //printk("Index Node %d is occupied\n", i);
     }
     else {
-      printk("Found empty index node: %d.\n", i);
+      //printk("Found empty index node: %d.\n", i);
       return i;
     }
   }
@@ -185,6 +185,7 @@ int createIndexNode(char *type, char *filename, int memorysize) {
   strcpy(indexNodeStart+INODE_TYPE,type);
   // Set indexNode size
   data = memorysize;
+  printk("Mem Size: %d\n", data);
   memcpy(indexNodeStart+INODE_SIZE, &data, sizeof(int));
   // Set the file count, default to 0
   data = 0;
