@@ -187,9 +187,9 @@ int createIndexNode(char *type, char *filename, int memorysize) {
   memcpy(RAM_memory+INDEX_NODE_ARRAY_OFFSET+FILE_COUNT, &data, sizeof(int));
   strcpy(RAM_memory+INDEX_NODE_ARRAY_OFFSET+INODE_FILE_NAME, filename);
 
-  printk("New index node: %d created\n", IndexNodeNumber);
+  printk("New index node: %d created\n", indexNodeNumber);
   
-  return IndexNodeNumber;
+  return indexNodeNumber;
 }
 
 /** TO DO - ADD ALLOCATION FOR SINGLE INDIRECT AND DOUBLE INDIRECT
