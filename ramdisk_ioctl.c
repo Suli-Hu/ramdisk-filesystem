@@ -174,7 +174,7 @@ int createIndexNode(char *type, char *filename, int memorysize) {
 
   int data;
   int numberOfBlocksRequired = (memorysize/RAM_BLOCK_SIZE)+1;
-  allocMemoryForIndexNode(IndexNodeNumber, numberOfBlocksRequired);
+  allocMemoryForIndexNode(indexNodeNumber, numberOfBlocksRequired);
 
   /****** Set up the root index node *******/
   // Set the type
@@ -188,7 +188,7 @@ int createIndexNode(char *type, char *filename, int memorysize) {
   strcpy(RAM_memory+INDEX_NODE_ARRAY_OFFSET+INODE_FILE_NAME, filename);
 
   printk("New index node: %d created\n", indexNodeNumber);
-  
+
   return indexNodeNumber;
 }
 
@@ -215,7 +215,7 @@ void allocMemoryForIndexNode(int indexNodeNumber, int numberOfBlocks) {
 
     // If number of blocks have reached 0, we are done allocating memory
     if (numberOfBlocks==0)
-      return;
+      return NULL;
   }
 
     

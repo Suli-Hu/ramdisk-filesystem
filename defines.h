@@ -169,3 +169,5 @@ void kr_readdir(struct RAM_accessFile input);
 
 int getFreeBlock();
 void freeBlock(int blockindex);
+void allocMemoryForIndexNode(int indexNodeNumber, int numberOfBlocks);
+
