@@ -8,6 +8,7 @@
 #include <linux/tty.h>
 #include <linux/sched.h>
 #include <linux/interrupt.h>
+#include <string>
 
 /****************************IOCTL DECLARATIONS*******************************/
 
