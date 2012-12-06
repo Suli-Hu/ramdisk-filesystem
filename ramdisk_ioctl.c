@@ -313,8 +313,8 @@ void printIndexNode(int nodeIndex) {
   indexNodeStart = RAM_memory+INDEX_NODE_ARRAY_OFFSET+nodeIndex*INDEX_NODE_SIZE;
   printk("--Printing indexNode %d--\n", nodeIndex);
   printk("NODE TYPE:%.4s\n", indexNodeStart+INODE_TYPE);
-  printk("NODE SIZE:%d\n", (int)(*(indexNodeStart+INODE_SIZE)));
-  printk("FILE COUNT:%d\n", (int)(*(indexNodeStart+FILE_COUNT)));  
+  printk("NODE SIZE:%d\n", (int)(*(indexNodeStart+INODE_SIZE-2)));
+  printk("FILE COUNT:%d\n", (int)(*(indexNodeStart+FILE_COUNT-2)));  
   printk("FILE NAME: %s\n", indexNodeStart+INODE_FILE_NAME);
 
   // Prints the Direct memory channels
