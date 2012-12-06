@@ -106,6 +106,8 @@ void init_ramdisk(void) {
   strcpy(RAM_memory+INDEX_NODE_ARRAY_OFFSET+INODE_TYPE,"dir");
   // Transfer 4 bytes into char array for the size
   data = 300;
+  printk("Size of int: %d\n", sizeof(int));
+  
   memcpy(RAM_memory+INDEX_NODE_ARRAY_OFFSET+INODE_SIZE, &data, sizeof(int));
   // Set the file count
   memcpy(RAM_memory+INDEX_NODE_ARRAY_OFFSET+FILE_COUNT, &data, sizeof(int));
