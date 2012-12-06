@@ -118,12 +118,9 @@ void init_ramdisk(void) {
 
 /************************ INTERNAL HELPER FUNCTIONS **************************/
 /**
- * Creates a new index node
+ * Get the next free IndexNodeNumber
  *
- * @return  type  description
- * @param[in-out]  type  type of the node, 'dir' or 'reg'
- * @param[in-out]  filename  name of the file or dir, 'dir' or 'reg'
- * @param[in-out]  memorysize  size of the file or dir in bytes
+ * @return  int return index node number of a free index node
  */
 
 int getNewIndexNodeNumber() {
@@ -139,34 +136,92 @@ int getNewIndexNodeNumber() {
       printk("Index Node %d is occupied\n", i);
     }
     else {
-      printk("Found empty index node.\n");
-      return;
+      printk("Found empty index node: %d.\n", i);
+      return i;
     }
   }
 }
 
-int createIndexNode(char *type, char *filename, int memorysize) {
+/**
+ * Helper method to clear an index node when a file/dir is removed
+ *
+ * @return  void
+ * @param[indexNodeNumber]  int index node number to clear
+ */
+void clearIndexNode(int IndexNodeNumber) {
 
-  getNewIndexNodeNumber();
-  // int data;
-  // int numberOfBlocksRequired = (memorysize/RAM_BLOCK_SIZE)+1;
-  // data = getFreeBlock();
-  // memcpy(RAM_memory+INDEX_NODE_ARRAY_OFFSET+DIRECT_1, &data, sizeof(int));
+  int i;
+  char *indexNodeStart;
+  indexNodeStart = RAM_memory+INDEX_NODE_ARRAY_OFFSET+IndexNodeNumber*INDEX_NODE_SIZE;
+  for (i=0; i<INDEX_NODE_SIZE; i++)
+    indexNodeStart[i] = '\0';
 
-  // /****** Set up the root index node *******/
-  // // Set the type
-  // strcpy(RAM_memory+INDEX_NODE_ARRAY_OFFSET+INODE_TYPE,type);
-  // // Set indexNode size
-  // data = memorysize;
-  // memcpy(RAM_memory+INDEX_NODE_ARRAY_OFFSET+INODE_SIZE, &data, sizeof(int));
-  // // Set the file count, default to 0
-  // data = 0;
-  // memcpy(RAM_memory+INDEX_NODE_ARRAY_OFFSET+FILE_COUNT, &data, sizeof(int));
-  // strcpy(RAM_memory+INDEX_NODE_ARRAY_OFFSET+INODE_FILE_NAME, filename);
-
-  return 0;
 }
 
+/**
+ * Creates a new index node
+ *
+ * @return  type  description
+ * @param[in-out]  type  type of the node, 'dir' or 'reg'
+ * @param[in-out]  filename  name of the file or dir, 'dir' or 'reg'
+ * @param[in-out]  memorysize  size of the file or dir in bytes
+ */
+
+int createIndexNode(char *type, char *filename, int memorysize) {
+
+  int indexNodeNumber;
+  indexNodeNumber = getNewIndexNodeNumber();
+
+  int data;
+  int numberOfBlocksRequired = (memorysize/RAM_BLOCK_SIZE)+1;
+  allocMemoryForIndexNode(IndexNodeNumber, numberOfBlocksRequired);
+
+  /****** Set up the root index node *******/
+  // Set the type
+  strcpy(RAM_memory+INDEX_NODE_ARRAY_OFFSET+INODE_TYPE,type);
+  // Set indexNode size
+  data = memorysize;
+  memcpy(RAM_memory+INDEX_NODE_ARRAY_OFFSET+INODE_SIZE, &data, sizeof(int));
+  // Set the file count, default to 0
+  data = 0;
+  memcpy(RAM_memory+INDEX_NODE_ARRAY_OFFSET+FILE_COUNT, &data, sizeof(int));
+  strcpy(RAM_memory+INDEX_NODE_ARRAY_OFFSET+INODE_FILE_NAME, filename);
+
+  printk("New index node: %d created\n", IndexNodeNumber);
+  
+  return IndexNodeNumber;
+}
+
+/** TO DO - ADD ALLOCATION FOR SINGLE INDIRECT AND DOUBLE INDIRECT
+ * Allocate memory for index Node given the number of blocks
+ *
+ * @return  void
+ * @param[in-out]  indexNodeNumber - reference to the index node
+ * @param[in-out]  numberOfBlocks  - number of blocks to allocate for
+ */
+void allocMemoryForIndexNode(int indexNodeNumber, int numberOfBlocks) {
+
+  char *indexNodeStart;
+  int i, blockNumber;
+  indexNodeStart = RAM_memory+INDEX_NODE_ARRAY_OFFSET+IndexNodeNumber*INDEX_NODE_SIZE;
+
+  // Allocate memory for direct blocks first
+  for (i=0; i<8; i++) {
+
+    blockNumber = getFreeBlock();
+    memcpy(indexNodeStart+DIRECT_1+ 4*i, &blockNumber, sizeof(int));
+
+    numberOfBlocks--;
+
+    // If number of blocks have reached 0, we are done allocating memory
+    if (numberOfBlocks==0)
+      return;
+  }
+
+    
+  
+
+}
 
 /************************ MEMORY MANAGEMENT *****************************/
 /**
@@ -246,8 +301,8 @@ void printBitmap(int numberOfBits) {
 void printIndexNode(int nodeIndex) {
 
   char *indexNodeStart;
-  char *singleIndirectStart;
-  char *doubleIndirectStart;
+  // char *singleIndirectStart;
+  // char *doubleIndirectStart;
   int i;
 
   indexNodeStart = RAM_memory+INDEX_NODE_ARRAY_OFFSET+nodeIndex*INDEX_NODE_SIZE;
@@ -308,7 +363,9 @@ static int __init initialization_routine(void) {
   printIndexNode(0);
   printBitmap(200);
 
-  createIndexNode("reg\0", "myfile.txt\0",  300);
+  int indexNodeNum;
+  indexNodeNum = createIndexNode("reg\0", "myfile.txt\0",  300);
+  printIndexNode(IndexNodeNumber);
 
   // Verify that memory is correctly set up initially
 
