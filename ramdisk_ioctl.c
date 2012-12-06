@@ -194,13 +194,20 @@ void printBitmap(int numberOfBits) {
 
 void printIndexNode(int nodeIndex) {
 
-  printk("--Printing indexNode %d--\n", nodeIndex);
   char *indexNodeStart;
+  int i;
+
   indexNodeStart = RAM_memory+INDEX_NODE_ARRAY_OFFSET+nodeIndex*INDEX_NODE_SIZE;
-  
+  printk("--Printing indexNode %d--\n", nodeIndex);
   printk("NODE TYPE:%.4s\n", indexNodeStart+INODE_TYPE);
   printk("NODE SIZE:%d\n", (int)(*(indexNodeStart+INODE_SIZE)));
   printk("FILE COUNT:%d\n", (int)(*(indexNodeStart+FILE_COUNT)));  
+  printk("FILE NAME: %s\n", indexNodeStart+INODE_FILE_NAME);
+  printk("MEM DIRECT: ", nodeIndex);
+  for (int i=0; i<=7;i++) 
+      printk("%d  ", indexNodeStart+DIRECT_1 + 4*i);
+  printk("\n");
+
 
 }
 
