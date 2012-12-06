@@ -177,6 +177,7 @@ void printBitmap(int numberOfBits) {
       if (bitCount%25==0)
         printk("\n");
         
+      bitCount++;
     }
 
   }
