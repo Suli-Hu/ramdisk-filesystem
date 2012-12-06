@@ -106,7 +106,7 @@ void init_ramdisk(void) {
   // Set the type
   strcpy(RAM_memory+INDEX_NODE_ARRAY_OFFSET+INODE_TYPE,"dir");
   // Transfer 4 bytes into char array for the size
-  data = 7;
+  data = 0;
   memcpy(RAM_memory+INDEX_NODE_ARRAY_OFFSET+INODE_SIZE, &data, sizeof(int));
   // Set the file count
   memcpy(RAM_memory+INDEX_NODE_ARRAY_OFFSET+FILE_COUNT, &data, sizeof(int));
@@ -195,6 +195,8 @@ void printBitmap(int numberOfBits) {
 void printIndexNode(int nodeIndex) {
 
   char *indexNodeStart;
+  char *singleIndirectStart;
+  char *doubleIndirectStart;
   int i;
 
   indexNodeStart = RAM_memory+INDEX_NODE_ARRAY_OFFSET+nodeIndex*INDEX_NODE_SIZE;
@@ -203,10 +205,21 @@ void printIndexNode(int nodeIndex) {
   printk("NODE SIZE:%d\n", (int)(*(indexNodeStart+INODE_SIZE)));
   printk("FILE COUNT:%d\n", (int)(*(indexNodeStart+FILE_COUNT)));  
   printk("FILE NAME: %s\n", indexNodeStart+INODE_FILE_NAME);
+
+  // Prints the Direct memory channels
   printk("MEM DIRECT: ");
   for (i=0; i<=7;i++) 
       printk("%d  ", (int)(*(indexNodeStart+DIRECT_1 + 4*i)));
   printk("\n");
+
+  // Prints the Single indirect channels
+  singleIndirectStart = RAM_memory+ROOT_DIR_OFFSET+(RAM_BLOCK_SIZE*((int)(*(indexNodeStart+SINGLE_INDIR))));
+  printk("MEM SINGLE INDIR: ");
+  for (i=0; i<RAM_BLOCK_SIZE/4;i++)
+    printk("%d  ", (int)(*(singleIndirectStart+4*i)));
+  printk("\n");
+  
+  // Prints the Double indirect channels
 
 
 }
