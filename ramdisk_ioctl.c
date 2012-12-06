@@ -98,8 +98,7 @@ void init_ramdisk(void) {
   /****** Set up the block bitmap *******/
   // Set the first bit to be 1 to indicate that this spot is full, endianness won't matter since we 
   // will be consistent with out assignment of bits here
-  data = 0;
-  setBit(BLOCK_BITMAP_OFFSET, 7); 
+  data = getFreeBlock();
   memcpy(RAM_memory+INDEX_NODE_ARRAY_OFFSET+DIRECT_1, &data, sizeof(int));
 
   /****** Set up the root index node *******/
@@ -117,8 +116,34 @@ void init_ramdisk(void) {
   printk("RAMDISK has been initialized with memory\n");
 }
 
+/************************ INTERNAL HELPER FUNCTIONS **************************/
+/**
+ * Creates a new index node
+ *
+ * @return  type  description
+ * @param[in-out]  type  type of the node, 'dir' or 'reg'
+ * @param[in-out]  filename  name of the file or dir, 'dir' or 'reg'
+ * @param[in-out]  memorysize  size of the file or dir in bytes
+ */
 
-/************************MEMORY MANAGEMENT*****************************/
+int createIndexNode(string type, string filename, int memorysize) {
+  // data = 0;
+  // setBit(BLOCK_BITMAP_OFFSET, 7); 
+  // memcpy(RAM_memory+INDEX_NODE_ARRAY_OFFSET+DIRECT_1, &data, sizeof(int));
+
+  // /****** Set up the root index node *******/
+  // // Set the type
+  // strcpy(RAM_memory+INDEX_NODE_ARRAY_OFFSET+INODE_TYPE,"dir");
+  // // Transfer 4 bytes into char array for the size
+  // data = 0;
+  // memcpy(RAM_memory+INDEX_NODE_ARRAY_OFFSET+INODE_SIZE, &data, sizeof(int));
+  // // Set the file count
+  // memcpy(RAM_memory+INDEX_NODE_ARRAY_OFFSET+FILE_COUNT, &data, sizeof(int));
+  // strcpy(RAM_memory+INDEX_NODE_ARRAY_OFFSET+INODE_FILE_NAME, "/");
+}
+
+
+/************************ MEMORY MANAGEMENT *****************************/
 /**
  * Get free block from memory region
  *
@@ -212,13 +237,15 @@ void printIndexNode(int nodeIndex) {
       printk("%d  ", (int)(*(indexNodeStart+DIRECT_1 + 4*i)));
   printk("\n");
 
-  // Prints the Single indirect channels
-  singleIndirectStart = RAM_memory+ROOT_DIR_OFFSET+(RAM_BLOCK_SIZE*((int)(*(indexNodeStart+SINGLE_INDIR))));
-  printk("MEM SINGLE INDIR: ");
-  for (i=0; i<RAM_BLOCK_SIZE/4;i++)
-    printk("%d  ", (int)(*(singleIndirectStart+4*i)));
-  printk("\n");
-  
+  // Prints the Single indirect channels 
+  // BROKEN, FIX BEFORE COMPILE, WILL FREEZE WILL VM!!!
+
+  // singleIndirectStart = RAM_memory+ROOT_DIR_OFFSET+(RAM_BLOCK_SIZE*((int)(*(indexNodeStart+SINGLE_INDIR))));
+  // printk("MEM SINGLE INDIR: ");
+  // for (i=0; i<RAM_BLOCK_SIZE/4;i++)
+  //   printk("%d  ", (int)(*(singleIndirectStart+4*i)));
+  // printk("\n");
+
   // Prints the Double indirect channels
 
 
