@@ -125,7 +125,6 @@ void init_ramdisk(void) {
  */
 int getFreeBlock() {
 
-  char *startOfBitMap;
   int i, j;
 
   for (i=0; i<BLOCK_BITMAP_SIZE; i++) {
@@ -146,12 +145,41 @@ int getFreeBlock() {
 }
 
 void freeBlock(int blockindex) {
-
   int major, minor;
   major = blockindex / 8;
   minor = blockindex % 8;
   minor = 7 - minor;
   clearBit(BLOCK_BITMAP_OFFSET+major, minor);
+}
+
+/************************ DEBUGGING FUNCTIONS *****************************/
+
+void printBitmap(int numberOfBits) {
+  int i, j, bitCount;
+  
+  bitCount = 0;
+
+  for (i=0; i<BLOCK_BITMAP_SIZE; i++) {
+    for (j=7; j>=0; j--) {
+
+      // We have printed the right number of bits
+      if (bitCount>=numberOfBits)
+        return;
+
+      if (bitCount%25==0)
+          printk("Printing %d - %d bitmaps\n", bitCount, bitCount+24)
+
+      if (!checkBit(BLOCK_BITMAP_OFFSET+i, j)) 
+        printk("0 ")
+      else 
+        printk("1 ")        
+      
+      if (bitCount%25==0)
+        printk("\n");
+        
+    }
+
+  }
 }
 
 /************************INIT AND EXIT ROUTINES*****************************/
@@ -180,6 +208,9 @@ static int __init initialization_routine(void) {
 
   // Initialize the superblock and all other memory segments
   init_ramdisk();
+
+  // Test bitmaps
+  printBitmap(200);
 
   // Verify that memory is correctly set up initially
 
