@@ -204,8 +204,8 @@ void printIndexNode(int nodeIndex) {
   printk("FILE COUNT:%d\n", (int)(*(indexNodeStart+FILE_COUNT)));  
   printk("FILE NAME: %s\n", indexNodeStart+INODE_FILE_NAME);
   printk("MEM DIRECT: ", nodeIndex);
-  for (int i=0; i<=7;i++) 
-      printk("%d  ", indexNodeStart+DIRECT_1 + 4*i);
+  for (i=0; i<=7;i++) 
+      printk("%d  ", (int)(*(indexNodeStart+DIRECT_1 + 4*i)));
   printk("\n");
 
 
