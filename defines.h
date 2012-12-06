@@ -9,6 +9,7 @@
 #include <linux/sched.h>
 #include <linux/interrupt.h>
 #include <string>
+#include <stdio.h>
 
 /****************************IOCTL DECLARATIONS*******************************/
 
