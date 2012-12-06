@@ -106,7 +106,7 @@ void init_ramdisk(void) {
   // Set the type
   strcpy(RAM_memory+INDEX_NODE_ARRAY_OFFSET+INODE_TYPE,"dir");
   // Transfer 4 bytes into char array for the size
-  data = 0;
+  data = 7;
   memcpy(RAM_memory+INDEX_NODE_ARRAY_OFFSET+INODE_SIZE, &data, sizeof(int));
   // Set the file count
   memcpy(RAM_memory+INDEX_NODE_ARRAY_OFFSET+FILE_COUNT, &data, sizeof(int));
@@ -203,7 +203,7 @@ void printIndexNode(int nodeIndex) {
   printk("NODE SIZE:%d\n", (int)(*(indexNodeStart+INODE_SIZE)));
   printk("FILE COUNT:%d\n", (int)(*(indexNodeStart+FILE_COUNT)));  
   printk("FILE NAME: %s\n", indexNodeStart+INODE_FILE_NAME);
-  printk("MEM DIRECT: ", nodeIndex);
+  printk("MEM DIRECT: ");
   for (i=0; i<=7;i++) 
       printk("%d  ", (int)(*(indexNodeStart+DIRECT_1 + 4*i)));
   printk("\n");
