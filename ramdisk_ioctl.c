@@ -215,9 +215,18 @@ static int __init initialization_routine(void) {
   printk("Block Number: %d\n", getFreeBlock());
   printk("Block Number: %d\n", getFreeBlock());
   printk("Block Number: %d\n", getFreeBlock());
+  printk("Block Number: %d\n", getFreeBlock());
+  printk("Block Number: %d\n", getFreeBlock());
+  printk("Block Number: %d\n", getFreeBlock());
+  printk("Block Number: %d\n", getFreeBlock());
+  printk("Block Number: %d\n", getFreeBlock());
+  printk("Block Number: %d\n", getFreeBlock());
+  printk("Block Number: %d\n", getFreeBlock());
+  printk("Block Number: %d\n", getFreeBlock());
+  printk("Block Number: %d\n", getFreeBlock());      
 
-  freeBlock(2);
-  freeBlock(3);
+  // freeBlock(2);
+  // freeBlock(3);
 
   printBitmap(200);
 
