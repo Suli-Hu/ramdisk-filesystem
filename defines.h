@@ -164,3 +164,8 @@ void kr_unlink(struct RAM_path input);
  * @param[in]	input	Accessfile struct.  Used to read the relevant directory
  */
 void kr_readdir(struct RAM_accessFile input);
+
+/*************** FUNCTION DECLARATIONS **********************/
+
+int getFreeBlock();
+void freeBlock(int blockindex);

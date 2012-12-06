@@ -126,7 +126,7 @@ void init_ramdisk(void) {
  * @param[in-out]  memorysize  size of the file or dir in bytes
  */
 
-int createIndexNode(string type, string filename, int memorysize) {
+int createIndexNode(char *type, char *filename, int memorysize) {
   // data = 0;
   // setBit(BLOCK_BITMAP_OFFSET, 7); 
   // memcpy(RAM_memory+INDEX_NODE_ARRAY_OFFSET+DIRECT_1, &data, sizeof(int));
@@ -280,6 +280,7 @@ static int __init initialization_routine(void) {
 
   // Debugging indexNode
   printIndexNode(0);
+  printBitmap(200);
 
   // Verify that memory is correctly set up initially
 
