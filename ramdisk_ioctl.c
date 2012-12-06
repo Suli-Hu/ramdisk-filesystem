@@ -228,6 +228,8 @@ static int __init initialization_routine(void) {
   freeBlock(10);
   freeBlock(11);
 
+  printk("Block Number: %d\n", getFreeBlock());        
+
   printBitmap(200);
 
   // Verify that memory is correctly set up initially
