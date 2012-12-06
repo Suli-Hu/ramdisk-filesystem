@@ -175,10 +175,10 @@ int createIndexNode(char *type, char *filename, int memorysize) {
   char *indexNodeStart;
 
   indexNodeNumber = getNewIndexNodeNumber();
-  numberOfBlocksRequired = = (memorysize/RAM_BLOCK_SIZE)+1;
+  numberOfBlocksRequired = (memorysize/RAM_BLOCK_SIZE)+1;
   allocMemoryForIndexNode(indexNodeNumber, numberOfBlocksRequired);
   indexNodeStart = RAM_memory+INDEX_NODE_ARRAY_OFFSET+indexNodeNumber*INDEX_NODE_SIZE;
-  
+
 
   /****** Set up the root index node *******/
   // Set the type
