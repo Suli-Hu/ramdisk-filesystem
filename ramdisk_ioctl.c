@@ -170,22 +170,26 @@ void clearIndexNode(int IndexNodeNumber) {
 int createIndexNode(char *type, char *filename, int memorysize) {
 
   int indexNodeNumber;
-  indexNodeNumber = getNewIndexNodeNumber();
-
   int data;
-  int numberOfBlocksRequired = (memorysize/RAM_BLOCK_SIZE)+1;
+  int numberOfBlocksRequired;
+  char *indexNodeStart;
+
+  indexNodeNumber = getNewIndexNodeNumber();
+  numberOfBlocksRequired = = (memorysize/RAM_BLOCK_SIZE)+1;
   allocMemoryForIndexNode(indexNodeNumber, numberOfBlocksRequired);
+  indexNodeStart = RAM_memory+INDEX_NODE_ARRAY_OFFSET+indexNodeNumber*INDEX_NODE_SIZE;
+  
 
   /****** Set up the root index node *******/
   // Set the type
-  strcpy(RAM_memory+INDEX_NODE_ARRAY_OFFSET+INODE_TYPE,type);
+  strcpy(indexNodeStart+INODE_TYPE,type);
   // Set indexNode size
   data = memorysize;
-  memcpy(RAM_memory+INDEX_NODE_ARRAY_OFFSET+INODE_SIZE, &data, sizeof(int));
+  memcpy(indexNodeStart+INODE_SIZE, &data, sizeof(int));
   // Set the file count, default to 0
   data = 0;
-  memcpy(RAM_memory+INDEX_NODE_ARRAY_OFFSET+FILE_COUNT, &data, sizeof(int));
-  strcpy(RAM_memory+INDEX_NODE_ARRAY_OFFSET+INODE_FILE_NAME, filename);
+  memcpy(indexNodeStart+FILE_COUNT, &data, sizeof(int));
+  strcpy(indexNodeStart+INODE_FILE_NAME, filename);
 
   printk("New index node: %d created\n", indexNodeNumber);
 
