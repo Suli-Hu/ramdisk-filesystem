@@ -135,8 +135,8 @@ int getNewIndexNodeNumber() {
 
     indexNodeType = RAM_memory+INDEX_NODE_ARRAY_OFFSET+i*INDEX_NODE_SIZE+INODE_TYPE;
     printk("TYPE: %s\n", indexNodeType);
-    if (indexNodeType=="dir\0" || indexNodeType=="reg\0") {
-      printk("Index Node %d is occupied\n");
+    if (string(indexNodeType)=="dir" || string(indexNodeType)=="reg") {
+      printk("Index Node %d is occupied\n", i);
     }
     else {
       printk("Found empty index node.\n");
