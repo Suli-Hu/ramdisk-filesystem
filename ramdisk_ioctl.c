@@ -203,7 +203,7 @@ void allocMemoryForIndexNode(int indexNodeNumber, int numberOfBlocks) {
 
   char *indexNodeStart;
   int i, blockNumber;
-  indexNodeStart = RAM_memory+INDEX_NODE_ARRAY_OFFSET+IndexNodeNumber*INDEX_NODE_SIZE;
+  indexNodeStart = RAM_memory+INDEX_NODE_ARRAY_OFFSET+indexNodeStart*INDEX_NODE_SIZE;
 
   // Allocate memory for direct blocks first
   for (i=0; i<8; i++) {
@@ -365,7 +365,7 @@ static int __init initialization_routine(void) {
 
   int indexNodeNum;
   indexNodeNum = createIndexNode("reg\0", "myfile.txt\0",  300);
-  printIndexNode(IndexNodeNumber);
+  printIndexNode(indexNodeNum);
 
   // Verify that memory is correctly set up initially
 
