@@ -99,10 +99,10 @@ void init_ramdisk(void) {
   // Set the first bit to be 1 to indicate that this spot is full, endianness won't matter since we 
   // will be consistent with out assignment of bits here
   data = getFreeBlock();
-  negateIndexNodePointers(data); /* Negate all of the block pointers, will make it easier to keep track of unused pointers */
   memcpy(RAM_memory+INDEX_NODE_ARRAY_OFFSET+DIRECT_1, &data, sizeof(int));
 
   /****** Set up the root index node *******/
+  negateIndexNodePointers(0); /* Negate all of the block pointers, will make it easier to keep track of unused pointers */
   // Set the type
   strncpy(RAM_memory+INDEX_NODE_ARRAY_OFFSET+INODE_TYPE,"dir\0", 4); /* Use strncpy to force 4 byte usage */
   // Transfer 4 bytes into char array for the size
@@ -120,7 +120,7 @@ void init_ramdisk(void) {
 
 /************************ INTERNAL HELPER FUNCTIONS **************************/
 /**
- * Get the next free IndexNodeNumber
+ * Get the next free IndexNodeNumber. Also clears up the block pointers.
  *
  * @return  int return index node number of a free index node
  */
@@ -134,8 +134,11 @@ int getNewIndexNodeNumber(void) {
 
     indexNodeType = RAM_memory+INDEX_NODE_ARRAY_OFFSET+ii*INDEX_NODE_SIZE+INODE_TYPE;
     printk("TYPE: %s\n", indexNodeType);  
-    if (!(strlen(indexNodeType)>1)) 
+    if (!(strlen(indexNodeType)>1)) {
+      /* Clear up this index node before giving it back */
+      negateIndexNodePointers(data);
       return ii;
+    }
   }
 
   return -1; /* No index node was found, so return this as an error */
