@@ -191,5 +191,5 @@ void allocMemoryForIndexNode(int indexNodeNumber, int numberOfBlocks);
  *
  * @param[in]  indexNodeNumber  the index node for which to clear
  */
-void negateIndexNodePointers(int indexNodeNumber)
+void negateIndexNodePointers(int indexNodeNumber);
 
