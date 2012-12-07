@@ -125,18 +125,15 @@ void init_ramdisk(void) {
 
 int getNewIndexNodeNumber(void) {
 
-  int ii, major, minor;
+  int ii;
   char *indexNodeType;
-  char *bitmap;
 
   for (ii=0; ii<INDEX_NODE_COUNT; ii++) {
 
     indexNodeType = RAM_memory+INDEX_NODE_ARRAY_OFFSET+ii*INDEX_NODE_SIZE+INODE_TYPE;
-    my_printk("TYPE: %s\n", *indexNodeType);  /* Print out the type by dreference */
+    printk("TYPE: %s\n", *indexNodeType);  /* Print out the type by dreference */
     if (!(strlen(indexNodeType)>1)) 
-      //printk("Found empty index node: %d.\n", i);
       return ii;
-    }
   }
 }
 
@@ -219,7 +216,7 @@ void allocMemoryForIndexNode(int indexNodeNumber, int numberOfBlocks) {
 
     // If number of blocks have reached 0, we are done allocating memory (works for now....)
     if (numberOfBlocks==0)
-      return NULL;
+      return;
   }
 }
 
@@ -278,17 +275,17 @@ void printBitmap(int numberOfBits) {
         return;
 
       if (bitCount%25==0)
-          my_printk("Printing %d - %d bitmaps\n", bitCount, bitCount+24);
+          printk("Printing %d - %d bitmaps\n", bitCount, bitCount+24);
 
       if (!checkBit(BLOCK_BITMAP_OFFSET+i, j)) 
-        my_printk("0 ");
+        printk("0 ");
       else 
-        my_printk("1 ");
+        printk("1 ");
 
       bitCount++;
       
       if (bitCount%25==0)
-        my_printk("\n");
+        printk("\n");
         
     }
 
