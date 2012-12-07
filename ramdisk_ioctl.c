@@ -131,10 +131,12 @@ int getNewIndexNodeNumber(void) {
   for (ii=0; ii<INDEX_NODE_COUNT; ii++) {
 
     indexNodeType = RAM_memory+INDEX_NODE_ARRAY_OFFSET+ii*INDEX_NODE_SIZE+INODE_TYPE;
-    printk("TYPE: %s\n", *indexNodeType);  /* Print out the type by dreference */
+    printk("TYPE: %s\n", indexNodeType);  
     if (!(strlen(indexNodeType)>1)) 
       return ii;
   }
+
+  return -1; /* No index node was found, so return this as an error */
 }
 
 /**
@@ -332,6 +334,8 @@ void printIndexNode(int nodeIndex) {
 * The main init routine for the kernel module.  Initializes proc entry 
 */
 static int __init initialization_routine(void) {
+  int indexNodeNum;
+
   printk("<1> Loading RAMDISK filesystem\n");
 
   pseudo_dev_proc_operations.ioctl = &ramdisk_ioctl;
@@ -357,7 +361,6 @@ static int __init initialization_routine(void) {
   printIndexNode(0);
   printBitmap(200);
 
-  int indexNodeNum;
   indexNodeNum = createIndexNode("reg\0", "myfile.txt\0",  300);
   printIndexNode(indexNodeNum);
 
