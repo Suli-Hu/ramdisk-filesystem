@@ -136,7 +136,7 @@ int getNewIndexNodeNumber(void) {
     printk("TYPE: %s\n", indexNodeType);  
     if (!(strlen(indexNodeType)>1)) {
       /* Clear up this index node before giving it back */
-      negateIndexNodePointers(data);
+      negateIndexNodePointers(ii);
       return ii;
     }
   }
@@ -159,16 +159,11 @@ void clearIndexNode(int IndexNodeNumber) {
     indexNodeStart[i] = '\0';
 }
 
-/**
- * Helper method that clears all of the block pointers in an index_node by setting them to -1
- *
- * @param[in]  indexNodeNumber  the index node for which to clear
- */
 void negateIndexNodePointers(int indexNodeNumber) {
   int ii, negate;
   negate = -1;
   char *indexNodePointersStart;
-  indexNodePointersStart = RAM_memory+INDEX_NODE_ARRAY_OFFSET+IndexNodeNumber*INDEX_NODE_SIZE+DIRECT_1;
+  indexNodePointersStart = RAM_memory+INDEX_NODE_ARRAY_OFFSET+indexNodeNumber*INDEX_NODE_SIZE+DIRECT_1;
   for (ii = 0 ; ii < 10 ; ii++) {
     memcpy(indexNodePointersStart + ii*4, &negate, sizeof(int));
   }
@@ -213,13 +208,6 @@ int createIndexNode(char *type, char *filename, int memorysize) {
   return indexNodeNumber;
 }
 
-/**  @todo ADD ALLOCATION FOR SINGLE INDIRECT AND DOUBLE INDIRECT
- * Allocate memory for index Node given the number of blocks.  This should be done depending on allocation size
- *
- * @return  void
- * @param[in-out]  indexNodeNumber - reference to the index node
- * @param[in-out]  numberOfBlocks  - number of blocks to allocate for
- */
 void allocMemoryForIndexNode(int indexNodeNumber, int numberOfBlocks) {
 
   char *indexNodeStart;
@@ -242,11 +230,6 @@ void allocMemoryForIndexNode(int indexNodeNumber, int numberOfBlocks) {
 }
 
 /************************ MEMORY MANAGEMENT *****************************/
-/**
- * Get free block from memory region
- *
- * @return  blocknumber
- */
 int getFreeBlock(void) {
 
   int i, j;

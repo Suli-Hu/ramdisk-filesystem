@@ -167,7 +167,29 @@ void kr_readdir(struct RAM_accessFile input);
 
 /*************** FUNCTION DECLARATIONS **********************/
 
+/**
+ * Get free block from memory region
+ *
+ * @return  blocknumber
+ */
 int getFreeBlock(void);
+
+
 void freeBlock(int blockindex);
+
+/**  @todo ADD ALLOCATION FOR SINGLE INDIRECT AND DOUBLE INDIRECT
+ * Allocate memory for index Node given the number of blocks.  This should be done depending on allocation size
+ *
+ * @return  void
+ * @param[in-out]  indexNodeNumber - reference to the index node
+ * @param[in-out]  numberOfBlocks  - number of blocks to allocate for
+ */
 void allocMemoryForIndexNode(int indexNodeNumber, int numberOfBlocks);
+
+/**
+ * Helper method that clears all of the block pointers in an index_node by setting them to -1
+ *
+ * @param[in]  indexNodeNumber  the index node for which to clear
+ */
+void negateIndexNodePointers(int indexNodeNumber)
 
