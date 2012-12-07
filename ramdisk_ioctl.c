@@ -123,21 +123,19 @@ void init_ramdisk(void) {
  * @return  int return index node number of a free index node
  */
 
-int getNewIndexNodeNumber() {
+int getNewIndexNodeNumber(void) {
 
-  int i;
+  int ii, major, minor;
   char *indexNodeType;
+  char *bitmap;
 
-  for (i=0; i<INDEX_NODE_COUNT; i++) {
+  for (ii=0; ii<INDEX_NODE_COUNT; ii++) {
 
-    indexNodeType = RAM_memory+INDEX_NODE_ARRAY_OFFSET+i*INDEX_NODE_SIZE+INODE_TYPE;
+    indexNodeType = RAM_memory+INDEX_NODE_ARRAY_OFFSET+ii*INDEX_NODE_SIZE+INODE_TYPE;
     my_printk("TYPE: %s\n", *indexNodeType);  /* Print out the type by dreference */
-    if (strlen(indexNodeType)>1) {
-      //printk("Index Node %d is occupied\n", i);
-    }
-    else {
+    if (!(strlen(indexNodeType)>1)) 
       //printk("Found empty index node: %d.\n", i);
-      return i;
+      return ii;
     }
   }
 }
@@ -197,8 +195,8 @@ int createIndexNode(char *type, char *filename, int memorysize) {
   return indexNodeNumber;
 }
 
-/** TO DO - ADD ALLOCATION FOR SINGLE INDIRECT AND DOUBLE INDIRECT
- * Allocate memory for index Node given the number of blocks
+/**  @todo ADD ALLOCATION FOR SINGLE INDIRECT AND DOUBLE INDIRECT
+ * Allocate memory for index Node given the number of blocks.  This should be done depending on allocation size
  *
  * @return  void
  * @param[in-out]  indexNodeNumber - reference to the index node
@@ -214,18 +212,15 @@ void allocMemoryForIndexNode(int indexNodeNumber, int numberOfBlocks) {
   for (i=0; i<8; i++) {
 
     blockNumber = getFreeBlock();
-    memcpy(indexNodeStart+DIRECT_1+ 4*i, &blockNumber, sizeof(int));
+    // @todo Weird situation, pointers are 8 bytes, so storing them doesn't make sense, store number instead
+    memcpy(indexNodeStart+DIRECT_1+ 4*i, blockNumber, sizeof(int));
 
     numberOfBlocks--;
 
-    // If number of blocks have reached 0, we are done allocating memory
+    // If number of blocks have reached 0, we are done allocating memory (works for now....)
     if (numberOfBlocks==0)
       return NULL;
   }
-
-    
-  
-
 }
 
 /************************ MEMORY MANAGEMENT *****************************/
@@ -233,9 +228,8 @@ void allocMemoryForIndexNode(int indexNodeNumber, int numberOfBlocks) {
  * Get free block from memory region
  *
  * @return  blocknumber
- * @param[in-out]  
  */
-int getFreeBlock() {
+int getFreeBlock(void) {
 
   int i, j;
 
@@ -244,15 +238,13 @@ int getFreeBlock() {
       if (!checkBit(BLOCK_BITMAP_OFFSET+i, j)) {
         // Return block number
         setBit(BLOCK_BITMAP_OFFSET+i, j);
-
+        // Convert the loop indices into a block bitmap index
         return i*8 + (7-j);
       }
         
     }
 
   }
-
-
   // No free blocks
   return -1;
 }

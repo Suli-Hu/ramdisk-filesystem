@@ -39,8 +39,8 @@
 // I'm indexing the fs via block size
 #define BLOCK_BITMAP_OFFSET BLOCK_SIZE*(INDEX_NODE_ARRAY_LENGTH+1)
 
-// This is the index into the root dir in bytes
-#define ROOT_DIR_OFFSET BLOCK_SIZE*(BLOCK_BITMAP_OFFSET+BLOCK_BITMAP_SIZE)
+// This is the index into the root dir in bytes, or the first data block in the ramdisk
+#define DATA_BLOCKS_OFFSET BLOCK_BITMAP_OFFSET+BLOCK_BITMAP_SIZE
 #define ROOT_INDEX_NODE 0 // Simply to make this access clearer
 
 // The total number of available blocks in the filesystem, excluding the Root Dir since that is always occupied
@@ -167,7 +167,7 @@ void kr_readdir(struct RAM_accessFile input);
 
 /*************** FUNCTION DECLARATIONS **********************/
 
-int getFreeBlock();
+int getFreeBlock(void);
 void freeBlock(int blockindex);
 void allocMemoryForIndexNode(int indexNodeNumber, int numberOfBlocks);
 
