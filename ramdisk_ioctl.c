@@ -131,7 +131,7 @@ int getNewIndexNodeNumber() {
   for (i=0; i<INDEX_NODE_COUNT; i++) {
 
     indexNodeType = RAM_memory+INDEX_NODE_ARRAY_OFFSET+i*INDEX_NODE_SIZE+INODE_TYPE;
-    printk("TYPE: %s\n", indexNodeType);
+    my_printk("TYPE: %s\n", *indexNodeType);  /* Print out the type by dreference */
     if (strlen(indexNodeType)>1) {
       //printk("Index Node %d is occupied\n", i);
     }
@@ -271,7 +271,7 @@ void freeBlock(int blockindex) {
  * This debugging function prints the specified number of bitmap numberOfBits
  *
  * @return  void prints the bitmap bits in 25 bit chunks
- * @param[in-out]  numberOfBits specifies the number of bits to print
+ * @param[in]  numberOfBits specifies the number of bits to print
  */
 void printBitmap(int numberOfBits) {
   int i, j, bitCount;
@@ -286,17 +286,17 @@ void printBitmap(int numberOfBits) {
         return;
 
       if (bitCount%25==0)
-          printk("Printing %d - %d bitmaps\n", bitCount, bitCount+24);
+          my_printk("Printing %d - %d bitmaps\n", bitCount, bitCount+24);
 
       if (!checkBit(BLOCK_BITMAP_OFFSET+i, j)) 
-        printk("0 ");
+        my_printk("0 ");
       else 
-        printk("1 ");
+        my_printk("1 ");
 
       bitCount++;
       
       if (bitCount%25==0)
-        printk("\n");
+        my_printk("\n");
         
     }
 
