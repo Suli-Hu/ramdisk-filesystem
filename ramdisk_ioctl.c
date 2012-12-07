@@ -99,15 +99,17 @@ void init_ramdisk(void) {
   // Set the first bit to be 1 to indicate that this spot is full, endianness won't matter since we 
   // will be consistent with out assignment of bits here
   data = getFreeBlock();
+  negateIndexNodePointers(data); /* Negate all of the block pointers, will make it easier to keep track of unused pointers */
   memcpy(RAM_memory+INDEX_NODE_ARRAY_OFFSET+DIRECT_1, &data, sizeof(int));
 
   /****** Set up the root index node *******/
   // Set the type
-  strcpy(RAM_memory+INDEX_NODE_ARRAY_OFFSET+INODE_TYPE,"dir");
+  strncpy(RAM_memory+INDEX_NODE_ARRAY_OFFSET+INODE_TYPE,"dir\0", 4); /* Use strncpy to force 4 byte usage */
   // Transfer 4 bytes into char array for the size
   data = 300;  
   memcpy(RAM_memory+INDEX_NODE_ARRAY_OFFSET+INODE_SIZE, &data, sizeof(int));
   // Set the file count
+  data = 0;
   memcpy(RAM_memory+INDEX_NODE_ARRAY_OFFSET+FILE_COUNT, &data, sizeof(int));
   strcpy(RAM_memory+INDEX_NODE_ARRAY_OFFSET+INODE_FILE_NAME, "/");
 
@@ -152,7 +154,21 @@ void clearIndexNode(int IndexNodeNumber) {
   indexNodeStart = RAM_memory+INDEX_NODE_ARRAY_OFFSET+IndexNodeNumber*INDEX_NODE_SIZE;
   for (i=0; i<INDEX_NODE_SIZE; i++)
     indexNodeStart[i] = '\0';
+}
 
+/**
+ * Helper method that clears all of the block pointers in an index_node by setting them to -1
+ *
+ * @param[in]  indexNodeNumber  the index node for which to clear
+ */
+void negateIndexNodePointers(int indexNodeNumber) {
+  int ii, negate;
+  negate = -1;
+  char *indexNodePointersStart;
+  indexNodePointersStart = RAM_memory+INDEX_NODE_ARRAY_OFFSET+IndexNodeNumber*INDEX_NODE_SIZE+DIRECT_1;
+  for (ii = 0 ; ii < 10 ; ii++) {
+    memcpy(indexNodePointersStart + ii*4, &negate, sizeof(int));
+  }
 }
 
 /**
