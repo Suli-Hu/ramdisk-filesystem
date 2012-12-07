@@ -161,8 +161,8 @@ void clearIndexNode(int IndexNodeNumber) {
 
 void negateIndexNodePointers(int indexNodeNumber) {
   int ii, negate;
-  negate = -1;
   char *indexNodePointersStart;
+  negate = -1;
   indexNodePointersStart = RAM_memory+INDEX_NODE_ARRAY_OFFSET+indexNodeNumber*INDEX_NODE_SIZE+DIRECT_1;
   for (ii = 0 ; ii < 10 ; ii++) {
     memcpy(indexNodePointersStart + ii*4, &negate, sizeof(int));
