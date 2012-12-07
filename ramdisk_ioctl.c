@@ -213,7 +213,7 @@ void allocMemoryForIndexNode(int indexNodeNumber, int numberOfBlocks) {
 
     blockNumber = getFreeBlock();
     // @todo Weird situation, pointers are 8 bytes, so storing them doesn't make sense, store number instead
-    memcpy(indexNodeStart+DIRECT_1+ 4*i, blockNumber, sizeof(int));
+    memcpy(indexNodeStart+DIRECT_1+ 4*i, &blockNumber, sizeof(int));
 
     numberOfBlocks--;
 
