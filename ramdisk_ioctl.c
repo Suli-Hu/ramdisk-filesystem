@@ -83,6 +83,7 @@ int checkBit(int index, int bit) {
 void init_ramdisk(void) {
   // First, we must clear all of the bits of RAM_memory to ensure they are all 0
   int ii, data;
+  short shortData;
   for (ii = 0 ; ii < FS_SIZE ; ii++)
     RAM_memory[ii] = '\0';  // Null terminator is 0
 
@@ -109,8 +110,8 @@ void init_ramdisk(void) {
   data = 300;  
   memcpy(RAM_memory+INDEX_NODE_ARRAY_OFFSET+INODE_SIZE, &data, sizeof(int));
   // Set the file count
-  data = 0;
-  memcpy(RAM_memory+INDEX_NODE_ARRAY_OFFSET+FILE_COUNT, &data, sizeof(int));
+  shortData = 0;
+  memcpy(RAM_memory+INDEX_NODE_ARRAY_OFFSET+FILE_COUNT, &shortData, sizeof(short));
   strcpy(RAM_memory+INDEX_NODE_ARRAY_OFFSET+INODE_FILE_NAME, "/");
 
 
@@ -183,6 +184,7 @@ int createIndexNode(char *type, char *filename, int memorysize) {
   int indexNodeNumber;
   int data;
   int numberOfBlocksRequired;
+  short shortData;
   char *indexNodeStart;
 
   indexNodeNumber = getNewIndexNodeNumber();
@@ -199,8 +201,8 @@ int createIndexNode(char *type, char *filename, int memorysize) {
   printk("Mem Size: %d\n", data);
   memcpy(indexNodeStart+INODE_SIZE, &data, sizeof(int));
   // Set the file count, default to 0
-  data = 0;
-  memcpy(indexNodeStart+FILE_COUNT, &data, sizeof(int));
+  shortData = 0;
+  memcpy(indexNodeStart+FILE_COUNT, &shortData , sizeof(short));
   strcpy(indexNodeStart+INODE_FILE_NAME, filename);
 
   printk("New index node: %d created\n", indexNodeNumber);
@@ -307,7 +309,7 @@ void printIndexNode(int nodeIndex) {
   printk("--Printing indexNode %d--\n", nodeIndex);
   printk("NODE TYPE:%.4s\n", indexNodeStart+INODE_TYPE);
   printk("NODE SIZE:%d\n", (int) *( (int *) (indexNodeStart+INODE_SIZE) ) );
-  printk("FILE COUNT:%d\n", (int) *( (int *)(indexNodeStart+FILE_COUNT) ) );  
+  printk("FILE COUNT:%hi\n", (short) *( (short *)(indexNodeStart+FILE_COUNT) ) );  
   printk("FILE NAME: %s\n", indexNodeStart+INODE_FILE_NAME);
 
   // Prints the Direct memory channels
