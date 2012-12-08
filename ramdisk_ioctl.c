@@ -188,7 +188,7 @@ void negateIndexNodePointers(int indexNodeNumber) {
 int createIndexNode(char *type, char *filename, int memorysize) {
 
   if (memorysize>MAX_FILE_SIZE) {
-    printf("File too large!\n");
+    printk("File too large!\n");
     return -1;
   }
 
@@ -339,9 +339,11 @@ void printIndexNode(int nodeIndex) {
   // Prints the Single indirect channels 
   // BROKEN, FIX BEFORE COMPILE, WILL FREEZE WILL VM!!!
 
-  int singleDirectBlock = (int)(*(indexNodeStart+SINGLE_INDIR));
-  int doubleDirectBlock = (int)(*(indexNodeStart+DOUBLE_INDIR));
-  printf("Single Indirect Block: %d\n", singleIndirectStart);
+  int singleDirectBlock;
+  singleDirectBlock =  = (int)(*(indexNodeStart+SINGLE_INDIR));
+  int doubleDirectBlock;
+  doubleDirectBlock = (int)(*(indexNodeStart+DOUBLE_INDIR));
+  printf("Single Indirect Block: %d\n", singleDirectBlock);
   printf("Double Indirect Block: %d\n", doubleDirectBlock);
   // singleIndirectStart = RAM_memory+ROOT_DIR_OFFSET+(RAM_BLOCK_SIZE*((int)(*(indexNodeStart+SINGLE_INDIR))));
   // printk("MEM SINGLE INDIR: ");
