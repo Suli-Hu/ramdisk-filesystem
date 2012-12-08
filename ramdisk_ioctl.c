@@ -160,13 +160,19 @@ void clearIndexNode(int IndexNodeNumber) {
     indexNodeStart[i] = '\0';
 }
 
+/**
+ * Helper function for setting memory region to -1 for easier tracking 
+ * Set Direct 1-8, single indirect 9 and double indirect 10 byte to -1
+ *
+ * @param[in-out]  indexNodeNumber - id of the index number
+ */
 void negateIndexNodePointers(int indexNodeNumber) {
   int ii, negate;
-  char *indexNodePointersStart;
+  char *indexNodeMemoryRegion;
   negate = -1;
-  indexNodePointersStart = RAM_memory+INDEX_NODE_ARRAY_OFFSET+indexNodeNumber*INDEX_NODE_SIZE+DIRECT_1;
+  indexNodeMemoryRegion = RAM_memory+INDEX_NODE_ARRAY_OFFSET+indexNodeNumber*INDEX_NODE_SIZE+DIRECT_1;
   for (ii = 0 ; ii < 10 ; ii++) {
-    memcpy(indexNodePointersStart + ii*4, &negate, sizeof(int));
+    memcpy(indexNodeMemoryRegion + ii*4, &negate, sizeof(int));
   }
 }
 
@@ -180,6 +186,11 @@ void negateIndexNodePointers(int indexNodeNumber) {
  */
 
 int createIndexNode(char *type, char *filename, int memorysize) {
+
+  if (memorysize>MAX_FILE_SIZE) {
+    printf("File too large!\n");
+    return -1;
+  }
 
   int indexNodeNumber;
   int data;
@@ -209,6 +220,13 @@ int createIndexNode(char *type, char *filename, int memorysize) {
 
   return indexNodeNumber;
 }
+
+/**
+ * Allocate memory for indexNode
+ *
+ * @param[in-out]  indexNodeNumber - index Node number to allocate memory for
+ * @param[in-out]  numberOfBlocks - number of blocks to allocate
+ */
 
 void allocMemoryForIndexNode(int indexNodeNumber, int numberOfBlocks) {
 
@@ -321,6 +339,10 @@ void printIndexNode(int nodeIndex) {
   // Prints the Single indirect channels 
   // BROKEN, FIX BEFORE COMPILE, WILL FREEZE WILL VM!!!
 
+  int singleDirectBlock = (int)(*(indexNodeStart+SINGLE_INDIR));
+  int doubleDirectBlock = (int)(*(indexNodeStart+DOUBLE_INDIR));
+  printf("Single Indirect Block: %d\n", singleIndirectStart);
+  printf("Double Indirect Block: %d\n", doubleDirectBlock);
   // singleIndirectStart = RAM_memory+ROOT_DIR_OFFSET+(RAM_BLOCK_SIZE*((int)(*(indexNodeStart+SINGLE_INDIR))));
   // printk("MEM SINGLE INDIR: ");
   // for (i=0; i<RAM_BLOCK_SIZE/4;i++)
