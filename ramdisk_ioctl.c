@@ -80,6 +80,34 @@ int checkBit(int index, int bit)
 }
 
 /**
+ * Changes the block count in the superblock
+ *
+ * @param[in]  delta  1 if incrementing (block freed), -1 if decrementing (block added)
+ * @remark    delta can be greater than 1 in magnitude, but only if you know what you are doing
+ */   
+ void changeBlockCount(int delta)
+ {
+    int blockCount;
+    memcpy(&blockCount, RAM_memory, sizeof(int));
+    blockCount += delta
+    memcpy(RAM_memory, &blockCount, sizeof(int));
+ }
+
+/**
+ * Changes the index node count in the superblock
+ *
+ * @param[in]  delta  1 if incrementing (index node deleted), -1 if decrementing (index node added)
+ * @remark    delta can be greater in magnitude, but only if you know what you are doing
+ */
+ void changeIndexNodeCount(int delta)
+ {
+    int blockCount;
+    memcpy(&blockCount, RAM_memory+4, sizeof(int));
+    blockCount += delta;
+    memcpy(RAM_memory+4, &blockCount, sizeof(int));
+ }
+
+/**
  * RAMDISK initialization
  * Initializes the ramdisk superblock, indexnodes, and bitmap to include the root directory and nothing else
  *
@@ -132,9 +160,7 @@ int getNewIndexNodeNumber(void)
             /* Clear up this index node before giving it back */
             negateIndexNodePointers(ii);
             /* Subtract 1 from the index node count */
-            memcpy(&indexNodeCount, RAM_memory + 4, sizeof(int));
-            indexNodeCount--;
-            memcpy(RAM_memory + 4, &indexNodeCount, sizeof(int));
+            changeIndexNodeCount(-1);
             /* Return the index node number */
             return ii;
         }
@@ -222,9 +248,7 @@ void clearIndexNode(int IndexNodeNumber)
         indexNodeStart[i] = '\0';
 
     /* Update the superblock index node count */
-    memcpy(&indexNodeCount, RAM_memory + 4, sizeof(int));
-    indexNodeCount++;
-    memcpy(RAM_memory + 4, &indexNodeCount, sizeof(int));
+    changeIndexNodeCount(1);
 }
 
 /**
@@ -258,7 +282,8 @@ int createIndexNode(char *type, char *filename, int memorysize)
 {
     int indexNodeNumber;
     int data;
-    int numberOfBlocksRequired, numBlocksPlusPointers;
+    int numberOfBlocksRequired, numBlocksPlusPointers, numBlocksDoubleIndir;
+    int blocksAvailable;
     short shortData;
     char *indexNodeStart;
 
@@ -272,8 +297,20 @@ int createIndexNode(char *type, char *filename, int memorysize)
       if (numberOfBlocksRequired > 72)
       {
         /* Need extra blocks for the double indirect pointer blocks */
+        numBlocksPlusPointers += 1; /* Add one for the pointer block */
+        numBlocksDoubleIndir = numberOfBlocksRequired - 72;
+        /* Add the number of blocks necessary for all the double indir necessary */
+        numBlocksPlusPointers += (numBlocksDoubleIndir/64) + 1
       }
     }
+
+    memcpy(&blocksAvailable, RAM_memory, sizeof(int));
+    if (numBlocksPlusPointers > blocksAvailable)
+    {
+        printk("Not enough blocks available!\n");
+        return -1;
+    }
+
     if (memorysize > MAX_FILE_SIZE)
     {
         printk("File too large!\n");
@@ -281,8 +318,6 @@ int createIndexNode(char *type, char *filename, int memorysize)
     }
 
     indexNodeNumber = getNewIndexNodeNumber();
-
-    /// @todo  Change blocks required to take into account the pointer blocks   
     allocMemoryForIndexNode(indexNodeNumber, numberOfBlocksRequired);
     indexNodeStart = RAM_memory + INDEX_NODE_ARRAY_OFFSET + indexNodeNumber * INDEX_NODE_SIZE;
 
@@ -385,6 +420,7 @@ int getFreeBlock(void)
 {
 
     int i, j;
+    int blockCount;
 
     for (i = 0; i < BLOCK_BITMAP_SIZE; i++)
     {
@@ -394,6 +430,8 @@ int getFreeBlock(void)
             {
                 // Return block number
                 setBit(BLOCK_BITMAP_OFFSET + i, j);
+                /* Decrement the block count in the superblock */
+                changeBlockCount(-1);
                 // Convert the loop indices into a block bitmap index
                 return i * 8 + (7 - j);
             }
@@ -407,11 +445,14 @@ int getFreeBlock(void)
 
 void freeBlock(int blockindex)
 {
-    int major, minor;
+    int major, minor, blockCount;
     major = blockindex / 8;
     minor = blockindex % 8;
     minor = 7 - minor;
     clearBit(BLOCK_BITMAP_OFFSET + major, minor);
+
+    /* Increment block count in the superblock */
+    changeBlockCount(1);
 }
 
 /************************ DEBUGGING FUNCTIONS *****************************/
