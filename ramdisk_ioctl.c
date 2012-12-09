@@ -99,21 +99,7 @@ void init_ramdisk(void) {
   /****** Set up the block bitmap *******/
   // Set the first bit to be 1 to indicate that this spot is full, endianness won't matter since we 
   // will be consistent with out assignment of bits here
-  data = getFreeBlock();
-  memcpy(RAM_memory+INDEX_NODE_ARRAY_OFFSET+DIRECT_1, &data, sizeof(int));
-
-  /****** Set up the root index node *******/
-  negateIndexNodePointers(0); /* Negate all of the block pointers, will make it easier to keep track of unused pointers */
-  // Set the type
-  strncpy(RAM_memory+INDEX_NODE_ARRAY_OFFSET+INODE_TYPE,"dir\0", 4); /* Use strncpy to force 4 byte usage */
-  // Transfer 4 bytes into char array for the size
-  data = 0;  
-  memcpy(RAM_memory+INDEX_NODE_ARRAY_OFFSET+INODE_SIZE, &data, sizeof(int));
-  // Set the file count
-  shortData = 0;
-  memcpy(RAM_memory+INDEX_NODE_ARRAY_OFFSET+FILE_COUNT, &shortData, sizeof(short));
-  strcpy(RAM_memory+INDEX_NODE_ARRAY_OFFSET+INODE_FILE_NAME, "/");
-
+  createIndexNode("dir\0", "/\0",  0);
 
   /****** At start, root directory has no files, so its block is empty (but claimed) at the moment ******/
   printk("RAMDISK has been initialized with memory\n");
@@ -134,7 +120,6 @@ int getNewIndexNodeNumber(void) {
   for (ii=0; ii<INDEX_NODE_COUNT; ii++) {
 
     indexNodeType = RAM_memory+INDEX_NODE_ARRAY_OFFSET+ii*INDEX_NODE_SIZE+INODE_TYPE;
-    printk("TYPE: %s\n", indexNodeType);  
     if (!(strlen(indexNodeType)>1)) {
       /* Clear up this index node before giving it back */
       negateIndexNodePointers(ii);
@@ -147,15 +132,73 @@ int getNewIndexNodeNumber(void) {
 
 /**
  * Helper method to clear an index node when a file/dir is removed
- *
+ * TO DO, FREE MEMORY FOR INDEX NODE
  * @return  void
  * @param[indexNodeNumber]  int index node number to clear
  */
 void clearIndexNode(int IndexNodeNumber) {
 
-  int i;
+  int i, j, blocknumber, blocknumberInner;
   char *indexNodeStart;
+  char *singleIndirectBlockStart;
+  char *doubleIndirectBlockStart;
+
   indexNodeStart = RAM_memory+INDEX_NODE_ARRAY_OFFSET+IndexNodeNumber*INDEX_NODE_SIZE;
+
+  /****** Free memory used by index node *****/
+  // Direct memory freeing
+  for (i=0; i<8; i++) {
+    blocknumber = (int) *(indexNodeStart+DIRECT_1+i*4);
+
+    // If we received an unallocated block, we are done freeing memory
+    if (blocknumber<=0)
+  break;
+
+       freeBlock(blocknumber);
+  }
+
+  // Single indirect memory freeing
+  blocknumber = (int) * (int *)(indexNodeStart+SINGLE_INDIR);
+  singleIndirectBlockStart =  RAM_memory + DATA_BLOCKS_OFFSET + (blocknumber*RAM_BLOCK_SIZE);
+  freeBlock(blocknumber);
+
+  for (i=0; i<64; i++) {
+    blocknumber = (int) * (int *)(singleIndirectBlockStart+i*4);
+
+    // If we received an unallocated block, we are done freeing memory
+    if (blocknumber==-1)
+  break;
+
+    freeBlock(blocknumber);
+  }
+
+  // Double indirect memory freeing
+  blocknumber = (int) * (int *)(indexNodeStart+DOUBLE_INDIR);
+  singleIndirectBlockStart =  RAM_memory + DATA_BLOCKS_OFFSET + (blocknumber*RAM_BLOCK_SIZE);
+  freeBlock(blocknumber);
+
+  for (i=0; i<64; i++) {
+    blocknumber = (int) * (int *)(singleIndirectBlockStart+i*4);
+
+    // If we received an unallocated block, we are done freeing memory
+    if (blocknumber<=0)
+  break;
+
+    doubleIndirectBlockStart = RAM_memory + DATA_BLOCKS_OFFSET + (blocknumber*RAM_BLOCK_SIZE);
+
+    for (j=0; j<64; j++) {
+        blocknumberInner = (int) * (int *)(doubleIndirectBlockStart+j*4);
+
+  if (blocknumberInner<=0)
+      break;
+  freeBlock(blocknumberInner);
+    }
+    freeBlock(blocknumber);
+  }  
+
+ /****** End of Free memory used by index node *****/
+
+  // Clear index node bits
   for (i=0; i<INDEX_NODE_SIZE; i++)
     indexNodeStart[i] = '\0';
 }
@@ -209,7 +252,6 @@ int createIndexNode(char *type, char *filename, int memorysize) {
   strcpy(indexNodeStart+INODE_TYPE,type);
   // Set indexNode size
   data = memorysize;
-  printk("Mem Size: %d\n", data);
   memcpy(indexNodeStart+INODE_SIZE, &data, sizeof(int));
   // Set the file count, default to 0
   shortData = 0;
@@ -230,8 +272,10 @@ int createIndexNode(char *type, char *filename, int memorysize) {
 
 void allocMemoryForIndexNode(int indexNodeNumber, int numberOfBlocks) {
 
-  char *indexNodeStart, singleIndirectBlockStart;
-  int i, blockNumber, singleIndirectMemBlock;
+  char *indexNodeStart;
+  char *singleIndirectBlockStart;
+  char *doubleIndirectBlockStart;
+  int i, j, blockNumber, singleIndirectMemBlock, doubleIndirectMemBlock;
   indexNodeStart = RAM_memory+INDEX_NODE_ARRAY_OFFSET+indexNodeNumber*INDEX_NODE_SIZE;
 
   // Allocate memory for direct blocks first
@@ -250,7 +294,10 @@ void allocMemoryForIndexNode(int indexNodeNumber, int numberOfBlocks) {
 
   // Allocate memory for single indirect block second
    singleIndirectMemBlock = getFreeBlock();
-   singleIndirectBlockStart = DATA_BLOCKS_OFFSET + singleIndirectMemBlock*RAM_BLOCK_SIZE;
+   memcpy(indexNodeStart+ SINGLE_INDIR, &singleIndirectMemBlock, sizeof(int));
+   singleIndirectBlockStart =  RAM_memory + DATA_BLOCKS_OFFSET + (singleIndirectMemBlock*RAM_BLOCK_SIZE);
+
+  // Each data block hold 64 pointers to further memory blocks
    for (i=0;i<64;i++) {
 
     blockNumber = getFreeBlock();
@@ -261,6 +308,31 @@ void allocMemoryForIndexNode(int indexNodeNumber, int numberOfBlocks) {
     if (numberOfBlocks==0)
       return;
    }
+
+  // Allocate memory for double indirect block third
+  doubleIndirectMemBlock = getFreeBlock();
+  memcpy(indexNodeStart+ DOUBLE_INDIR, &doubleIndirectMemBlock, sizeof(int));  
+  doubleIndirectBlockStart = RAM_memory + DATA_BLOCKS_OFFSET + (doubleIndirectMemBlock*RAM_BLOCK_SIZE);
+
+  // For each data block, we will allocate another data block of 64 pointers
+  for (i=0;i<64;i++) {
+
+  singleIndirectMemBlock = getFreeBlock();
+  singleIndirectBlockStart =  RAM_memory + DATA_BLOCKS_OFFSET + (singleIndirectMemBlock*RAM_BLOCK_SIZE);
+  memcpy(doubleIndirectBlockStart+ 4*i, &singleIndirectMemBlock, sizeof(int));
+
+     // Each data block hold 64 pointers to further memory blocks
+     for (j=0;j<64;j++) {
+
+      blockNumber = getFreeBlock();
+      memcpy(singleIndirectBlockStart+ 4*j, &blockNumber, sizeof(int));
+
+      numberOfBlocks--;
+
+      if (numberOfBlocks==0)
+        return;
+     }
+  }
 
 }
 
@@ -334,12 +406,13 @@ void printBitmap(int numberOfBits) {
 void printIndexNode(int nodeIndex) {
 
   char *indexNodeStart;
-  // char *singleIndirectStart;
-  // char *doubleIndirectStart;
-  int i;
+  char *singleIndirectStart;
+  char *doubleIndirectStart;
+  int singleDirectBlock, doubleDirectBlock, memoryblock,memoryblockinner, i, j;
+
 
   indexNodeStart = RAM_memory+INDEX_NODE_ARRAY_OFFSET+nodeIndex*INDEX_NODE_SIZE;
-  printk("--Printing indexNode %d--\n", nodeIndex);
+  printk("-----Printing indexNode %d-----\n", nodeIndex);
   printk("NODE TYPE:%.4s\n", indexNodeStart+INODE_TYPE);
   printk("NODE SIZE:%d\n", (int) *( (int *) (indexNodeStart+INODE_SIZE) ) );
   printk("FILE COUNT:%hi\n", (short) *( (short *)(indexNodeStart+FILE_COUNT) ) );  
@@ -347,28 +420,47 @@ void printIndexNode(int nodeIndex) {
 
   // Prints the Direct memory channels
   printk("MEM DIRECT: ");
-  for (i=0; i<=7;i++) 
+  for (i=0; i<=7;i++) {
       printk("%d  ", (int)(*(indexNodeStart+DIRECT_1 + 4*i)));
+  }
   printk("\n");
 
   // Prints the Single indirect channels 
-  // BROKEN, FIX BEFORE COMPILE, WILL FREEZE WILL VM!!!
+   singleDirectBlock = (int) *(indexNodeStart+SINGLE_INDIR) ;
+   singleIndirectStart = RAM_memory + DATA_BLOCKS_OFFSET + (singleDirectBlock*RAM_BLOCK_SIZE);
 
-  // int singleDirectBlock;
-  // singleDirectBlock = (int)(*(indexNodeStart+SINGLE_INDIR));
-  // int doubleDirectBlock;
-  // doubleDirectBlock = (int)(*(indexNodeStart+DOUBLE_INDIR));
-  // printk("Single Indirect Block: %d\n", singleDirectBlock);
-  // printk("Double Indirect Block: %d\n", doubleDirectBlock);
+   printk("MEM SINGLE INDIR: \n");
+   for (i=0; i<RAM_BLOCK_SIZE/4;i++) {
+     memoryblock = (int)(*(singleIndirectStart+4*i));
+     if (memoryblock!=0 || memoryblock!=-1)
+        printk("%d  ", memoryblock);
+   }
+   printk("\n");
 
+  // Prints the Double indirect channels 
+   doubleDirectBlock = (int) *(indexNodeStart+DOUBLE_INDIR) ;
+   doubleIndirectStart = RAM_memory + DATA_BLOCKS_OFFSET + (doubleDirectBlock*RAM_BLOCK_SIZE);
 
-  // singleIndirectStart = RAM_memory+ROOT_DIR_OFFSET+(RAM_BLOCK_SIZE*((int)(*(indexNodeStart+SINGLE_INDIR))));
-  // printk("MEM SINGLE INDIR: ");
-  // for (i=0; i<RAM_BLOCK_SIZE/4;i++)
-  //   printk("%d  ", (int)(*(singleIndirectStart+4*i)));
-  // printk("\n");
+   printk("MEM DOUBLE INDIR: ");
+   for (i=0; i<RAM_BLOCK_SIZE/4;i++) {
+     singleDirectBlock = (int)(*(doubleIndirectStart+4*i));
+     singleIndirectStart = RAM_memory + DATA_BLOCKS_OFFSET + (singleDirectBlock*RAM_BLOCK_SIZE);
 
-  // Prints the Double indirect channels
+     if (singleDirectBlock>0) {
+  printk("Sector %d :\n ", i);
+  for (j=0; j<RAM_BLOCK_SIZE/4;j++) {
+  memoryblockinner =  (int)(*(singleIndirectStart+4*j));
+
+        if (memoryblockinner>0)
+           printk("%d ", memoryblockinner);
+  }
+  printk("\n");
+     }
+
+   }
+   printk("\n");
+
+   printk("-----End of Printing indexNode %d-----\n", nodeIndex);
 
 
 }
@@ -404,10 +496,15 @@ static int __init initialization_routine(void) {
 
   // Debugging indexNode
   printIndexNode(0);
-  printBitmap(200);
 
-  indexNodeNum = createIndexNode("reg\0", "myfile.txt\0",  2816);
+printk("MEM BEFORE\n");
+  printBitmap(400);
+  indexNodeNum = createIndexNode("reg\0", "myfile.txt\0",  64816);
   printIndexNode(indexNodeNum);
+
+  clearIndexNode(indexNodeNum);
+printk("MEM AFTER\n");
+  printBitmap(400);
 
   // Verify that memory is correctly set up initially
 
@@ -428,7 +525,7 @@ static void __exit cleanup_routine(void) {
 /****************************IOCTL ENTRY POINT********************************/
 
 static int ramdisk_ioctl(struct inode *inode, struct file *file,
-				unsigned int cmd, unsigned long arg)
+        unsigned int cmd, unsigned long arg)
 { 
   switch (cmd){
 
