@@ -237,14 +237,13 @@ int createIndexNode(char *type, char *pathname, int memorysize) {
 
   int indexNodeNumber, data, numberOfBlocksRequired, directoryNodeNum;
   short shortData;
-  char *indexNodeStart;
-  char *filename;
+  char *indexNodeStart, *filename, *result;
 
   // String parsing to get the file name and directory node
   char delims[] = "/";
-  filename = strtok( pathname, delims );
+  result = strsep( pathname, delims );
   while( result != NULL ) {
-    filename = strtok( NULL, delims );
+    filename = strsep( NULL, delims );
   }
 
 
@@ -255,7 +254,7 @@ int createIndexNode(char *type, char *pathname, int memorysize) {
 
   // Insert the file into the right directory node
   directoryNodeNum = getIndexNodeNumberFromPathname(pathname);
-  insertFileIntoDirectoryNode(directoryNodeNum, IndexNodeNumber, filename);
+  insertFileIntoDirectoryNode(directoryNodeNum, indexNodeNumber, filename);
 
   /****** Set up the root index node *******/
   // Set the type
@@ -307,7 +306,7 @@ void insertFileIntoDirectoryNode(int directoryNodeNum, int fileNodeNum, char* fi
   }
 
   // If we here, we did not find any free direct memory blocks for our new file, look in single indirect memory blocks
-  blocknumber
+  //blocknumber
 
 }
 

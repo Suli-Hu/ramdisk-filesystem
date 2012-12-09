@@ -7,6 +7,7 @@
 #include <asm/uaccess.h>
 #include <linux/tty.h>
 #include <linux/sched.h>
+#include <linux/string.h>
 #include <linux/interrupt.h>
 
 /****************************IOCTL DECLARATIONS*******************************/
@@ -196,3 +197,6 @@ void negateIndexNodePointers(int indexNodeNumber);
 
 
 int createIndexNode(char *type, char *pathname, int memorysize);
+
+int getIndexNodeNumberFromPathname(char *pathname);
+void insertFileIntoDirectoryNode(int directoryNodeNum, int fileNodeNum, char* filename);
