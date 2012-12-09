@@ -304,7 +304,7 @@ int createIndexNode(char *type, char *pathname, int memorysize)
         }
     }
 
-                             memcpy(&blocksAvailable, RAM_memory, sizeof(int));
+    memcpy(&blocksAvailable, RAM_memory, sizeof(int));
     if (numBlocksPlusPointers > blocksAvailable)
     {
         printk("Not enough blocks available!\n");
@@ -467,7 +467,6 @@ void allocMemoryForIndexNode(int indexNodeNumber, int numberOfBlocks)
                 return;
         }
     }
-
 }
 
 /************************ MEMORY MANAGEMENT *****************************/
