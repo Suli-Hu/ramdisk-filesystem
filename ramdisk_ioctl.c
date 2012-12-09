@@ -17,19 +17,20 @@ static struct file_operations pseudo_dev_proc_operations;
 static struct proc_dir_entry *proc_entry;
 
 // @var The ramdisk memory in the kernel */
-static char *RAM_memory; 
+static char *RAM_memory;
 
 void my_printk(char *string)
 {
-  struct tty_struct *my_tty;
+    struct tty_struct *my_tty;
 
-  my_tty = current->signal->tty;
+    my_tty = current->signal->tty;
 
-  if (my_tty != NULL) {
-    (*my_tty->driver->ops->write)(my_tty, string, strlen(string));
-    (*my_tty->driver->ops->write)(my_tty, "\015\012", 2);
-  }
-} 
+    if (my_tty != NULL)
+    {
+        (*my_tty->driver->ops->write)(my_tty, string, strlen(string));
+        (*my_tty->driver->ops->write)(my_tty, "\015\012", 2);
+    }
+}
 
 /**
  * Utility function to set a specified bit within a byte
@@ -38,11 +39,12 @@ void my_printk(char *string)
  * @param[in]  bit  the specified bit to set
  * @remark  The most significant bit is 7, while the least significant bit is 0
  */
-void setBit(int index, int bit) {
-  int mask; 
-  mask = 1;// 00000001b
-  mask <<= bit;  // Shift the one to specified position
-  RAM_memory[index] |= mask; // Set the bit using OR
+void setBit(int index, int bit)
+{
+    int mask;
+    mask = 1;// 00000001b
+    mask <<= bit;  // Shift the one to specified position
+    RAM_memory[index] |= mask; // Set the bit using OR
 }
 
 /**
@@ -52,12 +54,13 @@ void setBit(int index, int bit) {
  * @param[in]  bit  the specified bit to clear
  * @remark  The most significant bit is 7, while the least significant bit is 0
  */
-void clearBit(int index, int bit) {
-  int mask; 
-  mask = 1;// 00000001b
-  mask <<= bit;  // Shift the one to specified position
-  mask = ~mask;
-  RAM_memory[index] &= mask; // Set the bit using OR
+void clearBit(int index, int bit)
+{
+    int mask;
+    mask = 1;// 00000001b
+    mask <<= bit;  // Shift the one to specified position
+    mask = ~mask;
+    RAM_memory[index] &= mask; // Set the bit using OR
 }
 
 /**
@@ -68,38 +71,69 @@ void clearBit(int index, int bit) {
  * @return  int   returns 1 if the bit is set, 0 if it is empty
  * @remark  The most significant bit is 7, while the least significant bit is 0
  */
-int checkBit(int index, int bit) {
-  int mask;
-  mask = 1;
-  mask <<= bit;
-  return (mask & RAM_memory[index]);
+int checkBit(int index, int bit)
+{
+    int mask;
+    mask = 1;
+    mask <<= bit;
+    return (mask & RAM_memory[index]);
 }
+
+/**
+ * Changes the block count in the superblock
+ *
+ * @param[in]  delta  1 if incrementing (block freed), -1 if decrementing (block added)
+ * @remark    delta can be greater than 1 in magnitude, but only if you know what you are doing
+ */   
+ void changeBlockCount(int delta)
+ {
+    int blockCount;
+    memcpy(&blockCount, RAM_memory, sizeof(int));
+    blockCount += delta
+    memcpy(RAM_memory, &blockCount, sizeof(int));
+ }
+
+/**
+ * Changes the index node count in the superblock
+ *
+ * @param[in]  delta  1 if incrementing (index node deleted), -1 if decrementing (index node added)
+ * @remark    delta can be greater in magnitude, but only if you know what you are doing
+ */
+ void changeIndexNodeCount(int delta)
+ {
+    int blockCount;
+    memcpy(&blockCount, RAM_memory+4, sizeof(int));
+    blockCount += delta;
+    memcpy(RAM_memory+4, &blockCount, sizeof(int));
+ }
 
 /**
  * RAMDISK initialization
  * Initializes the ramdisk superblock, indexnodes, and bitmap to include the root directory and nothing else
  *
  */
-void init_ramdisk(void) {
-  // First, we must clear all of the bits of RAM_memory to ensure they are all 0
-  int ii, data;
-  short shortData;
-  for (ii = 0 ; ii < FS_SIZE ; ii++)
-    RAM_memory[ii] = '\0';  // Null terminator is 0
+void init_ramdisk(void)
+{
+    // First, we must clear all of the bits of RAM_memory to ensure they are all 0
+    int ii, data;
+    short shortData;
+    for (ii = 0 ; ii < FS_SIZE ; ii++)
+        RAM_memory[ii] = '\0';  // Null terminator is 0
 
-  /****** Set up the superblock *******/
-  // Consists of two values, a 4 byte value containing the free block count
-  // and a 4 byte value containing the number of free index nodes
-  data = TOT_AVAILABLE_BLOCKS;
-  memcpy(RAM_memory, &data, sizeof(int));
-  data = INDEX_NODE_COUNT - 1;
-  memcpy(RAM_memory+4, &data, sizeof(int));
-  // For now, thats all that our superblock contains, may expand more in the future
+    /****** Set up the superblock *******/
+    // Consists of two values, a 4 byte value containing the free block count
+    // and a 4 byte value containing the number of free index nodes.  Initialized with
+    // everything free
+    data = TOT_AVAILABLE_BLOCKS;
+    memcpy(RAM_memory, &data, sizeof(int));
+    data = INDEX_NODE_COUNT;
+    memcpy(RAM_memory + 4, &data, sizeof(int));
+    // For now, thats all that our superblock contains, may expand more in the future
 
   /****** Set up the block bitmap *******/
   // Set the first bit to be 1 to indicate that this spot is full, endianness won't matter since we 
   // will be consistent with out assignment of bits here
-  createIndexNode("dir\0", "/\0",  256);
+  createIndexNode("dir\0", "/\0",  0);
 
   /****** At start, root directory has no files, so its block is empty (but claimed) at the moment ******/
   printk("RAMDISK has been initialized with memory\n");
@@ -228,15 +262,18 @@ void negateIndexNodePointers(int indexNodeNumber) {
  * @param[in-out]  memorysize  size of the file or dir in bytes
  */
 
-int createIndexNode(char *type, char *pathname, int memorysize) {
+int createIndexNode(char *type, char *filename, int memorysize) {
 
   if (memorysize>MAX_FILE_SIZE) {
     printk("File too large!\n");
     return -1;
   }
 
-  int indexNodeNumber, data, numberOfBlocksRequired, directoryNodeNum;
+  int indexNodeNumber;
+  int data;
+  int numberOfBlocksRequired;
   short shortData;
+<<<<<<< HEAD
   char *indexNodeStart, *filename, *result;
 
   // String parsing to get the file name and directory node
@@ -246,15 +283,21 @@ int createIndexNode(char *type, char *pathname, int memorysize) {
     filename = strsep( NULL, delims );
   }
 
+=======
+  char *indexNodeStart;
+>>>>>>> 6265483653396d1a42731c95d4b3d4fa1dce860c
 
   indexNodeNumber = getNewIndexNodeNumber();
   numberOfBlocksRequired = (memorysize/RAM_BLOCK_SIZE)+1;
   allocMemoryForIndexNode(indexNodeNumber, numberOfBlocksRequired);
   indexNodeStart = RAM_memory+INDEX_NODE_ARRAY_OFFSET+indexNodeNumber*INDEX_NODE_SIZE;
 
+<<<<<<< HEAD
   // Insert the file into the right directory node
   directoryNodeNum = getIndexNodeNumberFromPathname(pathname);
   insertFileIntoDirectoryNode(directoryNodeNum, indexNodeNumber, filename);
+=======
+>>>>>>> 6265483653396d1a42731c95d4b3d4fa1dce860c
 
   /****** Set up the root index node *******/
   // Set the type
@@ -272,6 +315,7 @@ int createIndexNode(char *type, char *pathname, int memorysize) {
   return indexNodeNumber;
 }
 
+<<<<<<< HEAD
 void insertFileIntoDirectoryNode(int directoryNodeNum, int fileNodeNum, char* filename) {
 
   char *indexNodeStart, *dirlistingstart, *singleIndirectStart;
@@ -310,6 +354,8 @@ void insertFileIntoDirectoryNode(int directoryNodeNum, int fileNodeNum, char* fi
 
 }
 
+=======
+>>>>>>> 6265483653396d1a42731c95d4b3d4fa1dce860c
 /**
  * Allocate memory for indexNode
  *
@@ -544,28 +590,18 @@ static int __init initialization_routine(void) {
   // Debugging indexNode
   printIndexNode(0);
 
-  printk("MEM BEFORE\n");
+printk("MEM BEFORE\n");
   printBitmap(400);
-  indexNodeNum = createIndexNode("reg\0", "/myfile.txt\0",  64816);
+  indexNodeNum = createIndexNode("reg\0", "myfile.txt\0",  64816);
   printIndexNode(indexNodeNum);
 
   clearIndexNode(indexNodeNum);
-  printk("MEM AFTER\n");
+printk("MEM AFTER\n");
   printBitmap(400);
 
   // Verify that memory is correctly set up initially
 
   return 0;
-}
-
-/**
- * Get the index Node number from pathname
- *
- * @returns the index node number of the directory that holds the specified file or di
- * @param[in-out]  name  description
- */
-int getIndexNodeNumberFromPathname(char *pathname) {
-
 }
 
 /**
