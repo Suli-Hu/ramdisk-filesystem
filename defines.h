@@ -45,7 +45,7 @@
 #define ROOT_INDEX_NODE 0 // Simply to make this access clearer
 
 // The total number of available blocks in the filesystem, excluding the Root Dir since that is always occupied
-#define TOT_AVAILABLE_BLOCKS FS_SIZE/BLOCK_SIZE-1-INDEX_NODE_ARRAY_LENGTH-BLOCK_BITMAP_BLOCK_COUNT-1
+#define TOT_AVAILABLE_BLOCKS FS_SIZE/BLOCK_SIZE-1-INDEX_NODE_ARRAY_LENGTH-BLOCK_BITMAP_BLOCK_COUNT
 
 /*********************INDEX NODE STRUCTURE************************/
 // Indexes into an inode are in bytes, must be cast into an int or pointer
