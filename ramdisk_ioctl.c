@@ -131,7 +131,7 @@ void init_ramdisk(void)
     // For now, thats all that our superblock contains, may expand more in the future
 
     /****************Create the root directory******************/
-    createIndexNode("dir\0", "/\0",  0);
+    createIndexNode("dir\0", "/\0",  256);
 
     /****** At start, root directory has no files, so its block is empty (but claimed) at the moment ******/
     printk("RAMDISK has been initialized with memory\n");
@@ -278,7 +278,7 @@ void negateIndexNodePointers(int indexNodeNumber)
  * @param[in-out]  memorysize  size of the file or dir in bytes
  */
 
-int createIndexNode(char *type, char *filename, int memorysize)
+int createIndexNode(char *type, char *pathname, int memorysize)
 {
     int indexNodeNumber;
     int data;
@@ -317,9 +317,19 @@ int createIndexNode(char *type, char *filename, int memorysize)
         return -1;
     }
 
+	// String parsing to get the file name and directory node
+  char delims[] = "/";
+  result = strsep( pathname, delims );
+  while( result != NULL ) {
+    filename = strsep( NULL, delims );
+  }
     indexNodeNumber = getNewIndexNodeNumber();
     allocMemoryForIndexNode(indexNodeNumber, numberOfBlocksRequired);
     indexNodeStart = RAM_memory + INDEX_NODE_ARRAY_OFFSET + indexNodeNumber * INDEX_NODE_SIZE;
+
+  // Insert the file into the right directory node
+  directoryNodeNum = getIndexNodeNumberFromPathname(pathname);
+  insertFileIntoDirectoryNode(directoryNodeNum, indexNodeNumber, filename);
 
     /* Set the index node values */
     // Set the type
@@ -334,7 +344,45 @@ int createIndexNode(char *type, char *filename, int memorysize)
 
     printk("New index node: %d created\n", indexNodeNumber);
 
-    return indexNodeNumber;
+  return indexNodeNumber;
+}
+
+void insertFileIntoDirectoryNode(int directoryNodeNum, int fileNodeNum, char* filename) {
+
+  char *indexNodeStart, *dirlistingstart, *singleIndirectStart;
+  int i, blocknumber, nextblocknumber, freeblock;
+
+  indexNodeStart = RAM_memory+INDEX_NODE_ARRAY_OFFSET+directoryNodeNum*INDEX_NODE_SIZE;
+
+  // Look for the last memory block that is free
+  for (i=0; i<8;i++) {
+     blocknumber = (int) *(indexNodeStart+DIRECT_1+i*4);
+     if (blocknumber>-1) {
+        nextblocknumber = (int) *(indexNodeStart+DIRECT_1+(i+1)*4);
+        if (nextblocknumber==-1) {
+          freeblock = blocknumber;
+          break;
+        }
+      }
+  }
+
+  dirlistingstart = RAM_memory+DATA_BLOCKS_OFFSET+(freeblock*RAM_BLOCK_SIZE);
+  
+  // Find the next unused directry file index
+  for (i=0; i<RAM_BLOCK_SIZE/FILE_INFO_SIZE;i++) {
+    blocknumber = (int) *(dirlistingstart+i*FILE_INFO_SIZE+INODE_NUM_OFFSET);
+
+    // We have find a directory block with no blocknumber, so its unused
+    if (blocknumber<=0) {
+      strcpy(dirlistingstart+i*FILE_INFO_SIZE, filename);
+      memcpy(dirlistingstart+i*FILE_INFO_SIZE+INODE_NUM_OFFSET, (short*)&fileNodeNum , sizeof(short));
+      return;
+    }
+  }
+
+  // If we here, we did not find any free direct memory blocks for our new file, look in single indirect memory blocks
+  //blocknumber
+
 }
 
 /**
@@ -466,33 +514,24 @@ void freeBlock(int blockindex)
 void printBitmap(int numberOfBits)
 {
     int i, j, bitCount;
-
     bitCount = 0;
-
     for (i = 0; i < BLOCK_BITMAP_SIZE; i++)
     {
         for (j = 7; j >= 0; j--)
         {
-
             // We have printed the right number of bits
             if (bitCount >= numberOfBits)
                 return;
-
             if (bitCount % 25 == 0)
                 printk("Printing %d - %d bitmaps\n", bitCount, bitCount + 24);
-
             if (!checkBit(BLOCK_BITMAP_OFFSET + i, j))
                 printk("0 ");
             else
                 printk("1 ");
-
             bitCount++;
-
             if (bitCount % 25 == 0)
                 printk("\n");
-
         }
-
     }
 }
 
@@ -599,7 +638,7 @@ static int __init initialization_routine(void)
 
     printk("MEM BEFORE\n");
     printBitmap(400);
-    indexNodeNum = createIndexNode("reg\0", "myfile.txt\0",  64816);
+    indexNodeNum = createIndexNode("reg\0", "/myfile.txt\0",  64816);
     printIndexNode(indexNodeNum);
 
     clearIndexNode(indexNodeNum);
@@ -608,11 +647,21 @@ static int __init initialization_routine(void)
 
     // Verify that memory is correctly set up initially
 
-    return 0;
+  return 0;
 }
 
 /**
-* Clean up routine
+ * Get the index Node number from pathname
+ *
+ * @returns the index node number of the directory that holds the specified file or di
+ * @param[in-out]  name  description
+ */
+int getIndexNodeNumberFromPathname(char *pathname) {
+
+}
+
+/**
+* Clean up routine 
 */
 static void __exit cleanup_routine(void)
 {
