@@ -99,7 +99,7 @@ void init_ramdisk(void) {
   /****** Set up the block bitmap *******/
   // Set the first bit to be 1 to indicate that this spot is full, endianness won't matter since we 
   // will be consistent with out assignment of bits here
-  createIndexNode("dir\0", "/\0",  0);
+  createIndexNode("dir\0", "/\0",  256);
 
   /****** At start, root directory has no files, so its block is empty (but claimed) at the moment ******/
   printk("RAMDISK has been initialized with memory\n");
@@ -228,24 +228,34 @@ void negateIndexNodePointers(int indexNodeNumber) {
  * @param[in-out]  memorysize  size of the file or dir in bytes
  */
 
-int createIndexNode(char *type, char *filename, int memorysize) {
+int createIndexNode(char *type, char *pathname, int memorysize) {
 
   if (memorysize>MAX_FILE_SIZE) {
     printk("File too large!\n");
     return -1;
   }
 
-  int indexNodeNumber;
-  int data;
-  int numberOfBlocksRequired;
+  int indexNodeNumber, data, numberOfBlocksRequired, directoryNodeNum;
   short shortData;
   char *indexNodeStart;
+  char *filename;
+
+  // String parsing to get the file name and directory node
+  char delims[] = "/";
+  filename = strtok( pathname, delims );
+  while( result != NULL ) {
+    filename = strtok( NULL, delims );
+  }
+
 
   indexNodeNumber = getNewIndexNodeNumber();
   numberOfBlocksRequired = (memorysize/RAM_BLOCK_SIZE)+1;
   allocMemoryForIndexNode(indexNodeNumber, numberOfBlocksRequired);
   indexNodeStart = RAM_memory+INDEX_NODE_ARRAY_OFFSET+indexNodeNumber*INDEX_NODE_SIZE;
 
+  // Insert the file into the right directory node
+  directoryNodeNum = getIndexNodeNumberFromPathname(pathname);
+  insertFileIntoDirectoryNode(directoryNodeNum, IndexNodeNumber, filename);
 
   /****** Set up the root index node *******/
   // Set the type
@@ -261,6 +271,44 @@ int createIndexNode(char *type, char *filename, int memorysize) {
   printk("New index node: %d created\n", indexNodeNumber);
 
   return indexNodeNumber;
+}
+
+void insertFileIntoDirectoryNode(int directoryNodeNum, int fileNodeNum, char* filename) {
+
+  char *indexNodeStart, *dirlistingstart, *singleIndirectStart;
+  int i, blocknumber, nextblocknumber, freeblock;
+
+  indexNodeStart = RAM_memory+INDEX_NODE_ARRAY_OFFSET+directoryNodeNum*INDEX_NODE_SIZE;
+
+  // Look for the last memory block that is free
+  for (i=0; i<8;i++) {
+     blocknumber = (int) *(indexNodeStart+DIRECT_1+i*4);
+     if (blocknumber>-1) {
+        nextblocknumber = (int) *(indexNodeStart+DIRECT_1+(i+1)*4);
+        if (nextblocknumber==-1) {
+          freeblock = blocknumber;
+          break;
+        }
+      }
+  }
+
+  dirlistingstart = RAM_memory+DATA_BLOCKS_OFFSET+(freeblock*RAM_BLOCK_SIZE);
+  
+  // Find the next unused directry file index
+  for (i=0; i<RAM_BLOCK_SIZE/FILE_INFO_SIZE;i++) {
+    blocknumber = (int) *(dirlistingstart+i*FILE_INFO_SIZE+INODE_NUM_OFFSET);
+
+    // We have find a directory block with no blocknumber, so its unused
+    if (blocknumber<=0) {
+      strcpy(dirlistingstart+i*FILE_INFO_SIZE, filename);
+      memcpy(dirlistingstart+i*FILE_INFO_SIZE+INODE_NUM_OFFSET, (short*)&fileNodeNum , sizeof(short));
+      return;
+    }
+  }
+
+  // If we here, we did not find any free direct memory blocks for our new file, look in single indirect memory blocks
+  blocknumber
+
 }
 
 /**
@@ -497,18 +545,28 @@ static int __init initialization_routine(void) {
   // Debugging indexNode
   printIndexNode(0);
 
-printk("MEM BEFORE\n");
+  printk("MEM BEFORE\n");
   printBitmap(400);
-  indexNodeNum = createIndexNode("reg\0", "myfile.txt\0",  64816);
+  indexNodeNum = createIndexNode("reg\0", "/myfile.txt\0",  64816);
   printIndexNode(indexNodeNum);
 
   clearIndexNode(indexNodeNum);
-printk("MEM AFTER\n");
+  printk("MEM AFTER\n");
   printBitmap(400);
 
   // Verify that memory is correctly set up initially
 
   return 0;
+}
+
+/**
+ * Get the index Node number from pathname
+ *
+ * @returns the index node number of the directory that holds the specified file or di
+ * @param[in-out]  name  description
+ */
+int getIndexNodeNumberFromPathname(char *pathname) {
+
 }
 
 /**
