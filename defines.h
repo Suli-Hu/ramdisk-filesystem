@@ -24,6 +24,7 @@
 
 /*********************FILE SYSTEM STRUCTURE************************/
 #define FS_SIZE 2097152 // Exactly 2 MB
+#define MAX_FILE_SIZE 1067008
 
 #define RAM_BLOCK_SIZE 256  // Size in bytes
 
