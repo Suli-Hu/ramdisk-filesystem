@@ -194,3 +194,5 @@ void allocMemoryForIndexNode(int indexNodeNumber, int numberOfBlocks);
  */
 void negateIndexNodePointers(int indexNodeNumber);
 
+
+int createIndexNode(char *type, char *filename, int memorysize);
