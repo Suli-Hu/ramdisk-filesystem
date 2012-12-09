@@ -84,14 +84,14 @@ int checkBit(int index, int bit)
  *
  * @param[in]  delta  1 if incrementing (block freed), -1 if decrementing (block added)
  * @remark    delta can be greater than 1 in magnitude, but only if you know what you are doing
- */   
- void changeBlockCount(int delta)
- {
+ */
+void changeBlockCount(int delta)
+{
     int blockCount;
     memcpy(&blockCount, RAM_memory, sizeof(int));
     blockCount += delta
     memcpy(RAM_memory, &blockCount, sizeof(int));
- }
+}
 
 /**
  * Changes the index node count in the superblock
@@ -99,13 +99,13 @@ int checkBit(int index, int bit)
  * @param[in]  delta  1 if incrementing (index node deleted), -1 if decrementing (index node added)
  * @remark    delta can be greater in magnitude, but only if you know what you are doing
  */
- void changeIndexNodeCount(int delta)
- {
+void changeIndexNodeCount(int delta)
+{
     int blockCount;
-    memcpy(&blockCount, RAM_memory+4, sizeof(int));
+    memcpy(&blockCount, RAM_memory + 4, sizeof(int));
     blockCount += delta;
-    memcpy(RAM_memory+4, &blockCount, sizeof(int));
- }
+    memcpy(RAM_memory + 4, &blockCount, sizeof(int));
+}
 
 /**
  * RAMDISK initialization
@@ -209,7 +209,7 @@ void clearIndexNode(int IndexNodeNumber)
 
         // If we received an unallocated block, we are done freeing memory
         if (blocknumber == -1)
-          break;
+            break;
 
         freeBlock(blocknumber);
     }
@@ -231,12 +231,12 @@ void clearIndexNode(int IndexNodeNumber)
 
         for (j = 0; j < 64; j++)
         {
-           blocknumberInner = (int) * (int *)(doubleIndirectBlockStart + j * 4);
+            blocknumberInner = (int) * (int *)(doubleIndirectBlockStart + j * 4);
 
-           if (blocknumberInner <= 0)
+            if (blocknumberInner <= 0)
                 break;
 
-           freeBlock(blocknumberInner);
+            freeBlock(blocknumberInner);
         }
         freeBlock(blocknumber);
     }
@@ -292,19 +292,19 @@ int createIndexNode(char *type, char *pathname, int memorysize)
     numBlocksPlusPointers = numberOfBlocksRequired;
     if (numberOfBlocksRequired > 8)
     {
-      /* Add an extra block for the singly indirect block */
-      numBlocksPlusPointers += 1; 
-      if (numberOfBlocksRequired > 72)
-      {
-        /* Need extra blocks for the double indirect pointer blocks */
-        numBlocksPlusPointers += 1; /* Add one for the pointer block */
-        numBlocksDoubleIndir = numberOfBlocksRequired - 72;
-        /* Add the number of blocks necessary for all the double indir necessary */
-        numBlocksPlusPointers += (numBlocksDoubleIndir/64) + 1
-      }
+        /* Add an extra block for the singly indirect block */
+        numBlocksPlusPointers += 1;
+        if (numberOfBlocksRequired > 72)
+        {
+            /* Need extra blocks for the double indirect pointer blocks */
+            numBlocksPlusPointers += 1; /* Add one for the pointer block */
+            numBlocksDoubleIndir = numberOfBlocksRequired - 72;
+            /* Add the number of blocks necessary for all the double indir necessary */
+            numBlocksPlusPointers += (numBlocksDoubleIndir / 64) + 1
+        }
     }
 
-    memcpy(&blocksAvailable, RAM_memory, sizeof(int));
+                             memcpy(&blocksAvailable, RAM_memory, sizeof(int));
     if (numBlocksPlusPointers > blocksAvailable)
     {
         printk("Not enough blocks available!\n");
@@ -317,19 +317,20 @@ int createIndexNode(char *type, char *pathname, int memorysize)
         return -1;
     }
 
-	// String parsing to get the file name and directory node
-  char delims[] = "/";
-  result = strsep( pathname, delims );
-  while( result != NULL ) {
-    filename = strsep( NULL, delims );
-  }
+    // String parsing to get the file name and directory node
+    char delims[] = "/";
+    result = strsep( pathname, delims );
+    while ( result != NULL )
+    {
+        filename = strsep( NULL, delims );
+    }
     indexNodeNumber = getNewIndexNodeNumber();
     allocMemoryForIndexNode(indexNodeNumber, numberOfBlocksRequired);
     indexNodeStart = RAM_memory + INDEX_NODE_ARRAY_OFFSET + indexNodeNumber * INDEX_NODE_SIZE;
 
-  // Insert the file into the right directory node
-  directoryNodeNum = getIndexNodeNumberFromPathname(pathname);
-  insertFileIntoDirectoryNode(directoryNodeNum, indexNodeNumber, filename);
+    // Insert the file into the right directory node
+    directoryNodeNum = getIndexNodeNumberFromPathname(pathname);
+    insertFileIntoDirectoryNode(directoryNodeNum, indexNodeNumber, filename);
 
     /* Set the index node values */
     // Set the type
@@ -344,44 +345,50 @@ int createIndexNode(char *type, char *pathname, int memorysize)
 
     printk("New index node: %d created\n", indexNodeNumber);
 
-  return indexNodeNumber;
+    return indexNodeNumber;
 }
 
-void insertFileIntoDirectoryNode(int directoryNodeNum, int fileNodeNum, char* filename) {
+void insertFileIntoDirectoryNode(int directoryNodeNum, int fileNodeNum, char *filename)
+{
 
-  char *indexNodeStart, *dirlistingstart, *singleIndirectStart;
-  int i, blocknumber, nextblocknumber, freeblock;
+    char *indexNodeStart, *dirlistingstart, *singleIndirectStart;
+    int i, blocknumber, nextblocknumber, freeblock;
 
-  indexNodeStart = RAM_memory+INDEX_NODE_ARRAY_OFFSET+directoryNodeNum*INDEX_NODE_SIZE;
+    indexNodeStart = RAM_memory + INDEX_NODE_ARRAY_OFFSET + directoryNodeNum * INDEX_NODE_SIZE;
 
-  // Look for the last memory block that is free
-  for (i=0; i<8;i++) {
-     blocknumber = (int) *(indexNodeStart+DIRECT_1+i*4);
-     if (blocknumber>-1) {
-        nextblocknumber = (int) *(indexNodeStart+DIRECT_1+(i+1)*4);
-        if (nextblocknumber==-1) {
-          freeblock = blocknumber;
-          break;
+    // Look for the last memory block that is free
+    for (i = 0; i < 8; i++)
+    {
+        blocknumber = (int) * (indexNodeStart + DIRECT_1 + i * 4);
+        if (blocknumber > -1)
+        {
+            nextblocknumber = (int) * (indexNodeStart + DIRECT_1 + (i + 1) * 4);
+            if (nextblocknumber == -1)
+            {
+                freeblock = blocknumber;
+                break;
+            }
         }
-      }
-  }
-
-  dirlistingstart = RAM_memory+DATA_BLOCKS_OFFSET+(freeblock*RAM_BLOCK_SIZE);
-  
-  // Find the next unused directry file index
-  for (i=0; i<RAM_BLOCK_SIZE/FILE_INFO_SIZE;i++) {
-    blocknumber = (int) *(dirlistingstart+i*FILE_INFO_SIZE+INODE_NUM_OFFSET);
-
-    // We have find a directory block with no blocknumber, so its unused
-    if (blocknumber<=0) {
-      strcpy(dirlistingstart+i*FILE_INFO_SIZE, filename);
-      memcpy(dirlistingstart+i*FILE_INFO_SIZE+INODE_NUM_OFFSET, (short*)&fileNodeNum , sizeof(short));
-      return;
     }
-  }
 
-  // If we here, we did not find any free direct memory blocks for our new file, look in single indirect memory blocks
-  //blocknumber
+    dirlistingstart = RAM_memory + DATA_BLOCKS_OFFSET + (freeblock * RAM_BLOCK_SIZE);
+
+    // Find the next unused directry file index
+    for (i = 0; i < RAM_BLOCK_SIZE / FILE_INFO_SIZE; i++)
+    {
+        blocknumber = (int) * (dirlistingstart + i * FILE_INFO_SIZE + INODE_NUM_OFFSET);
+
+        // We have find a directory block with no blocknumber, so its unused
+        if (blocknumber <= 0)
+        {
+            strcpy(dirlistingstart + i * FILE_INFO_SIZE, filename);
+            memcpy(dirlistingstart + i * FILE_INFO_SIZE + INODE_NUM_OFFSET, (short *)&fileNodeNum , sizeof(short));
+            return;
+        }
+    }
+
+    // If we here, we did not find any free direct memory blocks for our new file, look in single indirect memory blocks
+    //blocknumber
 
 }
 
@@ -647,7 +654,7 @@ static int __init initialization_routine(void)
 
     // Verify that memory is correctly set up initially
 
-  return 0;
+    return 0;
 }
 
 /**
@@ -656,12 +663,13 @@ static int __init initialization_routine(void)
  * @returns the index node number of the directory that holds the specified file or di
  * @param[in-out]  name  description
  */
-int getIndexNodeNumberFromPathname(char *pathname) {
+int getIndexNodeNumberFromPathname(char *pathname)
+{
 
 }
 
 /**
-* Clean up routine 
+* Clean up routine
 */
 static void __exit cleanup_routine(void)
 {
