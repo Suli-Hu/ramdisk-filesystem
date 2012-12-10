@@ -32,21 +32,21 @@
 #define INDEX_NODE_SIZE 64  // Size in bytes
 #define INDEX_NODE_ARRAY_LENGTH 256  // Number of blocks
 #define INDEX_NODE_COUNT INDEX_NODE_ARRAY_LENGTH*(RAM_BLOCK_SIZE/INDEX_NODE_SIZE)
-#define BLOCK_BITMAP_SIZE 4*BLOCK_SIZE
+#define BLOCK_BITMAP_SIZE 4*RAM_BLOCK_SIZE
 #define BLOCK_BITMAP_BLOCK_COUNT 4
 
 #define SUPERBLOCK_OFFSET 0
-#define INDEX_NODE_ARRAY_OFFSET BLOCK_SIZE
+#define INDEX_NODE_ARRAY_OFFSET RAM_BLOCK_SIZE
 
 // I'm indexing the fs via block size
-#define BLOCK_BITMAP_OFFSET BLOCK_SIZE*(INDEX_NODE_ARRAY_LENGTH+1)
+#define BLOCK_BITMAP_OFFSET RAM_BLOCK_SIZE*(INDEX_NODE_ARRAY_LENGTH+1)
 
 // This is the index into the root dir in bytes, or the first data block in the ramdisk
 #define DATA_BLOCKS_OFFSET BLOCK_BITMAP_OFFSET+BLOCK_BITMAP_SIZE
 #define ROOT_INDEX_NODE 0 // Simply to make this access clearer
 
 // The total number of available blocks in the filesystem, excluding the Root Dir since that is always occupied
-#define TOT_AVAILABLE_BLOCKS FS_SIZE/BLOCK_SIZE-1-INDEX_NODE_ARRAY_LENGTH-BLOCK_BITMAP_BLOCK_COUNT
+#define TOT_AVAILABLE_BLOCKS FS_SIZE/RAM_BLOCK_SIZE-1-INDEX_NODE_ARRAY_LENGTH-BLOCK_BITMAP_BLOCK_COUNT
 
 /*********************INDEX NODE STRUCTURE************************/
 // Indexes into an inode are in bytes, must be cast into an int or pointer
@@ -200,3 +200,5 @@ int createIndexNode(char *type, char *pathname, int memorysize);
 
 int getIndexNodeNumberFromPathname(char *pathname);
 void insertFileIntoDirectoryNode(int directoryNodeNum, int fileNodeNum, char* filename);
+void printIndexNode(int nodeIndex);
+char* getFileNameFromPath(char *pathname);
