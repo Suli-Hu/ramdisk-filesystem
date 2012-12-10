@@ -138,6 +138,291 @@ void init_ramdisk(void)
 }
 
 /************************ INTERNAL HELPER FUNCTIONS **************************/
+
+/**
+ * Fills the input array with the block numbers of all the allocated blocks for a given index node, valid for both dir and fil
+ *
+ * @param[in-out]  blockArray  An int array which will hold the values of allocated blocks.  
+ * @param[in]  inodeNum  the inode number to search through
+ * @require blockArray MUST be allocated with size 4168 before being passed into this functino
+ */
+ void getAllocatedBlockNumbers(int * blockArray, int inodeNum) 
+ {
+    int ii, jj, counter, offset, value;
+    char *inodePointer;
+    char *singleIndirPointer;
+    char *doubleIndirPointer;
+    char *blockPointer;
+
+    /* Now, travel through the directory to get all of the block numbers */
+    counter = 0;
+
+    /* Direct */
+    inodePointer = RAM_memory + INDEX_NODE_ARRAY_OFFSET + inodeNum*INDEX_NODE_SIZE;
+    for (ii = 0 ; ii < NUM_DIRECT ; ii++)
+    {
+        value = (int) *( (int *)(inodePointer + DIRECT_1 + ii * 4) );
+        blockArray[counter] = value;
+        /* Now after value is set, check for -1 ( we need to have at least one -1 as an end condition for the external check) */
+        if (value == -1)
+            return;
+
+        counter++;
+    }
+
+    /* Singly Indirect */
+    singleIndirPointer = inodePointer + SINGLE_INDIR;
+    offset = (int) *( (int *)(singleIndirPointer) );
+    if (offset == -1)
+    {
+        /* This means there are no single indirect pointers, so set the next to -1 and return */
+        blockArray[counter] = -1;
+        return;
+    }
+
+    blockPointer = RAM_memory + DATA_BLOCKS_OFFSET + offset * RAM_BLOCK_SIZE;
+    for (ii = 0 ; ii < 64 ; ii++)
+    {
+        value = (int) *( (int *)(blockPointer + ii*4) );
+        blockArray[counter] = value;
+        /* Once again, check for termination */
+        if (value == -1)
+            return;
+        counter++;
+    }
+
+    /* Double Indirect */
+    singleIndirPointer = inodePointer + DOUBLE_INDIR; /* The top level doubly indirect pointer */
+    offset = (int) *( (int *)(singleIndirPointer) );
+    if (offset == -1)
+    {
+        /* This means there are no doubly indirect pointers, so set the next to -1 and return */
+        blockArray[counter] = -1;
+        return;
+    }
+    doubleIndirPointer = RAM_memory + DATA_BLOCKS_OFFSET + offset * RAM_BLOCK_SIZE;
+    for (ii = 0 ; ii < 64 ; ii++)
+    {
+        /* Get the next offset for the next pointer block */
+        offset = (int) *( (int *)(doubleIndirPointer + ii*4) );
+        if (offset == -1)
+        {
+            /* This means there are no more doubly indirect pointers, so set the next to -1 and return */
+            blockArray[counter] = -1;
+            return;
+        }
+        blockPointer = RAM_memory + DATA_BLOCKS_OFFSET = offset * RAM_BLOCK_SIZE;
+        for (jj = 0 ; jj < 64 ; jj++)
+        {
+            /* This is the innermost loop, where the values are not actually data blocks */
+            value = (int) *( (int *)(blockPointer + ii*4) );
+            blockArray[counter] = value;
+            if (value == -1)
+                return;
+            counter++;
+        }
+    }
+    /* If it made it here, then this file has the total max amount of blocks possible! */
+ }
+
+/**
+ * Returns the index node of a file stored in a directory
+ *
+ * @return  int  the index node index for the desired file, returns -1 if not found or -2 if indexNode is not a directory
+ * @param[in]  indexNode  the indexNode to search, must be a valid directory
+ * @param[in]  filename  the filename to search for
+ */
+int findFileIndexNodeInDir(int indexNode, char* filename) 
+{
+    /* Some variables */
+    short fileCount;
+    char *directory;
+    char *inodePointer;
+    char *singleIndirBlock,;
+    char *doubleIndirBlock;
+    char *blockPointer;
+    int counter, ii, jj, kk, blockNumber;
+    int singleBlock, doubleBlock;
+    short outputNode;
+
+    /* The index node we want */
+    directory = RAM_memory+INDEX_NODE_ARRAY_OFFSET+(INDEX_NODE_SIZE*indexNode);
+    if ( strcmp(directory+INODE_TYPE, "dir\0") )
+    {
+        /* These are not equal, thus the inode is not a directory, fail here */
+        return -2;
+    }
+
+    /* Now, get the file count of this directory for use in iterating through */
+    memcpy(&fileCount, directory+INODE_FILE_COUNT, sizeof(short) );
+
+    /* When I find the file, I return with the index node immediately.  If the file isn't found, I return -1 */
+    counter = 0;
+    /* Direct First */
+    for (ii = 0 ; ii < NUM_DIRECT ; ii++)
+    {
+        inodePointer = directory+DIRECT_1 + ii*4;
+        memcpy(&blockNumber, inodePointer, sizeof(int));
+
+        if (counter >= fileCount)
+        {
+            /* Done looking, couldn't find it */
+            return -1;
+        }
+
+        if (blockPointer == -1)
+        {
+            /* This shouldn't occur after the filecount check, so this would indicate potential directory corruption */
+            printk("Potential directory corruption detected\n");
+            return -1;
+        }
+
+        blockPointer = RAM_memory + DATA_BLOCKS_OFFSET + blockNumber * RAM_BLOCK_SIZE;
+
+        /* Now we have our block to look through, so we iterate through this */
+        for (jj = 0 ; jj < (RAM_BLOCK_SIZE / FILE_INFO_SIZE) ; jj++)
+        {
+            /* Check to see if we exceeded the file count */
+            if (counter >= fileCount)
+                return -1;
+
+            /* Go through the file and do a strcmp with the filename */
+            if ( !strcmp(blockPointer, filename) )
+            {
+                memcpy(&outputNode, blockPointer+INODE_NUM_OFFSET, sizeof(short) );
+                return (int)outputNode; /* Output must be an int */
+            }
+            counter++;
+            blockPointer += FILE_INFO_SIZE; /* Travel the blockpointer to the next chunk */
+        }
+    }
+
+    /* Singly indirect */
+    inodePointer = directory + SINGLE_INDIR;
+    memcpy( &singleBlock, inodePointer, sizeof(int) );
+    singleIndirBlock = RAM_memory + DATA_BLOCKS_OFFSET + singleBlock*RAM_BLOCK_SIZE;
+
+    for (ii = 0 ; ii < 64 ; ii++)
+    {
+        /* Rather than memcpy, I simply access the data like this (although I think memcpy can be safer) */
+        singleBlock = ( (int) *( (int *)(singleIndirBlock + ii*4) ) );
+
+        if (counter >= fileCount)
+        {
+            /* Done looking, couldn't find it */
+            return -1;
+        }
+
+        if (singleBlock == -1)
+        {
+            /* This shouldn't occur after the filecount check, so this would indicate potential directory corruption */
+            printk("Potential directory corruption detected\n");
+            return -1;
+        }
+
+        blockPointer =RAM_memory + DATA_BLOCKS_OFFSET + singleBlock * RAM_BLOCK_SIZE;
+
+        for (jj = 0 ; jj < (RAM_BLOCK_SIZE / FILE_INFO_SIZE) ; jj++) 
+        {
+            /* Check to see if we exceeded the file count */
+            if (counter >= fileCount)
+                return -1;
+
+            /* Go through the file and do a strcmp with the filename */
+            if ( !strcmp(blockPointer, filename) )
+            {
+                memcpy(&outputNode, blockPointer+INODE_NUM_OFFSET, sizeof(short) );
+                return (int)outputNode; /* Output must be an int */
+            }
+            counter++;
+            blockPointer += FILE_INFO_SIZE; /* Travel the blockpointer to the next chunk */
+        }
+    }
+
+    /* Doubly Indirect */
+    inodePointer = directory + DOUBLE_INDIR;
+    memcpy(&doubleBlock, inodePointer, sizeof(int));
+    doubleIndirBlock = RAM_memory + DATA_BLOCKS_OFFSET + doubleBlock*RAM_BLOCK_SIZE;
+    for (ii = 0 ; ii < 64 ; ii++)
+    {
+
+    }
+}
+
+/**
+ * Get the index Node number for a file from the pathname
+ *
+ * @returns the index node number of the directory that holds the specified file or dir, or -1 if file doesn't exist, or a dir holding it doesn't exist
+ * @param[in]  pathname  the pathname to parse
+ * @require pathname must NOT have a trailing '/'
+ */
+int getIndexNodeNumberFromPathname(char *pathname)
+{
+    char delim = '/';
+    int ii;
+    int counter;
+    int pathsize, numDirs;
+    char nextFile[14];
+    int currentIndexNode, nextIndexNode;
+
+    counter = 0;
+    numDirs = 0; /* Count up the number of directories found for later use */
+    pathsize = 1;
+    while (1) 
+    {
+        if (pathname[counter] == delim) 
+        {
+            numDirs++;
+        }
+        else if (pathname[counter] == '\0') 
+        {
+            break; /* I don't count the null character in the path size */
+        }
+        pathsize++;
+        counter++;
+    }
+
+    /* We now know how many dirs we are dealing with, and the pathsize, so we can extrac the names of all directories and put them in an array */
+    currentIndexNode = 0; /* Root always at 0 */
+    counter = 1; /* Used to keep track of the pathname index, starts at 1 to ignore root */
+    for (numDirs ; numDirs > 0 ; numDirs--) 
+    {
+        for (ii = 0 ; ii < 14 ; ii++ )
+        {
+          /* Get the name of the current dir */
+          nextFile[ii] = pathname[counter];
+          /* First check and see if we have the filename for the regular file(last iteration of outer loop) */
+          if (nextFile[ii] == '\0')
+          {
+              /* The final iteration, we have the filename */
+              break;
+          }
+
+          /* Increment the counter for the pathname */
+          counter++;
+
+          /* Break if we have the whole filename now for a directory*/
+          if (nextFile[ii] == '/')
+          {
+              nextFile[ii] = '\0';
+              break;
+          }
+        }
+        /* Get the index node of the next directory */
+        nextIndexNode = 1; //findFileIndexNodeInDir(currentIndexNode, nextFile);
+
+        if (nextIndexNode == -1)
+        {
+            return -1; /*Directory or file does not exist */
+        }
+
+        currentIndexNode = nextIndexNode;
+    }
+
+    /* At this point, currentIndexNode has the index node for the file, so we return this */
+    return currentIndexNode;
+}
+
 /**
  * Get the next free IndexNodeNumber. Also clears up the block pointers.
  *
@@ -187,7 +472,7 @@ void clearIndexNode(int IndexNodeNumber)
 
     /****** Free memory used by index node *****/
     // Direct memory freeing
-    for (i = 0; i < 8; i++)
+    for (i = 0; i < NUM_DIRECT; i++)
     {
         blocknumber = (int) * (indexNodeStart + DIRECT_1 + i * 4);
 
@@ -290,7 +575,7 @@ int createIndexNode(char *type, char *pathname, int memorysize)
     // Calculate the actual number of blocks needed for the file
     numberOfBlocksRequired = (memorysize / RAM_BLOCK_SIZE) + 1;
     numBlocksPlusPointers = numberOfBlocksRequired;
-    if (numberOfBlocksRequired > 8)
+    if (numberOfBlocksRequired > NUM_DIRECT)
     {
         /* Add an extra block for the singly indirect block */
         numBlocksPlusPointers += 1;
@@ -318,19 +603,19 @@ int createIndexNode(char *type, char *pathname, int memorysize)
     }
 
     // String parsing to get the file name and directory node
-    char delims[] = "/";
-    result = strsep( pathname, delims );
-    while ( result != NULL )
-    {
-        filename = strsep( NULL, delims );
-    }
+    // char delims[] = "/";
+    // result = strsep( pathname, delims );
+    // while ( result != NULL )
+    // {
+    //     filename = strsep( NULL, delims );
+    // }
     indexNodeNumber = getNewIndexNodeNumber();
     allocMemoryForIndexNode(indexNodeNumber, numberOfBlocksRequired);
     indexNodeStart = RAM_memory + INDEX_NODE_ARRAY_OFFSET + indexNodeNumber * INDEX_NODE_SIZE;
 
     // Insert the file into the right directory node
-    directoryNodeNum = getIndexNodeNumberFromPathname(pathname);
-    insertFileIntoDirectoryNode(directoryNodeNum, indexNodeNumber, filename);
+    // directoryNodeNum = getIndexNodeNumberFromPathname(pathname);
+    // insertFileIntoDirectoryNode(directoryNodeNum, indexNodeNumber, filename);
 
     /* Set the index node values */
     // Set the type
@@ -357,7 +642,7 @@ void insertFileIntoDirectoryNode(int directoryNodeNum, int fileNodeNum, char *fi
     indexNodeStart = RAM_memory + INDEX_NODE_ARRAY_OFFSET + directoryNodeNum * INDEX_NODE_SIZE;
 
     // Look for the last memory block that is free
-    for (i = 0; i < 8; i++)
+    for (i = 0; i < NUM_DIRECT; i++)
     {
         blocknumber = (int) * (indexNodeStart + DIRECT_1 + i * 4);
         if (blocknumber > -1)
@@ -409,7 +694,7 @@ void allocMemoryForIndexNode(int indexNodeNumber, int numberOfBlocks)
     indexNodeStart = RAM_memory + INDEX_NODE_ARRAY_OFFSET + indexNodeNumber * INDEX_NODE_SIZE;
 
     // Allocate memory for direct blocks first
-    for (i = 0; i < 8; i++)
+    for (i = 0; i < NUM_DIRECT; i++)
     {
 
         blockNumber = getFreeBlock();
@@ -654,17 +939,6 @@ static int __init initialization_routine(void)
     // Verify that memory is correctly set up initially
 
     return 0;
-}
-
-/**
- * Get the index Node number from pathname
- *
- * @returns the index node number of the directory that holds the specified file or di
- * @param[in-out]  name  description
- */
-int getIndexNodeNumberFromPathname(char *pathname)
-{
-
 }
 
 /**

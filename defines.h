@@ -48,6 +48,8 @@
 // The total number of available blocks in the filesystem, excluding the Root Dir since that is always occupied
 #define TOT_AVAILABLE_BLOCKS FS_SIZE/BLOCK_SIZE-1-INDEX_NODE_ARRAY_LENGTH-BLOCK_BITMAP_BLOCK_COUNT
 
+#define MAX_BLOCKS_ALLOCATABLE 4168
+
 /*********************INDEX NODE STRUCTURE************************/
 // Indexes into an inode are in bytes, must be cast into an int or pointer
 // before used, but I don't take that into account here.  To access these
@@ -55,19 +57,14 @@
 #define INODE_TYPE 0
 #define INODE_SIZE 4
 #define DIRECT_1 8
-#define DIRECT_2 12
-#define DIRECT_3 16
-#define DIRECT_4 20
-#define DIRECT_5 24
-#define DIRECT_6 28
-#define DIRECT_7 32
-#define DIRECT_8 36
 #define SINGLE_INDIR 40
 #define DOUBLE_INDIR 44
 
+#define NUM_DIRECT 8
+
 // I add this custom value to keep track of directory file count
 // I use 2 bytes ( a short ) for this
-#define FILE_COUNT 48
+#define INODE_FILE_COUNT 48
 
 // I also keep within here the filename for convenience, so that it
 // isn't necessary to view memory to access current files name
