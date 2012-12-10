@@ -116,7 +116,6 @@ void init_ramdisk(void)
 {
     // First, we must clear all of the bits of RAM_memory to ensure they are all 0
     int ii, data;
-    short shortData;
     for (ii = 0 ; ii < FS_SIZE ; ii++)
         RAM_memory[ii] = '\0';  // Null terminator is 0
 
@@ -316,7 +315,6 @@ int createIndexNode(char *type, char *pathname, int memorysize)
     }
 
     // String parsing to get the file name and directory node
-    filename = getFileNameFromPath(pathname);
 
 
     /* Set the index node values */
@@ -328,7 +326,11 @@ int createIndexNode(char *type, char *pathname, int memorysize)
     if (strcmp(type, "reg\0")==0){
       // directoryNodeNum = getIndexNodeNumberFromPathname(pathname);
       directoryNodeNum = 0;
+      filename = getFileNameFromPath(pathname);
       insertFileIntoDirectoryNode(directoryNodeNum, indexNodeNumber, filename);
+    }
+    else {
+      filename = pathname;
     }
 
 
@@ -381,7 +383,7 @@ int numberOfFilesInMemoryBlock(int memoryBlock) {
   char *filename;
   char *memoryblockStart;
   short inodeNum;
-  int i, numberOfFiles, blocknumber;
+  int i, numberOfFiles;
   numberOfFiles = 0;
   memoryblockStart = RAM_memory + DATA_BLOCKS_OFFSET + (memoryBlock*RAM_BLOCK_SIZE);
 
@@ -400,8 +402,8 @@ int numberOfFilesInMemoryBlock(int memoryBlock) {
 void insertFileIntoDirectoryNode(int directoryNodeNum, int fileNodeNum, char *filename)
 {
 
-  char *indexNodeStart, *dirlistingstart, *singleIndirectStart, *filename2;
-  int i, blocknumber, nextblocknumber, freeblock, numOfFiles;
+  char *indexNodeStart, *dirlistingstart;
+  int i, blocknumber, freeblock, numOfFiles;
   short inodeNum;
   freeblock = -1;
   blocknumber = 0;
@@ -433,8 +435,6 @@ void insertFileIntoDirectoryNode(int directoryNodeNum, int fileNodeNum, char *fi
         {
             strcpy(dirlistingstart + i * FILE_INFO_SIZE, filename);
             memcpy(dirlistingstart + i * FILE_INFO_SIZE + INODE_NUM_OFFSET, (short *)&fileNodeNum , sizeof(short));
-
-            printk("NUM: %d\n", numberOfFilesInMemoryBlock(freeblock));
             return;
         }
     }
@@ -538,7 +538,6 @@ int getFreeBlock(void)
 {
 
     int i, j;
-    int blockCount;
 
     for (i = 0; i < BLOCK_BITMAP_SIZE; i++)
     {
@@ -672,21 +671,25 @@ void printIndexNode(int nodeIndex)
     }
 
     // If directory, print all the files in the directory
-    printk("Directory Listing: \n");
-    for (i = 0; i <= 7; i++)
-    {
-      memoryblock = (int)*((int*)(indexNodeStart + DIRECT_1 + 4 * i));
-      dirlistingstart = RAM_memory + DATA_BLOCKS_OFFSET + (memoryblock * RAM_BLOCK_SIZE);
-      for (j=0; j<RAM_BLOCK_SIZE/FILE_INFO_SIZE;j++){
-          indexNodeNum = (short)*(short*)(dirlistingstart + FILE_INFO_SIZE*j+INODE_NUM_OFFSET);
-          if (indexNodeNum>0) {
-            filename = (dirlistingstart + FILE_INFO_SIZE*j);
-            printk("Filename: %s  INode: %hi\n", filename, indexNodeNum);
-          }
-      }
-    }
-    printk("\n");    
 
+    if (strcmp("dir\0",  indexNodeStart + INODE_TYPE)==0) {
+      printk("Directory Listing: \n");
+      for (i = 0; i <= 7; i++)
+      {
+
+        memoryblock = (int)*((int*)(indexNodeStart + DIRECT_1 + 4 * i));
+        dirlistingstart = RAM_memory + DATA_BLOCKS_OFFSET + (memoryblock * RAM_BLOCK_SIZE);
+
+        for (j=0; j<RAM_BLOCK_SIZE/FILE_INFO_SIZE;j++){
+            indexNodeNum = (short)*(short*)(dirlistingstart + FILE_INFO_SIZE*j+INODE_NUM_OFFSET);
+            if (indexNodeNum>0 && memoryblock>-1) {
+              filename = (dirlistingstart + FILE_INFO_SIZE*j);
+              printk("Filename: %s  Inode: %hd\n", filename, indexNodeNum);
+            }
+        }
+      }
+      printk("\n");    
+    }
 
     printk("-----End of Printing indexNode %d-----\n", nodeIndex);
 }
@@ -721,13 +724,11 @@ static int __init initialization_routine(void)
     // Initialize the superblock and all other memory segments
     init_ramdisk();
 
-    // Debugging indexNode
-    printIndexNode(0);
-
     // printk("MEM BEFORE\n");
     // printBitmap(400);
     indexNodeNum = createIndexNode("reg\0", "/myfile.txt\0",  64816);
     printIndexNode(indexNodeNum);
+    printIndexNode(0);
 
     // clearIndexNode(indexNodeNum);
     // printk("MEM AFTER\n");
@@ -746,7 +747,7 @@ static int __init initialization_routine(void)
  */
 int getIndexNodeNumberFromPathname(char *pathname)
 {
-
+  return 0;
 }
 
 /**
