@@ -274,14 +274,8 @@ int findFileIndexNodeInDir(int indexNode, char* filename)
     return -1;
 }
 
-/**
- * Get the index Node number for a file from the pathname
- *
- * @returns the index node number of the directory that holds the specified file or dir, or -1 if file doesn't exist, or a dir holding it doesn't exist
- * @param[in]  pathname  the pathname to parse
- * @require pathname must NOT have a trailing '/'
- */
-int getIndexNodeNumberFromPathname(char *pathname)
+/* Definition of function in the defines file */
+int getIndexNodeNumberFromPathname(char *pathname, int dirFlag)
 {
     char delim = '/';
     int ii;
@@ -310,6 +304,10 @@ int getIndexNodeNumberFromPathname(char *pathname)
     /* We now know how many dirs we are dealing with, and the pathsize, so we can extrac the names of all directories and put them in an array */
     currentIndexNode = 0; /* Root always at 0 */
     counter = 1; /* Used to keep track of the pathname index, starts at 1 to ignore root */
+    if (dirFlag)
+    {
+        numDirs--;  /* Loop through one less directory to return the directory inode, now the file inode */
+    }
     for (numDirs ; numDirs > 0 ; numDirs--) 
     {
         for (ii = 0 ; ii < 14 ; ii++ )
@@ -537,7 +535,7 @@ int createIndexNode(char *type, char *pathname, int memorysize)
 
     // Insert the file into the right directory node    
     if (strcmp(type, "reg\0")==0){
-      // directoryNodeNum = getIndexNodeNumberFromPathname(pathname);
+      // directoryNodeNum = getIndexNodeNumberFromPathname(pathname, 1);
       directoryNodeNum = 0;
       filename = getFileNameFromPath(pathname);
       insertFileIntoDirectoryNode(directoryNodeNum, indexNodeNumber, filename);
@@ -952,17 +950,6 @@ static int __init initialization_routine(void)
     // Verify that memory is correctly set up initially
 
     return 0;
-}
-
-/**
- * Get the index Node number from pathname
- *
- * @returns the index node number of the directory that holds the specified file or di
- * @param[in-out]  name  description
- */
-int getIndexNodeNumberFromPathname(char *pathname)
-{
-  return 0;
 }
 
 /**

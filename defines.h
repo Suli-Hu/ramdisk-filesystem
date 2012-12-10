@@ -195,7 +195,18 @@ void negateIndexNodePointers(int indexNodeNumber);
 
 int createIndexNode(char *type, char *pathname, int memorysize);
 
-int getIndexNodeNumberFromPathname(char *pathname);
+/**
+ * Get the index Node number for a file from the pathname
+ *
+ * @returns the index node number of the directory that holds the specified file or dir, or -1 if file doesn't exist, or a dir holding it doesn't exist
+ *      If the dirFlag is not 0, then it returns the index node of the directory of the file, else it returns the index node of the file itself
+ * @param[in]  pathname  the pathname to parse
+ * @require pathname must NOT have a trailing '/'
+ */
+int getIndexNodeNumberFromPathname(char *pathname, int dirFlag);
+
 void insertFileIntoDirectoryNode(int directoryNodeNum, int fileNodeNum, char* filename);
+
 void printIndexNode(int nodeIndex);
+
 char* getFileNameFromPath(char *pathname);
