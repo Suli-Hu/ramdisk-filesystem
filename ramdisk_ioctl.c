@@ -334,7 +334,7 @@ int getIndexNodeNumberFromPathname(char *pathname)
           }
         }
         /* Get the index node of the next directory */
-        nextIndexNode = 1; //findFileIndexNodeInDir(currentIndexNode, nextFile);
+        nextIndexNode = findFileIndexNodeInDir(currentIndexNode, nextFile);
 
         if (nextIndexNode == -1)
         {
