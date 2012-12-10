@@ -223,13 +223,12 @@ int findFileIndexNodeInDir(int indexNode, char* filename)
     /* Some variables */
     short fileCount;
     char *directory;
-    char *inodePointer;
-    char *singleIndirBlock;
-    char *doubleIndirBlock;
     char *blockPointer;
-    int counter, ii, jj, blockNumber;
-    int singleBlock, doubleBlock;
-    short outputNode;
+    int counter, ii, jj;
+    int outputNode;
+
+    /* The array of all of the allocated blocks for this indexNode */
+    int nodeBlocks[MAX_BLOCKS_ALLOCATABLE];
 
     /* The index node we want */
     directory = RAM_memory+INDEX_NODE_ARRAY_OFFSET+(INDEX_NODE_SIZE*indexNode);
@@ -242,97 +241,37 @@ int findFileIndexNodeInDir(int indexNode, char* filename)
     /* Now, get the file count of this directory for use in iterating through */
     memcpy(&fileCount, directory+INODE_FILE_COUNT, sizeof(short) );
 
-    /* When I find the file, I return with the index node immediately.  If the file isn't found, I return -1 */
+    /* Finally, get the aray of all of the blocks allocated for this index node */
+    getAllocatedBlockNumbers(nodeBlocks, indexNode);
+
+    /* Now, just loop through this array until hit a -1 or the desired file is found */
     counter = 0;
-    /* Direct First */
-    for (ii = 0 ; ii < NUM_DIRECT ; ii++)
-    {
-        inodePointer = directory+DIRECT_1 + ii*4;
-        memcpy(&blockNumber, inodePointer, sizeof(int));
-
-        if (counter >= fileCount)
+    for (ii = 0 ; ii < MAX_BLOCKS_ALLOCATABLE ; ii++) {
+        if (nodeBlocks[ii] == -1)
         {
-            /* Done looking, couldn't find it */
+            /* Did not find the file */
+            if (counter < fileCount)
+                printk("Data corruption, saved fileCount and actual file count mismatch\n");
             return -1;
         }
-
-        if (blockPointer == -1)
+        blockPointer = RAM_memory + DATA_BLOCKS_OFFSET + nodeBlocks[ii] * RAM_BLOCK_SIZE;
+        /* Now, look through this block for the filename */
+        for (jj = 0 ; jj < 64 ; jj++)
         {
-            /* This shouldn't occur after the filecount check, so this would indicate potential directory corruption */
-            printk("Potential directory corruption detected\n");
-            return -1;
-        }
-
-        blockPointer = RAM_memory + DATA_BLOCKS_OFFSET + blockNumber * RAM_BLOCK_SIZE;
-
-        /* Now we have our block to look through, so we iterate through this */
-        for (jj = 0 ; jj < (RAM_BLOCK_SIZE / FILE_INFO_SIZE) ; jj++)
-        {
-            /* Check to see if we exceeded the file count */
             if (counter >= fileCount)
-                return -1;
+                return -1; /* Exceeded the file count */
 
-            /* Go through the file and do a strcmp with the filename */
             if ( !strcmp(blockPointer, filename) )
             {
-                memcpy(&outputNode, blockPointer+INODE_NUM_OFFSET, sizeof(short) );
-                return (int)outputNode; /* Output must be an int */
+                /* We found the file */
+                outputNode = (int) *( (short *) (blockPointer + INODE_NUM_OFFSET) );
+                return outputNode;
             }
             counter++;
-            blockPointer += FILE_INFO_SIZE; /* Travel the blockpointer to the next chunk */
         }
     }
-
-    /* Singly indirect */
-    inodePointer = directory + SINGLE_INDIR;
-    memcpy( &singleBlock, inodePointer, sizeof(int) );
-    singleIndirBlock = RAM_memory + DATA_BLOCKS_OFFSET + singleBlock*RAM_BLOCK_SIZE;
-
-    for (ii = 0 ; ii < 64 ; ii++)
-    {
-        /* Rather than memcpy, I simply access the data like this (although I think memcpy can be safer) */
-        singleBlock = ( (int) *( (int *)(singleIndirBlock + ii*4) ) );
-
-        if (counter >= fileCount)
-        {
-            /* Done looking, couldn't find it */
-            return -1;
-        }
-
-        if (singleBlock == -1)
-        {
-            /* This shouldn't occur after the filecount check, so this would indicate potential directory corruption */
-            printk("Potential directory corruption detected\n");
-            return -1;
-        }
-
-        blockPointer =RAM_memory + DATA_BLOCKS_OFFSET + singleBlock * RAM_BLOCK_SIZE;
-
-        for (jj = 0 ; jj < (RAM_BLOCK_SIZE / FILE_INFO_SIZE) ; jj++) 
-        {
-            /* Check to see if we exceeded the file count */
-            if (counter >= fileCount)
-                return -1;
-
-            /* Go through the file and do a strcmp with the filename */
-            if ( !strcmp(blockPointer, filename) )
-            {
-                memcpy(&outputNode, blockPointer+INODE_NUM_OFFSET, sizeof(short) );
-                return (int)outputNode; /* Output must be an int */
-            }
-            counter++;
-            blockPointer += FILE_INFO_SIZE; /* Travel the blockpointer to the next chunk */
-        }
-    }
-
-    /* Doubly Indirect */
-    inodePointer = directory + DOUBLE_INDIR;
-    memcpy(&doubleBlock, inodePointer, sizeof(int));
-    doubleIndirBlock = RAM_memory + DATA_BLOCKS_OFFSET + doubleBlock*RAM_BLOCK_SIZE;
-    for (ii = 0 ; ii < 64 ; ii++)
-    {
-
-    }
+    /* If it made it to this point, then directory had max possible files, and the file was also not found */
+    return -1;
 }
 
 /**
