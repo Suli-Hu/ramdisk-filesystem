@@ -10,7 +10,7 @@
   */
 #include "defines.h"
 
-MODULE_LICENSE("GPL");
+// MODULE_LICENSE("GPL");
 
 static int ramdisk_ioctl(struct inode *inode, struct file *file, unsigned int cmd, unsigned long arg);
 static struct file_operations pseudo_dev_proc_operations;
@@ -18,19 +18,6 @@ static struct proc_dir_entry *proc_entry;
 
 // @var The ramdisk memory in the kernel */
 static char *RAM_memory;
-
-void my_printk(char *string)
-{
-    struct tty_struct *my_tty;
-
-    my_tty = current->signal->tty;
-
-    if (my_tty != NULL)
-    {
-        (*my_tty->driver->ops->write)(my_tty, string, strlen(string));
-        (*my_tty->driver->ops->write)(my_tty, "\015\012", 2);
-    }
-}
 
 /**
  * Utility function to set a specified bit within a byte
@@ -89,7 +76,7 @@ void changeBlockCount(int delta)
 {
     int blockCount;
     memcpy(&blockCount, RAM_memory, sizeof(int));
-    blockCount += delta
+    blockCount += delta;
     memcpy(RAM_memory, &blockCount, sizeof(int));
 }
 
@@ -116,7 +103,6 @@ void init_ramdisk(void)
 {
     // First, we must clear all of the bits of RAM_memory to ensure they are all 0
     int ii, data;
-    short shortData;
     for (ii = 0 ; ii < FS_SIZE ; ii++)
         RAM_memory[ii] = '\0';  // Null terminator is 0
 
@@ -211,7 +197,7 @@ void init_ramdisk(void)
             blockArray[counter] = -1;
             return;
         }
-        blockPointer = RAM_memory + DATA_BLOCKS_OFFSET = offset * RAM_BLOCK_SIZE;
+        blockPointer = RAM_memory + DATA_BLOCKS_OFFSET + offset * RAM_BLOCK_SIZE;
         for (jj = 0 ; jj < 64 ; jj++)
         {
             /* This is the innermost loop, where the values are not actually data blocks */
@@ -238,10 +224,10 @@ int findFileIndexNodeInDir(int indexNode, char* filename)
     short fileCount;
     char *directory;
     char *inodePointer;
-    char *singleIndirBlock,;
+    char *singleIndirBlock;
     char *doubleIndirBlock;
     char *blockPointer;
-    int counter, ii, jj, kk, blockNumber;
+    int counter, ii, jj, blockNumber;
     int singleBlock, doubleBlock;
     short outputNode;
 
@@ -433,7 +419,6 @@ int getNewIndexNodeNumber(void)
 {
 
     int ii;
-    int indexNodeCount;
     char *indexNodeType;
 
     for (ii = 0; ii < INDEX_NODE_COUNT; ii++)
@@ -585,7 +570,7 @@ int createIndexNode(char *type, char *pathname, int memorysize)
             numBlocksPlusPointers += 1; /* Add one for the pointer block */
             numBlocksDoubleIndir = numberOfBlocksRequired - 72;
             /* Add the number of blocks necessary for all the double indir necessary */
-            numBlocksPlusPointers += (numBlocksDoubleIndir / 64) + 1
+            numBlocksPlusPointers += (numBlocksDoubleIndir / 64) + 1;
         }
     }
 
@@ -625,8 +610,9 @@ int createIndexNode(char *type, char *pathname, int memorysize)
     memcpy(indexNodeStart + INODE_SIZE, &data, sizeof(int));
     // Set the file count, default to 0
     shortData = 0;
-    memcpy(indexNodeStart + FILE_COUNT, &shortData , sizeof(short));
-    strcpy(indexNodeStart + INODE_FILE_NAME, filename);
+    memcpy(indexNodeStart + INODE_FILE_COUNT, &shortData , sizeof(short));
+    /// @todo THIS IS WRONG, SHOULD NOT PASS IN PATHNAME, NEEDS TO BE FILENAME, MUST FIX LATER
+    strcpy(indexNodeStart + INODE_FILE_NAME, pathname);
 
     printk("New index node: %d created\n", indexNodeNumber);
 
@@ -759,7 +745,6 @@ int getFreeBlock(void)
 {
 
     int i, j;
-    int blockCount;
 
     for (i = 0; i < BLOCK_BITMAP_SIZE; i++)
     {
@@ -784,7 +769,7 @@ int getFreeBlock(void)
 
 void freeBlock(int blockindex)
 {
-    int major, minor, blockCount;
+    int major, minor;
     major = blockindex / 8;
     minor = blockindex % 8;
     minor = 7 - minor;
@@ -839,7 +824,7 @@ void printIndexNode(int nodeIndex)
     printk("-----Printing indexNode %d-----\n", nodeIndex);
     printk("NODE TYPE:%.4s\n", indexNodeStart + INODE_TYPE);
     printk("NODE SIZE:%d\n", (int) * ( (int *) (indexNodeStart + INODE_SIZE) ) );
-    printk("FILE COUNT:%hi\n", (short) * ( (short *)(indexNodeStart + FILE_COUNT) ) );
+    printk("FILE COUNT:%hi\n", (short) * ( (short *)(indexNodeStart + INODE_FILE_COUNT) ) );
     printk("FILE NAME: %s\n", indexNodeStart + INODE_FILE_NAME);
 
     // Prints the Direct memory channels
