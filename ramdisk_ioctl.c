@@ -10,11 +10,13 @@
   */
 #include "defines.h"
 
+#ifndef DEBUG
 MODULE_LICENSE("GPL");
 
 static int ramdisk_ioctl(struct inode *inode, struct file *file, unsigned int cmd, unsigned long arg);
 static struct file_operations pseudo_dev_proc_operations;
 static struct proc_dir_entry *proc_entry;
+#endif
 
 // @var The ramdisk memory in the kernel */
 static char *RAM_memory;
@@ -120,7 +122,7 @@ void init_ramdisk(void)
     createIndexNode("dir\0", "/\0",  256);
 
     /****** At start, root directory has no files, so its block is empty (but claimed) at the moment ******/
-    printk("RAMDISK has been initialized with memory\n");
+    PRINT("RAMDISK has been initialized with memory\n");
 }
 
 /************************ INTERNAL HELPER FUNCTIONS **************************/
@@ -252,7 +254,7 @@ int findFileIndexNodeInDir(int indexNode, char *filename)
         {
             /* Did not find the file */
             if (counter < fileCount)
-                printk("Data corruption, saved fileCount and actual file count mismatch\n");
+                PRINT("Data corruption, saved fileCount and actual file count mismatch\n");
             return -1;
         }
         blockPointer = RAM_memory + DATA_BLOCKS_OFFSET + nodeBlocks[ii] * RAM_BLOCK_SIZE;
@@ -516,13 +518,13 @@ int createIndexNode(char *type, char *pathname, int memorysize)
     memcpy(&blocksAvailable, RAM_memory, sizeof(int));
     if (numBlocksPlusPointers > blocksAvailable)
     {
-        printk("Not enough blocks available!\n");
+        PRINT("Not enough blocks available!\n");
         return -1;
     }
 
     if (memorysize > MAX_FILE_SIZE)
     {
-        printk("File too large!\n");
+        PRINT("File too large!\n");
         return -1;
     }
 
@@ -559,7 +561,7 @@ int createIndexNode(char *type, char *pathname, int memorysize)
     memcpy(indexNodeStart + INODE_FILE_COUNT, &shortData , sizeof(short));
     strcpy(indexNodeStart + INODE_FILE_NAME, filename);
 
-    printk("New index node: %d created\n", indexNodeNumber);
+    PRINT("New index node: %d created\n", indexNodeNumber);
 
     return indexNodeNumber;
 }
@@ -611,7 +613,7 @@ int numberOfFilesInMemoryBlock(int memoryBlock)
         {
             numberOfFiles++;
             filename = (memoryblockStart + i * FILE_INFO_SIZE);
-            printk("NODE: %i  FILENAME: %s\n", inodeNum, filename);
+            PRINT("NODE: %i  FILENAME: %s\n", inodeNum, filename);
         }
     }
     return numberOfFiles;
@@ -827,14 +829,14 @@ void printBitmap(int numberOfBits)
             if (bitCount >= numberOfBits)
                 return;
             if (bitCount % 25 == 0)
-                printk("Printing %d - %d bitmaps\n", bitCount, bitCount + 24);
+                PRINT("Printing %d - %d bitmaps\n", bitCount, bitCount + 24);
             if (!checkBit(BLOCK_BITMAP_OFFSET + i, j))
-                printk("0 ");
+                PRINT("0 ");
             else
-                printk("1 ");
+                PRINT("1 ");
             bitCount++;
             if (bitCount % 25 == 0)
-                printk("\n");
+                PRINT("\n");
         }
     }
 }
@@ -849,34 +851,34 @@ void printIndexNode(int nodeIndex)
     short indexNodeNum;
 
     indexNodeStart = RAM_memory + INDEX_NODE_ARRAY_OFFSET + nodeIndex * INDEX_NODE_SIZE;
-    printk("-----Printing indexNode %d-----\n", nodeIndex);
-    printk("NODE TYPE:%.4s\n", indexNodeStart + INODE_TYPE);
-    printk("NODE SIZE:%d\n", (int) * ( (int *) (indexNodeStart + INODE_SIZE) ) );
-    printk("FILE COUNT:%hi\n", (short) * ( (short *)(indexNodeStart + INODE_FILE_COUNT) ) );
-    printk("FILE NAME: %s\n", indexNodeStart + INODE_FILE_NAME);
+    PRINT("-----Printing indexNode %d-----\n", nodeIndex);
+    PRINT("NODE TYPE:%.4s\n", indexNodeStart + INODE_TYPE);
+    PRINT("NODE SIZE:%d\n", (int) * ( (int *) (indexNodeStart + INODE_SIZE) ) );
+    PRINT("FILE COUNT:%hi\n", (short) * ( (short *)(indexNodeStart + INODE_FILE_COUNT) ) );
+    PRINT("FILE NAME: %s\n", indexNodeStart + INODE_FILE_NAME);
 
     // Prints the Direct memory channels
-    printk("MEM DIRECT: ");
+    PRINT("MEM DIRECT: ");
     for (i = 0; i <= 7; i++)
     {
-        printk("%d  ", (int) * ((int *)(indexNodeStart + DIRECT_1 + 4 * i)));
+        PRINT("%d  ", (int) * ((int *)(indexNodeStart + DIRECT_1 + 4 * i)));
     }
-    printk("\n");
+    PRINT("\n");
 
     // Prints the Single indirect channels
     singleDirectBlock = (int) * (indexNodeStart + SINGLE_INDIR) ;
     singleIndirectStart = RAM_memory + DATA_BLOCKS_OFFSET + (singleDirectBlock * RAM_BLOCK_SIZE);
 
-    printk("MEM SINGLE INDIR: \n");
+    PRINT("MEM SINGLE INDIR: \n");
     if (singleDirectBlock != -1)
     {
         for (i = 0; i < RAM_BLOCK_SIZE / 4; i++)
         {
             memoryblock = (int)(*(singleIndirectStart + 4 * i));
             if (memoryblock != 0 || memoryblock != -1)
-                printk("%d  ", memoryblock);
+                PRINT("%d  ", memoryblock);
         }
-        printk("\n");
+        PRINT("\n");
     }
 
 
@@ -884,7 +886,7 @@ void printIndexNode(int nodeIndex)
     doubleDirectBlock = (int) * (indexNodeStart + DOUBLE_INDIR) ;
     doubleIndirectStart = RAM_memory + DATA_BLOCKS_OFFSET + (doubleDirectBlock * RAM_BLOCK_SIZE);
 
-    printk("MEM DOUBLE INDIR: \n");
+    PRINT("MEM DOUBLE INDIR: \n");
     if (doubleDirectBlock != -1)
     {
         for (i = 0; i < RAM_BLOCK_SIZE / 4; i++)
@@ -894,15 +896,15 @@ void printIndexNode(int nodeIndex)
 
             if (singleDirectBlock > -1)
             {
-                printk("Sector %d  block %d:\n ", i, singleDirectBlock);
+                PRINT("Sector %d  block %d:\n ", i, singleDirectBlock);
                 for (j = 0; j < RAM_BLOCK_SIZE / 4; j++)
                 {
                     memoryblockinner =  (int) * ((int *)(singleIndirectStart + 4 * j));
 
                     if (memoryblockinner > -1)
-                        printk("%d ", memoryblockinner);
+                        PRINT("%d ", memoryblockinner);
                 }
-                printk("\n");
+                PRINT("\n");
             }
 
         }
@@ -912,7 +914,7 @@ void printIndexNode(int nodeIndex)
 
     if (strcmp("dir\0",  indexNodeStart + INODE_TYPE) == 0)
     {
-        printk("Directory Listing: \n");
+        PRINT("Directory Listing: \n");
         for (i = 0; i <= 7; i++)
         {
 
@@ -925,18 +927,31 @@ void printIndexNode(int nodeIndex)
                 if (indexNodeNum > 0 && memoryblock > -1)
                 {
                     filename = (dirlistingstart + FILE_INFO_SIZE * j);
-                    printk("Filename: %s  Inode: %hd\n", filename, indexNodeNum);
+                    PRINT("Filename: %s  Inode: %hd\n", filename, indexNodeNum);
                 }
             }
         }
-        printk("\n");
+        PRINT("\n");
     }
 
-    printk("-----End of Printing indexNode %d-----\n", nodeIndex);
+    PRINT("-----End of Printing indexNode %d-----\n", nodeIndex);
 }
 
 /************************INIT AND EXIT ROUTINES*****************************/
+#ifdef DEBUG
+int main()
+{
+    int indexNodeNum;
 
+    RAM_memory = (char *)malloc(FS_SIZE*sizeof(char));
+    init_ramdisk();
+    indexNodeNum = createIndexNode("reg\0", "/myfile.txt\0",  64816);
+    printIndexNode(indexNodeNum);
+    printIndexNode(0);
+    return 0;
+}
+
+#else
 /**
 * The main init routine for the kernel module.  Initializes proc entry
 */
@@ -944,7 +959,7 @@ static int __init initialization_routine(void)
 {
     int indexNodeNum;
 
-    printk("<1> Loading RAMDISK filesystem\n");
+    PRINT("<1> Loading RAMDISK filesystem\n");
 
     pseudo_dev_proc_operations.ioctl = &ramdisk_ioctl;
 
@@ -952,7 +967,7 @@ static int __init initialization_routine(void)
     proc_entry = create_proc_entry("ramdisk", 0444, NULL);
     if (!proc_entry)
     {
-        printk("<1> Error creating /proc entry for ramdisk.\n");
+        PRINT("<1> Error creating /proc entry for ramdisk.\n");
         return 1;
     }
 
@@ -965,14 +980,14 @@ static int __init initialization_routine(void)
     // Initialize the superblock and all other memory segments
     init_ramdisk();
 
-    // printk("MEM BEFORE\n");
+    // PRINT("MEM BEFORE\n");
     // printBitmap(400);
     indexNodeNum = createIndexNode("reg\0", "/myfile.txt\0",  64816);
     printIndexNode(indexNodeNum);
     printIndexNode(0);
 
     // clearIndexNode(indexNodeNum);
-    // printk("MEM AFTER\n");
+    // PRINT("MEM AFTER\n");
     // printBitmap(400);
 
     // Verify that memory is correctly set up initially
@@ -986,7 +1001,7 @@ static int __init initialization_routine(void)
 static void __exit cleanup_routine(void)
 {
 
-    printk("<1> Dumping RAMDISK module\n");
+    PRINT("<1> Dumping RAMDISK module\n");
     remove_proc_entry("ramdisk", NULL);
 
     return;
@@ -1001,39 +1016,39 @@ static int ramdisk_ioctl(struct inode *inode, struct file *file,
     {
 
     case RAM_CREATE:
-        my_printk("Creating file...\n");
+        my_PRINT("Creating file...\n");
         break;
 
     case RAM_MKDIR:
-        my_printk("Making directory...\n");
+        my_PRINT("Making directory...\n");
         break;
 
     case RAM_OPEN:
-        my_printk("Opening file...\n");
+        my_PRINT("Opening file...\n");
         break;
 
     case RAM_CLOSE:
-        my_printk("Closing file...\n");
+        my_PRINT("Closing file...\n");
         break;
 
     case RAM_READ:
-        my_printk("Reading file...\n");
+        my_PRINT("Reading file...\n");
         break;
 
     case RAM_WRITE:
-        my_printk("Writing file...\n");
+        my_PRINT("Writing file...\n");
         break;
 
     case RAM_LSEEK:
-        my_printk("Seeking into file...\n");
+        my_PRINT("Seeking into file...\n");
         break;
 
     case RAM_UNLINK:
-        my_printk("Unlinking file...\n");
+        my_PRINT("Unlinking file...\n");
         break;
 
     case RAM_READDIR:
-        my_printk("Reading file from directory...\n");
+        my_PRINT("Reading file from directory...\n");
         break;
 
     default:
@@ -1047,3 +1062,4 @@ static int ramdisk_ioctl(struct inode *inode, struct file *file,
 // Init and Exit declaration
 module_init(initialization_routine);
 module_exit(cleanup_routine);
+#endif
