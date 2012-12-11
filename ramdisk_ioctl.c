@@ -509,6 +509,9 @@ int createIndexNode(char *type, char *pathname, int memorysize)
 
     // Calculate the actual number of blocks needed for the file
     numberOfBlocksRequired = (memorysize / RAM_BLOCK_SIZE) + 1;
+    if ( memorysize % RAM_BLOCK_SIZE == 0 )
+        numberOfBlocksRequired--;  /* Special case where the size is exact, make sure no extra blocks are allocated */
+
     numBlocksPlusPointers = numberOfBlocksRequired;
     if (numberOfBlocksRequired > NUM_DIRECT)
     {
@@ -980,6 +983,7 @@ int main()
     /* Now create some more files as a test */
     indexNodeNum = createIndexNode("reg\0", "/myfile.txt\0",  64816);
     printIndexNode(indexNodeNum);
+    printSuperblock();
     printIndexNode(0);
     return 0;
 }

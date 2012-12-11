@@ -62,7 +62,9 @@ ramdisk_ioctl.c.LOCAL.16050.c
 
 ramdisk_ioctl.c.REMOTE.16050.c
 
-#######################SUBL PROJECT########################
+#######################SUBL/ECLIPSE PROJECT########################
 ramdisk.sublime-workspace
 ram
 ram.*
+.project
+.cproject
