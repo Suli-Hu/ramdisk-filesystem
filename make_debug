@@ -1,4 +1,0 @@
-# Makefile for debugging while in mac
-
-all:
-	gcc -DEBUG=1 ramdisk_ioctl.c -o ram
