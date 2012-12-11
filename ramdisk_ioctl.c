@@ -833,6 +833,61 @@ void allocMemoryForIndexNode(int indexNodeNumber, int numberOfBlocks)
 }
 
 /************************ MEMORY MANAGEMENT *****************************/
+
+/**
+ * Function that allocates a new block for a given index node
+ *
+ * @return    int    -1 if there is no more room available in the filesystem
+ * @param[in]    indexNode    the indexNode to expand
+ * @param[in]    current   the current number of index nodes allocated
+ */
+int allocateMemoryForIndexNode(int indexNode, int current)
+{
+    int currentSize, numBlocksAllocated;
+    int inodePointer;
+    char *nodePointer;
+    char *blockPointer;
+    char *singleIndirPointer;
+    char *doubleIndirPointer;
+
+    /* First, find out the next indexNode which needs to be allocated */
+    nodePointer = RAM_memory + INDEX_NODE_ARRAY_OFFSET + indexNode *INDEX_NODE_SIZE;
+
+    /* Since current is simply the number of blocks we can use this to figure out where the next free pointer is */
+    if (current < 8)
+    {
+        /* Example: 0 allocated, the free inode pointer is DIRECT_1 */
+        inodePointer = (current % 8) + 1;
+    }
+    else if (current < 72)
+    {
+        /* This is in singly indirect territory */
+        if (current == 8)
+        {
+            /** @todo Special Case where we have to allocated an indirect block as well (must num available blocks in order 
+              *  to not leak a block by accident) 
+              */
+            PRINT("Allocating a new single indirect block for indexNode %d", indexNode);
+        }
+        else
+        {
+            /* Find out which pointer in the indirect block to give it to */
+            inodePointer = ( (current - 8) % 64);
+        }
+    }
+    else
+    {
+        /* Doubly indirect situation, requires a special case on mod 64, to ensure a new block is allocated */
+        if (current == 72)
+        {
+            /* First special case, need to allocate the double pointer, and the first single indirect within it */
+            PRINT("Allocating the first doubly indirect block for indexNode %d", indexNode);
+        }
+    }
+
+
+}
+
 int getFreeBlock(void)
 {
 
