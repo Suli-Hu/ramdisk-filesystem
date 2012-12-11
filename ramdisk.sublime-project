@@ -8,6 +8,11 @@
 			[
 				"doc",
 				"ram.dSYM"
+			],
+			"file_exclude_patterns":
+			[
+				".project",
+				".cproject"
 			]
 		}
 	]

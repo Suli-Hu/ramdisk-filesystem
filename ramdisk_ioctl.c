@@ -574,16 +574,12 @@ int createIndexNode(char *type, char *pathname, int memorysize)
     // Insert the file into the right directory node
     if (strcmp(type, "reg\0") == 0)
     {
-<<<<<<< HEAD
         PRINT("Using my new function\n");
         directoryNodeNum = getIndexNodeNumberFromPathname(pathname, 1);
 
         if (directoryNodeNum == -1)
             return -1; /* Directory of file does not exist */
 
-=======
-        directoryNodeNum = getIndexNodeNumberFromPathname(pathname, 1);
->>>>>>> chenkaiBranch
         filename = getFileNameFromPath(pathname);
         insertFileIntoDirectoryNode(directoryNodeNum, indexNodeNumber, filename);
         printf("***Found direct Num: %d\n", directoryNodeNum);
@@ -1031,15 +1027,13 @@ int main()
     /* Now create some more files as a test */
     indexNodeNum = createIndexNode("reg\0", "/myfile.txt\0",  64816);
     printIndexNode(indexNodeNum);
-<<<<<<< HEAD
     printSuperblock();
-=======
     createIndexNode("reg\0", "/otherfile.txt\0",  200);
     createIndexNode("dir\0", "/myfolder/\0",  400);
     indexNodeNum = createIndexNode("reg\0", "/myfolder/hello.txt\0",  400);
     printIndexNode(indexNodeNum);
+    printSuperblock();
 
->>>>>>> chenkaiBranch
     printIndexNode(0);
     return 0;
 }
