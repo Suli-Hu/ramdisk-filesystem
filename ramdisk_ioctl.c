@@ -203,7 +203,7 @@ void getAllocatedBlockNumbers(int *blockArray, int inodeNum)
         for (jj = 0 ; jj < 64 ; jj++)
         {
             /* This is the innermost loop, where the values are not actually data blocks */
-            value = (int) * ( (int *)(blockPointer + ii * 4) );
+            value = (int) * ( (int *)(blockPointer + jj * 4) );
             blockArray[counter] = value;
             if (value == -1)
                 return;
@@ -480,6 +480,29 @@ void negateIndexNodePointers(int indexNodeNumber)
 }
 
 /**
+ * Helper function to find if a char exists in a string
+ *
+ * @return    bool    true - char found  false - char not found
+ * @param[in-out]    name    description
+ */
+int stringContainsChar(char *string, char ourchar) 
+{
+    int i;
+    char currentChar;
+    i=0;
+    
+    do 
+    {
+        currentChar = string[i];
+        if (currentChar==ourchar) {
+            return 1;
+        }
+            
+        i++;
+    } while (currentChar!='\0');
+    return -1;
+}
+/**
  * Creates a new index node
  *
  * @return  type  description
@@ -539,14 +562,19 @@ int createIndexNode(char *type, char *pathname, int memorysize)
     // Insert the file into the right directory node
     if (strcmp(type, "reg\0") == 0)
     {
-        // directoryNodeNum = getIndexNodeNumberFromPathname(pathname, 1);
-        directoryNodeNum = 0;
+        directoryNodeNum = getIndexNodeNumberFromPathname(pathname, 1);
         filename = getFileNameFromPath(pathname);
         insertFileIntoDirectoryNode(directoryNodeNum, indexNodeNumber, filename);
+        printf("***Found direct Num: %d\n", directoryNodeNum);
+
     }
     else
-    {
-        filename = pathname;
+    {   
+        directoryNodeNum = getIndexNodeNumberFromPathname(pathname, 1);
+
+        printf("***Found direct Num: %d\n", directoryNodeNum);
+        filename = getFileNameFromPath(pathname);
+        insertFileIntoDirectoryNode(directoryNodeNum, indexNodeNumber, filename);
     }
 
 
@@ -576,8 +604,10 @@ char *getFileNameFromPath(char *pathname)
     temp = pathname[index];
     while (temp != '\0')
     {
-        if (temp == delim)
+        if (temp == delim) {
+            if (pathname[index+1]!='\0')
             delimPosition = index;
+        }
         index++;
         temp = pathname[index];
     }
@@ -614,6 +644,7 @@ int numberOfFilesInMemoryBlock(int memoryBlock)
             numberOfFiles++;
             filename = (memoryblockStart + i * FILE_INFO_SIZE);
             PRINT("NODE: %i  FILENAME: %s\n", inodeNum, filename);
+
         }
     }
     return numberOfFiles;
@@ -624,27 +655,36 @@ void insertFileIntoDirectoryNode(int directoryNodeNum, int fileNodeNum, char *fi
 
     char *indexNodeStart, *dirlistingstart;
     int i, blocknumber, freeblock, numOfFiles;
-    short inodeNum;
+    short inodeNum, fileCount;
     freeblock = -1;
     blocknumber = 0;
+    i=0;
 
     indexNodeStart = RAM_memory + INDEX_NODE_ARRAY_OFFSET + directoryNodeNum * INDEX_NODE_SIZE;
 
-    // Look for the last memory block that is free
-    for (i = 0; i < NUM_DIRECT; i++)
-    {
-        blocknumber = (int) * (int *)(indexNodeStart + DIRECT_1 + i * 4);
+    // Increment file count
+    fileCount = (short)*(short*)(indexNodeStart + INODE_FILE_COUNT);
+    fileCount++;
+    memcpy(indexNodeStart + INODE_FILE_COUNT, (short *)&fileCount , sizeof(short));
 
-        if (blocknumber != -1)
+    // Get allocated blocks for directory node
+    int blocks [MAX_BLOCKS_ALLOCATABLE];
+    getAllocatedBlockNumbers(blocks, fileNodeNum);
+    
+    // Find a block that isn't fully allocated of directories
+    while (blocknumber!=-1)
+    {
+        blocknumber=blocks[i];        
+        blocknumber = (int) * (int *)(indexNodeStart + DIRECT_1 + i * 4);
+        numOfFiles = numberOfFilesInMemoryBlock(blocknumber);
+        if (numOfFiles < (RAM_BLOCK_SIZE / FILE_INFO_SIZE))
         {
-            numOfFiles = numberOfFilesInMemoryBlock(blocknumber);
-            if (numOfFiles < (RAM_BLOCK_SIZE / FILE_INFO_SIZE))
-            {
-                freeblock = blocknumber;
-                break;
-            }
-        }
+            freeblock = blocknumber;
+            break;
+        }        
+        i++;
     }
+
     dirlistingstart = RAM_memory + DATA_BLOCKS_OFFSET + (freeblock * RAM_BLOCK_SIZE);
 
     // Find the next unused directry file index
@@ -927,7 +967,10 @@ void printIndexNode(int nodeIndex)
                 if (indexNodeNum > 0 && memoryblock > -1)
                 {
                     filename = (dirlistingstart + FILE_INFO_SIZE * j);
-                    PRINT("Filename: %s  Inode: %hd\n", filename, indexNodeNum);
+                    if (stringContainsChar(filename, '/')==1)
+                        PRINT("Directory: %s  Inode: %hd\n", filename, indexNodeNum);
+                    else
+                        PRINT("File: %s  Inode: %hd\n", filename, indexNodeNum);
                 }
             }
         }
@@ -947,6 +990,11 @@ int main()
     init_ramdisk();
     indexNodeNum = createIndexNode("reg\0", "/myfile.txt\0",  64816);
     printIndexNode(indexNodeNum);
+    createIndexNode("reg\0", "/otherfile.txt\0",  200);
+    createIndexNode("dir\0", "/myfolder/\0",  400);
+    indexNodeNum = createIndexNode("reg\0", "/myfolder/hello.txt\0",  400);
+    printIndexNode(indexNodeNum);
+
     printIndexNode(0);
     return 0;
 }
