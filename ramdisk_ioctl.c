@@ -273,6 +273,7 @@ int findFileIndexNodeInDir(int indexNode, char *filename)
                 return outputNode;
             }
             counter++;
+            blockPointer += FILE_INFO_SIZE; /* Move to next data block */
         }
     }
     /* If it made it to this point, then directory had max possible files, and the file was also not found */
@@ -295,6 +296,7 @@ int getIndexNodeNumberFromPathname(char *pathname, int dirFlag)
     int pathsize, numDirs;
     char nextFile[14];
     int currentIndexNode, nextIndexNode;
+    int isDir;
 
     counter = 0;
     numDirs = 0; /* Count up the number of directories found for later use */
@@ -312,6 +314,10 @@ int getIndexNodeNumberFromPathname(char *pathname, int dirFlag)
         pathsize++;
         counter++;
     }
+
+    /* We have the size of the file (counter does not include null byte), so we check to see if this is a directory */
+    isDir = pathname[counter-1] == '/' ? 1 : 0;
+    numDirs -= isDir; /* If the file to search is a dir, subtract this from the count to ensure the count is correct below */
 
     /* We now know how many dirs we are dealing with, and the pathsize, so we can extrac the names of all directories and put them in an array */
     currentIndexNode = 0; /* Root always at 0 */
@@ -339,7 +345,7 @@ int getIndexNodeNumberFromPathname(char *pathname, int dirFlag)
             /* Break if we have the whole filename now for a directory*/
             if (nextFile[ii] == '/')
             {
-                nextFile[ii] = '\0';
+                nextFile[ii+1] = '\0';
                 break;
             }
         }
