@@ -539,8 +539,12 @@ int createIndexNode(char *type, char *pathname, int memorysize)
     // Insert the file into the right directory node
     if (strcmp(type, "reg\0") == 0)
     {
-        // directoryNodeNum = getIndexNodeNumberFromPathname(pathname, 1);
-        directoryNodeNum = 0;
+        PRINT("Using my new function\n");
+        directoryNodeNum = getIndexNodeNumberFromPathname(pathname, 1);
+
+        if (directoryNodeNum == -1)
+            return -1; /* Directory of file does not exist */
+
         filename = getFileNameFromPath(pathname);
         insertFileIntoDirectoryNode(directoryNodeNum, indexNodeNumber, filename);
     }
