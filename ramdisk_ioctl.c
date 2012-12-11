@@ -608,7 +608,7 @@ int numberOfFilesInMemoryBlock(int memoryBlock)
     {
         inodeNum = (short) * (short *)(memoryblockStart + i * FILE_INFO_SIZE + INODE_NUM_OFFSET);
         if (inodeNum > 0)
-       {
+        {
             numberOfFiles++;
             filename = (memoryblockStart + i * FILE_INFO_SIZE);
             printk("NODE: %i  FILENAME: %s\n", inodeNum, filename);

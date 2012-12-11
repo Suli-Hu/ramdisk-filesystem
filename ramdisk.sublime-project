@@ -2,7 +2,12 @@
 	"folders":
 	[
 		{
-			"path": "/Users/Raphy/Documents/School/Fall 2012/Operating Systems/HW3/ramdisk-filesystem"
+			"path": "/Users/Raphy/Documents/School/Fall 2012/Operating Systems/HW3/ramdisk-filesystem",
+			"name":"Ramdisk Filesystem",
+			"folder_exclude_patterns":
+			[
+				"doc"
+			]
 		}
 	]
 }

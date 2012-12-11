@@ -71,7 +71,7 @@
 #define INODE_FILE_NAME 50
 
 /*********************FILE SYSTEM DIRECTORY STRUCTURE************************/
-// Files are just raw data pointed to from the index node, directories on the 
+// Files are just raw data pointed to from the index node, directories on the
 // othere hand are groups of 16 byte "structs", where 14 bytes is filename and
 // 2 bytes index node number
 
@@ -80,22 +80,25 @@
 
 /*****************************IOCTL STRUCTURES*******************************/
 
-struct RAM_path{
-	char *name;  /** Pathname for the file */
-	int ret;          /** Return value, will be used for a variety of reasons */
+struct RAM_path
+{
+    char *name;  /** Pathname for the file */
+    int ret;          /** Return value, will be used for a variety of reasons */
 };
 
-struct RAM_file {
-	int fd;       /** File descriptor */
-	int offset;  /** Only used for seek, not for close.  Offset into data requested */
-	int ret;      /** Return value */
+struct RAM_file
+{
+    int fd;       /** File descriptor */
+    int offset;  /** Only used for seek, not for close.  Offset into data requested */
+    int ret;      /** Return value */
 };
 
-struct RAM_accessFile {
-	int fd;               /** File descriptor */
-	int numBytes;    /** Number of bytes to transfer into userspace (Used if regular file) */
-	int ret;              /** Return value */
-	char *address;  /** User space address to which to send data */
+struct RAM_accessFile
+{
+    int fd;               /** File descriptor */
+    int numBytes;    /** Number of bytes to transfer into userspace (Used if regular file) */
+    int ret;              /** Return value */
+    char *address;  /** User space address to which to send data */
 };
 
 /***************************KERNEL FS FUNCTION PROTOTYPES********************/
@@ -103,21 +106,21 @@ struct RAM_accessFile {
 /**
  * Kernel pair for the create function
  *
- * @param[in]	input	The RAM_path struct for creating the file
+ * @param[in]   input   The RAM_path struct for creating the file
  */
 void kr_creat(struct RAM_path input);
 
 /**
  * Kernel pair for making a new directory
  *
- * @param[in]	input	The RAM_path struct for creating the file
+ * @param[in]   input   The RAM_path struct for creating the file
  */
 void kr_mkdir(struct RAM_path input);
 
 /**
  * Kernel pair for opening a file
  *
- * @param[in]	input	The RAM_path struct for opening the file
+ * @param[in]   input   The RAM_path struct for opening the file
  */
 void kr_open(struct RAM_path input);
 
@@ -125,42 +128,42 @@ void kr_open(struct RAM_path input);
  * Kernel pair for closing a file
  * @todo may not be necessary, not sure yet
  *
- * @param[in]	input	The file struct for closing the file
+ * @param[in]   input   The file struct for closing the file
  */
 void kr_close(struct RAM_file input);
 
 /**
  * Kernel pair for reading a file
  *
- * @param[in]	input	The accessfile struct.  Output read is placed into this struct
+ * @param[in]   input   The accessfile struct.  Output read is placed into this struct
  */
 void kr_read(struct RAM_accessFile input);
 
 /**
  * Kernel pair for the write function
  *
- * @param[in]	input	The accessfile struct.  Input for writing is in this struct
+ * @param[in]   input   The accessfile struct.  Input for writing is in this struct
  */
 void kr_write(struct RAM_accessFile input);
 
 /**
  * Kernel pair for the seeking function
  *
- * @param[in]	input	input, use offset in here to index into file
+ * @param[in]   input   input, use offset in here to index into file
  */
 void kr_lseek(struct RAM_file input);
 
 /**
  * Kernel pair for unlinking a file from the filesystem
  *
- * @param[in]	input	Path struct.  Will delete file at the desired RAM_path
+ * @param[in]   input   Path struct.  Will delete file at the desired RAM_path
  */
 void kr_unlink(struct RAM_path input);
 
 /**
  * Kernel pair for the readdir function
  *
- * @param[in]	input	Accessfile struct.  Used to read the relevant directory
+ * @param[in]   input   Accessfile struct.  Used to read the relevant directory
  */
 void kr_readdir(struct RAM_accessFile input);
 
@@ -205,8 +208,8 @@ int createIndexNode(char *type, char *pathname, int memorysize);
  */
 int getIndexNodeNumberFromPathname(char *pathname, int dirFlag);
 
-void insertFileIntoDirectoryNode(int directoryNodeNum, int fileNodeNum, char* filename);
+void insertFileIntoDirectoryNode(int directoryNodeNum, int fileNodeNum, char *filename);
 
 void printIndexNode(int nodeIndex);
 
-char* getFileNameFromPath(char *pathname);
+char *getFileNameFromPath(char *pathname);
