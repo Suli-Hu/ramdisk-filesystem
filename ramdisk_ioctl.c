@@ -115,11 +115,13 @@ void init_ramdisk(void)
     data = TOT_AVAILABLE_BLOCKS;
     memcpy(RAM_memory, &data, sizeof(int));
     data = INDEX_NODE_COUNT;
-    memcpy(RAM_memory + 4, &data, sizeof(int));
+    memcpy(RAM_memory + INODE_COUNT_OFFSET, &data, sizeof(int));
     // For now, thats all that our superblock contains, may expand more in the future
+    printSuperblock();
 
     /****************Create the root directory******************/
     createIndexNode("dir\0", "/\0",  256);
+    printSuperblock();
 
     /****** At start, root directory has no files, so its block is empty (but claimed) at the moment ******/
     PRINT("RAMDISK has been initialized with memory\n");
@@ -277,7 +279,14 @@ int findFileIndexNodeInDir(int indexNode, char *filename)
     return -1;
 }
 
-/* Definition of function in the defines file */
+/**
+ * Get the index Node number for a file from the pathname
+ *
+ * @returns the index node number of the directory that holds the specified file or dir, or -1 if file doesn't exist, or a dir holding it doesn't exist
+ *      If the dirFlag is not 0, then it returns the index node of the directory of the file, else it returns the index node of the file itself
+ * @param[in]  pathname  the pathname to parse
+ * @require pathname must NOT have a trailing '/'
+ */
 int getIndexNodeNumberFromPathname(char *pathname, int dirFlag)
 {
     char delim = '/';
@@ -670,13 +679,12 @@ void insertFileIntoDirectoryNode(int directoryNodeNum, int fileNodeNum, char *fi
 
 }
 
-/**
- * Allocate memory for indexNode
+/** 
+ * Allocate memory for index Node given the number of blocks.  This should be done depending on allocation size
  *
- * @param[in]  indexNodeNumber - index Node number to allocate memory for
- * @param[in]  numberOfBlocks - number of blocks to allocate
+ * @param[in]  indexNodeNumber - reference to the index node
+ * @param[in]  numberOfBlocks  - number of blocks to allocate for
  */
-
 void allocMemoryForIndexNode(int indexNodeNumber, int numberOfBlocks)
 {
 
@@ -816,6 +824,19 @@ void freeBlock(int blockindex)
 /************************ DEBUGGING FUNCTIONS *****************************/
 
 /**
+ * Prints out the superblock
+ *
+ */
+void printSuperblock(void)
+{
+    /* At the moment, there are only two values in the superblock.  INODE count, and BLOCK count */
+    PRINT("\n/-------------Printing Superblock---------------/\n");
+    PRINT("Number of free blocks ---> %d\n", (int) *( (int *)(RAM_memory+SUPERBLOCK_OFFSET) ) );
+    PRINT("Number of free index nodes ---> %d\n", (int) *( (int *)(RAM_memory + SUPERBLOCK_OFFSET + INODE_COUNT_OFFSET) ) );
+    PRINT("\n/-------------Done Printing Block---------------/\n");
+}
+
+/**
  * This debugging function prints the specified number of bitmap numberOfBits
  *
  * @return  void prints the bitmap bits in 25 bit chunks
@@ -941,6 +962,12 @@ void printIndexNode(int nodeIndex)
     PRINT("-----End of Printing indexNode %d-----\n", nodeIndex);
 }
 
+/****************************Testing Routines*********************************/
+void testDirCreation()
+{
+    /* Creates 64 files that go into the root directory (max within direct) */
+}
+
 /************************INIT AND EXIT ROUTINES*****************************/
 #ifdef DEBUG
 int main()
@@ -949,6 +976,8 @@ int main()
 
     RAM_memory = (char *)malloc(FS_SIZE*sizeof(char));
     init_ramdisk();
+
+    /* Now create some more files as a test */
     indexNodeNum = createIndexNode("reg\0", "/myfile.txt\0",  64816);
     printIndexNode(indexNodeNum);
     printIndexNode(0);

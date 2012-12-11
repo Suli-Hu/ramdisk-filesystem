@@ -48,6 +48,7 @@
 #define BLOCK_BITMAP_BLOCK_COUNT 4
 
 #define SUPERBLOCK_OFFSET 0
+#define INODE_COUNT_OFFSET 4
 #define INDEX_NODE_ARRAY_OFFSET RAM_BLOCK_SIZE
 
 // I'm indexing the fs via block size
@@ -181,6 +182,8 @@ void kr_readdir(struct RAM_accessFile input);
 
 /*************** FUNCTION DECLARATIONS **********************/
 
+void printSuperblock(void);
+
 /**
  * Get free block from memory region
  *
@@ -188,36 +191,14 @@ void kr_readdir(struct RAM_accessFile input);
  */
 int getFreeBlock(void);
 
-
 void freeBlock(int blockindex);
 
-/**  @todo ADD ALLOCATION FOR SINGLE INDIRECT AND DOUBLE INDIRECT
- * Allocate memory for index Node given the number of blocks.  This should be done depending on allocation size
- *
- * @return  void
- * @param[in-out]  indexNodeNumber - reference to the index node
- * @param[in-out]  numberOfBlocks  - number of blocks to allocate for
- */
 void allocMemoryForIndexNode(int indexNodeNumber, int numberOfBlocks);
 
-/**
- * Helper method that clears all of the block pointers in an index_node by setting them to -1
- *
- * @param[in]  indexNodeNumber  the index node for which to clear
- */
 void negateIndexNodePointers(int indexNodeNumber);
-
 
 int createIndexNode(char *type, char *pathname, int memorysize);
 
-/**
- * Get the index Node number for a file from the pathname
- *
- * @returns the index node number of the directory that holds the specified file or dir, or -1 if file doesn't exist, or a dir holding it doesn't exist
- *      If the dirFlag is not 0, then it returns the index node of the directory of the file, else it returns the index node of the file itself
- * @param[in]  pathname  the pathname to parse
- * @require pathname must NOT have a trailing '/'
- */
 int getIndexNodeNumberFromPathname(char *pathname, int dirFlag);
 
 void insertFileIntoDirectoryNode(int directoryNodeNum, int fileNodeNum, char *filename);

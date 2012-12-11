@@ -65,3 +65,4 @@ ramdisk_ioctl.c.REMOTE.16050.c
 #######################SUBL PROJECT########################
 ramdisk.sublime-workspace
 ram
+ram.*
