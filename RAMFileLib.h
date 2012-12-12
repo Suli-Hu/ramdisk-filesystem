@@ -84,3 +84,5 @@ int rd_unlink(char *pathname);
  * @remark	Fails if fd is a regular file.  On each call, file position of fd incremented by 1
  */
 int rd_readdir(int fd, char *address);
+
+int rd_close(int fd);
