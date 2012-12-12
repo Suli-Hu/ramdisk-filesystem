@@ -68,3 +68,7 @@ ram
 ram.*
 .project
 .cproject
+
+user.dSYM/Contents/Resources/DWARF/user
+
+ramdisk_ioctl.c.orig
