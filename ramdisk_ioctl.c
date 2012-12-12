@@ -121,6 +121,7 @@ void init_ramdisk(void)
 
     /****************Create the root directory******************/
     createIndexNode("dir\0", "/\0",  0);
+    printIndexNode(0);
     printSuperblock();
 
     /****** At start, root directory has no files, so its block is empty (but claimed) at the moment ******/
@@ -564,12 +565,6 @@ int createIndexNode(char *type, char *pathname, int memorysize)
         return -1;
     }
 
-    if (memorysize > MAX_FILE_SIZE)
-    {
-        PRINT("File too large!\n");
-        return -1;
-    }
-
     // String parsing to get the file name and directory node
 
 
@@ -579,7 +574,8 @@ int createIndexNode(char *type, char *pathname, int memorysize)
     indexNodeStart = RAM_memory + INDEX_NODE_ARRAY_OFFSET + indexNodeNumber * INDEX_NODE_SIZE;
 
     // Insert the file into the right directory node
-    if (strcmp(type, "reg\0") == 0)
+    filename = getFileNameFromPath(pathname);
+    if (strcmp(pathname, "/\0"))
     {
         PRINT("Using my new function\n");
         directoryNodeNum = getIndexNodeNumberFromPathname(pathname, 1);
@@ -587,20 +583,9 @@ int createIndexNode(char *type, char *pathname, int memorysize)
         if (directoryNodeNum == -1)
             return -1; /* Directory of file does not exist */
 
-        filename = getFileNameFromPath(pathname);
         insertFileIntoDirectoryNode(directoryNodeNum, indexNodeNumber, filename);
         printf("***Found direct Num: %d\n", directoryNodeNum);
-
     }
-    else
-    {   
-        directoryNodeNum = getIndexNodeNumberFromPathname(pathname, 1);
-
-        printf("***Found direct Num: %d\n", directoryNodeNum);
-        filename = getFileNameFromPath(pathname);
-        insertFileIntoDirectoryNode(directoryNodeNum, indexNodeNumber, filename);
-    }
-
 
     /* Set the index node values */
     // Set the type
@@ -667,8 +652,6 @@ int numberOfFilesInMemoryBlock(int memoryBlock)
         {
             numberOfFiles++;
             filename = (memoryblockStart + i * FILE_INFO_SIZE);
-            PRINT("NODE: %i  FILENAME: %s\n", inodeNum, filename);
-
         }
     }
     return numberOfFiles;
@@ -688,6 +671,7 @@ int insertFileIntoDirectoryNode(int directoryNodeNum, int fileNodeNum, char *fil
     char *indexNodeStart, *dirlistingstart;
     int i, blocknumber, freeblock, numOfFiles;
     short inodeNum, fileCount, numFreeBlocks;
+    int dirSize;
     freeblock = -1;
     blocknumber = 0;
     i=0;
@@ -711,7 +695,7 @@ int insertFileIntoDirectoryNode(int directoryNodeNum, int fileNodeNum, char *fil
 
     /* Also need to check if the next added file will then require a new block for more storage */
     numFreeBlocks = (int) *((int *) (RAM_memory + SUPERBLOCK_OFFSET)) ;
-    if (fileCount  % 16 )
+    if (!(fileCount  % 16))
     {
         /* On this mod, it means the next addition requires a new block, so check if enough blocks are available */
         if (numFreeBlocks < 1)
@@ -729,19 +713,23 @@ int insertFileIntoDirectoryNode(int directoryNodeNum, int fileNodeNum, char *fil
     /* Good, we can properly add this file */
     fileCount++;
     memcpy(indexNodeStart + INODE_FILE_COUNT, (short *)&fileCount , sizeof(short));
+    /* Also, increase the file size of the directory */
+    dirSize = (int) *( (int *)(indexNodeStart + INODE_SIZE) );
+    dirSize += 16;
+    memcpy(indexNodeStart + INODE_SIZE, &dirSize, sizeof(int) );
 
     // Get allocated blocks for directory node
     int blocks [MAX_BLOCKS_ALLOCATABLE];
-    getAllocatedBlockNumbers(blocks, fileNodeNum);
+    getAllocatedBlockNumbers(blocks, directoryNodeNum);
     
     // Find a block that isn't fully allocated of directories
-    while (blocknumber!=-1)
+    do
     {
         blocknumber=blocks[i];
         if (blocknumber == -1)
         {
             blocknumber = allocateNewBlockForIndexNode(directoryNodeNum, i);
-            if (blocknumber)
+            if (blocknumber == -1)
                 return -1;
         } 
         numOfFiles = numberOfFilesInMemoryBlock(blocknumber);
@@ -751,7 +739,7 @@ int insertFileIntoDirectoryNode(int directoryNodeNum, int fileNodeNum, char *fil
             break;
         }        
         i++;
-    }
+    } while (blocknumber!=-1);
 
     dirlistingstart = RAM_memory + DATA_BLOCKS_OFFSET + (freeblock * RAM_BLOCK_SIZE);
 
@@ -910,7 +898,7 @@ int allocateNewBlockForIndexNode(int indexNode, int current)
     if (current < 8)
     {
         /* Example: 0 allocated, the free inode pointer is DIRECT_1 at offset 0*/
-        PRINT("Allocating a new direct block for indexNode %d", indexNode);
+        PRINT("Allocating a new direct block for indexNode %d\n", indexNode);
         if ( ((int)*((int *)(nodePointer+DIRECT_1+current*4))) != -1)
         {
             PRINT("Mem corruption, block pointers are inconsistent\n");
@@ -918,7 +906,7 @@ int allocateNewBlockForIndexNode(int indexNode, int current)
         }
         newBlock = getFreeBlock();
         /* Current is num allocated blocks, so the next allocatable block is at index current */
-        memcpy(nodePointer+DIRECT_1+current*4, &inodePointer, sizeof(int));
+        memcpy(nodePointer+DIRECT_1+current*4, &newBlock, sizeof(int));
         return newBlock;
     }
     else if (current < 72)
@@ -929,7 +917,7 @@ int allocateNewBlockForIndexNode(int indexNode, int current)
             /** @todo Special Case where we have to allocated an indirect block as well (must num available blocks in order 
               *  to not leak a block by accident) 
               */
-            PRINT("Allocating a new single indirect block for indexNode %d", indexNode);
+            PRINT("Allocating a new single indirect block for indexNode %d\n", indexNode);
             if (numAvailableBlocks < 2)
             {
                 PRINT("Out of memory, no room to allocate both a single indirect and data block\n");
@@ -975,7 +963,7 @@ int allocateNewBlockForIndexNode(int indexNode, int current)
         if (current == 72)
         {
             /* First special case, need to allocate the double pointer, and the first single indirect within it */
-            PRINT("Allocating the first doubly indirect block for indexNode %d", indexNode);
+            PRINT("Allocating the first doubly indirect block for indexNode %d\n", indexNode);
             if (numAvailableBlocks < 3)
             {
                 /* Not enough blocks available */
@@ -1243,14 +1231,14 @@ void testDirCreation()
     /* Creates 20 files that go into the root directory (starts adding files to new data blocks */
     int ii, indexNodeNum;
     char filename[80];
-    for (ii = 0 ; ii < 20 ; ii++)
+    for (ii = 0 ; ii < 1024 ; ii++)
     {
         sprintf(filename, "/test%d", ii);
         indexNodeNum = createIndexNode("reg\0", filename, 0);
-        PRINT("Created index node %d for file %s", indexNodeNum, filename);
+        PRINT("Created index node %d for file %s\n", indexNodeNum, filename);
+        printIndexNode(0);
     }
     /* Print out the root indexNode now */
-    printIndexNode(0);
     printSuperblock();
 }
 
@@ -1262,7 +1250,6 @@ int main()
 
     RAM_memory = (char *)malloc(FS_SIZE*sizeof(char));
     init_ramdisk();
-
     testDirCreation();
     /* Now create some more files as a test */
     // indexNodeNum = createIndexNode("reg\0", "/myfile.txt\0",  0);
