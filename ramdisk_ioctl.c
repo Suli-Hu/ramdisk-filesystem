@@ -130,18 +130,6 @@ void init_ramdisk(void)
 /************************ INTERNAL HELPER FUNCTIONS **************************/
 
 /**
- * Writes a new file into a directory, given the file name, and the index node of the directory to write into
- *
- * @return    int    -1 on fail, 0 on success
- * @param[in]    indexNode    the indexnode of the directory 
- * @param[in]   file    the name of the file to insert into the directory 
- */
-int insertFileIntoDir(int indexNode, char *filename)
-{
-    
-}
-
-/**
  * Fills the input array with the block numbers of all the allocated blocks for a given index node, valid for both dir and fil
  *
  * @param[in-out]  blockArray  An int array which will hold the values of allocated blocks.
@@ -656,7 +644,7 @@ char *getFileNameFromPath(char *pathname)
  * Helper method that returns how many files are stored
  * in a memory block
  *
- * @returns number of memory block
+ * @returns number of memory block, or -1 if the memoryBlock passed in is -1
  * @param[in-out]  name  description
  */
 int numberOfFilesInMemoryBlock(int memoryBlock)
@@ -686,20 +674,59 @@ int numberOfFilesInMemoryBlock(int memoryBlock)
     return numberOfFiles;
 }
 
-void insertFileIntoDirectoryNode(int directoryNodeNum, int fileNodeNum, char *filename)
+/**
+ * Inserts a file into a directory node
+ *
+ * @return    int    -1 on fail, 0 on success
+ * @param[in]    directoryNodeNum    the indexnode number for the directory
+ * @param[in]    fileNodeNum      the indexNode of the file to insert(must be generated already)
+ * @param[in]    filename    the filename of the file to insert
+ */
+int insertFileIntoDirectoryNode(int directoryNodeNum, int fileNodeNum, char *filename)
 {
 
     char *indexNodeStart, *dirlistingstart;
     int i, blocknumber, freeblock, numOfFiles;
-    short inodeNum, fileCount;
+    short inodeNum, fileCount, numFreeBlocks;
     freeblock = -1;
     blocknumber = 0;
     i=0;
-
+    PRINT("Inserting file into directory node\n");
     indexNodeStart = RAM_memory + INDEX_NODE_ARRAY_OFFSET + directoryNodeNum * INDEX_NODE_SIZE;
+
+    /* First check if there is an inode available */
+    if (!( (int) *((int *) (RAM_memory + SUPERBLOCK_OFFSET +INODE_COUNT_OFFSET) ) ) )
+    {
+        /* There are no more inodes left, return */
+        return -1;
+    }
 
     // Increment file count
     fileCount = (short)*(short*)(indexNodeStart + INODE_FILE_COUNT);
+    if (fileCount == 1023)
+    {
+        /* Max file count already reached, can't add in anymore files */
+        return -1;
+    }
+
+    /* Also need to check if the next added file will then require a new block for more storage */
+    numFreeBlocks = (int) *((int *) (RAM_memory + SUPERBLOCK_OFFSET)) ;
+    if (fileCount  % 16 )
+    {
+        /* On this mod, it means the next addition requires a new block, so check if enough blocks are available */
+        if (numFreeBlocks < 1)
+        {
+            return -1;
+        }
+
+        /* Also check for the case at fileCount = 128, at which point a new block is required for both the indirect and data */
+        if (fileCount == 128)
+        {
+            if (numFreeBlocks < 2)
+                return -1;
+        }
+    }
+    /* Good, we can properly add this file */
     fileCount++;
     memcpy(indexNodeStart + INODE_FILE_COUNT, (short *)&fileCount , sizeof(short));
 
@@ -710,8 +737,13 @@ void insertFileIntoDirectoryNode(int directoryNodeNum, int fileNodeNum, char *fi
     // Find a block that isn't fully allocated of directories
     while (blocknumber!=-1)
     {
-        blocknumber=blocks[i];        
-        blocknumber = (int) * (int *)(indexNodeStart + DIRECT_1 + i * 4);
+        blocknumber=blocks[i];
+        if (blocknumber == -1)
+        {
+            blocknumber = allocateNewBlockForIndexNode(directoryNodeNum, i);
+            if (blocknumber)
+                return -1;
+        } 
         numOfFiles = numberOfFilesInMemoryBlock(blocknumber);
         if (numOfFiles < (RAM_BLOCK_SIZE / FILE_INFO_SIZE))
         {
@@ -733,13 +765,11 @@ void insertFileIntoDirectoryNode(int directoryNodeNum, int fileNodeNum, char *fi
         {
             strcpy(dirlistingstart + i * FILE_INFO_SIZE, filename);
             memcpy(dirlistingstart + i * FILE_INFO_SIZE + INODE_NUM_OFFSET, (short *)&fileNodeNum , sizeof(short));
-            return;
+            return 0;
         }
     }
-
-    // If we here, we did not find any free direct memory blocks for our new file, look in single indirect memory blocks
-    //blocknumber
-
+    PRINT("File Count corruption detected, could not insert file into inode %c\n", directoryNodeNum);
+    return -1; /* Should never reach here, so print out something just in case */
 }
 
 /** 
@@ -848,9 +878,9 @@ void allocMemoryForIndexNode(int indexNodeNumber, int numberOfBlocks)
 /************************ MEMORY MANAGEMENT *****************************/
 
 /**
- * Function that allocates a new block for a given index node
+ * Function that allocates a new data block for a given index node
  *
- * @return    int    -1 if there is no more room available in the filesystem, 0 otherwise
+ * @return    int    -1 if there is no more room available in the filesystem, the new block number otherwise
  * @param[in]    indexNode    the indexNode to expand
  * @param[in]    current   the current number of index nodes allocated
  */
@@ -889,7 +919,7 @@ int allocateNewBlockForIndexNode(int indexNode, int current)
         newBlock = getFreeBlock();
         /* Current is num allocated blocks, so the next allocatable block is at index current */
         memcpy(nodePointer+DIRECT_1+current*4, &inodePointer, sizeof(int));
-        return 0;
+        return newBlock;
     }
     else if (current < 72)
     {
@@ -921,7 +951,7 @@ int allocateNewBlockForIndexNode(int indexNode, int current)
 
             /* The block is ready for pointing! */
             memcpy(blockPointer, &newBlock, sizeof(int) );
-            return 0;
+            return newBlock;
         }
         else
         {
@@ -935,7 +965,7 @@ int allocateNewBlockForIndexNode(int indexNode, int current)
             }
             newSingle = getFreeBlock();
             memcpy( blockPointer + inodePointer * 4, &newSingle, sizeof(int) );
-            return 0;
+            return newSingle;
         }
     }
     else if (current < 4168)
@@ -971,7 +1001,7 @@ int allocateNewBlockForIndexNode(int indexNode, int current)
 
             newBlock = getFreeBlock();
             memcpy(singleIndirPointer, &newBlock, sizeof(int) );
-            return 0;
+            return newBlock;
         }
         else if ((inodePointer % 64) == 0)
         {
@@ -1000,7 +1030,7 @@ int allocateNewBlockForIndexNode(int indexNode, int current)
             /* Finally get the new data block for the file */
             newBlock = getFreeBlock();
             memcpy(singleIndirPointer, &newBlock, sizeof(int) );
-            return 0;
+            return newBlock;
         }
         else 
         {
@@ -1017,7 +1047,7 @@ int allocateNewBlockForIndexNode(int indexNode, int current)
             }
             newBlock = getFreeBlock();
             memcpy(singleIndirPointer+singleOffset, &newBlock, sizeof(int));
-            return 0;
+            return newBlock;
         }
     }
     /* 4168 is the max blocks available to a file (max size is 1067008), if it made it here, invalid write */
@@ -1210,7 +1240,7 @@ void printIndexNode(int nodeIndex)
 /****************************Testing Routines*********************************/
 void testDirCreation()
 {
-    /* Creates 64 files that go into the root directory (max within direct) */
+    /* Creates 20 files that go into the root directory (starts adding files to new data blocks */
 }
 
 /************************INIT AND EXIT ROUTINES*****************************/
@@ -1223,12 +1253,12 @@ int main()
     init_ramdisk();
 
     /* Now create some more files as a test */
-    indexNodeNum = createIndexNode("reg\0", "/myfile.txt\0",  64816);
+    indexNodeNum = createIndexNode("reg\0", "/myfile.txt\0",  0);
     printIndexNode(indexNodeNum);
     printSuperblock();
-    createIndexNode("reg\0", "/otherfile.txt\0",  200);
-    createIndexNode("dir\0", "/myfolder/\0",  400);
-    indexNodeNum = createIndexNode("reg\0", "/myfolder/hello.txt\0",  400);
+    createIndexNode("reg\0", "/otherfile.txt\0",  0);
+    createIndexNode("dir\0", "/myfolder/\0",  0);
+    indexNodeNum = createIndexNode("reg\0", "/myfolder/hello.txt\0",  0);
     printIndexNode(indexNodeNum);
     printSuperblock();
 

@@ -202,8 +202,10 @@ int createIndexNode(char *type, char *pathname, int memorysize);
 
 int getIndexNodeNumberFromPathname(char *pathname, int dirFlag);
 
-void insertFileIntoDirectoryNode(int directoryNodeNum, int fileNodeNum, char *filename);
+int insertFileIntoDirectoryNode(int directoryNodeNum, int fileNodeNum, char *filename);
 
 void printIndexNode(int nodeIndex);
 
 char *getFileNameFromPath(char *pathname);
+
+int allocateNewBlockForIndexNode(int indexNode, int current);
