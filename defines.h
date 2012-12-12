@@ -23,13 +23,13 @@
 	#define PRINT printK
 #endif
 
+#include "structs.h"
+
 /****************************IOCTL DECLARATIONS*******************************/
 
 #define RAM_CREATE _IOWR(0, 6, struct path)
 #define RAM_MKDIR _IOWR(1, 7, struct path)
 #define RAM_OPEN _IOWR(1, 8, struct path)
-/** @todo Close may not need a kernel call? */
-#define RAM_CLOSE _IOWR(1, 9, struct file)
 #define RAM_READ _IOWR(1, 10, struct RAM_accessFile)
 #define RAM_WRITE _IOWR(1, 11, struct RAM_accessFile)
 #define RAM_LSEEK _IOWR(1, 12, struct file)
@@ -92,98 +92,7 @@
 #define FILE_INFO_SIZE 16
 #define INODE_NUM_OFFSET 14 // Offset in file_info to get the inode
 
-/*****************************IOCTL STRUCTURES*******************************/
 
-struct RAM_path
-{
-    char *name;  /** Pathname for the file */
-    int ret;          /** Return value, will be used for a variety of reasons */
-};
-
-struct RAM_file
-{
-    int fd;       /** File descriptor */
-    int offset;  /** Only used for seek, not for close.  Offset into data requested */
-    int ret;      /** Return value */
-};
-
-struct RAM_accessFile
-{
-    int fd;               /** File descriptor */
-    int numBytes;    /** Number of bytes to transfer into userspace (Used if regular file) */
-    int ret;              /** Return value */
-    char *address;  /** User space address to which to send data */
-};
-
-/***************************KERNEL FS FUNCTION PROTOTYPES********************/
-
-/**
- * Kernel pair for the create function
- *
- * @param[in]   input   The RAM_path struct for creating the file
- */
-void kr_creat(struct RAM_path input);
-
-/**
- * Kernel pair for making a new directory
- *
- * @param[in]   input   The RAM_path struct for creating the file
- */
-void kr_mkdir(struct RAM_path input);
-
-/**
- * Kernel pair for opening a file
- *
- * @param[in]   input   The RAM_path struct for opening the file
- */
-void kr_open(struct RAM_path input);
-
-/**
- * Kernel pair for closing a file
- * @todo may not be necessary, not sure yet
- *
- * @param[in]   input   The file struct for closing the file
- */
-void kr_close(struct RAM_file input);
-
-/**
- * Kernel pair for reading a file
- *
- * @param[in]   input   The accessfile struct.  Output read is placed into this struct
- */
-void kr_read(struct RAM_accessFile input);
-
-/**
- * Kernel pair for the write function
- *
- * @param[in]   input   The accessfile struct.  Input for writing is in this struct
- */
-void kr_write(struct RAM_accessFile input);
-
-/**
- * Kernel pair for the seeking function
- *
- * @param[in]   input   input, use offset in here to index into file
- */
-void kr_lseek(struct RAM_file input);
-
-/**
- * Kernel pair for unlinking a file from the filesystem
- *
- * @param[in]   input   Path struct.  Will delete file at the desired RAM_path
- */
-void kr_unlink(struct RAM_path input);
-
-/**
- * Kernel pair for the readdir function
- *
- * @param[in]   input   Accessfile struct.  Used to read the relevant directory
- */
-void kr_readdir(struct RAM_accessFile input);
-
-/*************** FUNCTION DECLARATIONS **********************/
-
-void printSuperblock(void);
 
 /**
  * Get free block from memory region
