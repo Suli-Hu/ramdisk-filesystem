@@ -118,3 +118,5 @@ void printIndexNode(int nodeIndex);
 char *getFileNameFromPath(char *pathname);
 
 int allocateNewBlockForIndexNode(int indexNode, int current);
+
+void printSuperblock(void);
