@@ -1190,6 +1190,45 @@ void testDirCreation()
 
 /************************INIT AND EXIT ROUTINES*****************************/
 #ifdef DEBUG
+
+void kr_creat(struct RAM_path input) {
+PRINT("CREATING FILE\n")
+}
+
+/**
+ * Kernel pair for making a new directory
+ *
+ * @param[in]   input   The RAM_path struct for creating the file
+ */
+void kr_mkdir(struct RAM_path input) {
+
+}
+
+/**
+ * Kernel pair for opening a file
+ *
+ * @param[in]   input   The RAM_path struct for opening the file
+ */
+void kr_open(struct RAM_file input) {
+
+}
+
+void kr_read(struct RAM_accessFile input) {
+
+}
+
+void kr_write(struct RAM_accessFile input) {
+}
+
+void kr_lseek(struct RAM_file input) {
+}
+
+void kr_unlink(struct RAM_path input) {
+}
+
+void kr_readdir(struct RAM_accessFile input) {
+}
+
 int main()
 {
     int indexNodeNum;
@@ -1307,10 +1346,10 @@ static int ramdisk_ioctl(struct inode *inode, struct file *file,
     case RAM_OPEN:
         PRINT("Opening file...\n");
 
-        RAM_path path;
-        copy_from_user(&path, (struct RAM_path *)arg, 
-           sizeof(struct RAM_path));
-        kr_open(path);
+        RAM_file file;
+        copy_from_user(&file, (struct RAM_file *)arg, 
+           sizeof(struct RAM_file));
+        kr_open(fileCount);
 
         break;
 
@@ -1380,7 +1419,7 @@ static int ramdisk_ioctl(struct inode *inode, struct file *file,
  * @param[in]   input   The RAM_path struct for creating the file
  */
 void kr_creat(struct RAM_path input) {
-
+PRINT("CREATING FILE\n")
 }
 
 /**
@@ -1397,7 +1436,7 @@ void kr_mkdir(struct RAM_path input) {
  *
  * @param[in]   input   The RAM_path struct for opening the file
  */
-void kr_open(struct RAM_path input) {
+void kr_open(struct RAM_file input) {
 
 }
 
