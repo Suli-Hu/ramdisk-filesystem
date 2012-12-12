@@ -35,15 +35,6 @@ int rd_mkdir(char *pathname);
 int rd_open(char *pathname);
 
 /**
- * Close a currently opened file
- *
- * @return	int	0 on success, -1 on error
- * @param[in]	fd	the file descriptor of the file to close
- * @remark	Fails if file descriptor is not valid
- */
-int rd_close(int fd);
-
-/**
  * Read a currently opened file
  *
  * @return	int	Number of bytes actually read, or -1 on fail

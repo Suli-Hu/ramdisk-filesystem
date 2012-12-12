@@ -578,27 +578,15 @@ int createIndexNode(char *type, char *pathname, int memorysize)
     indexNodeStart = RAM_memory + INDEX_NODE_ARRAY_OFFSET + indexNodeNumber * INDEX_NODE_SIZE;
 
     // Insert the file into the right directory node
-    if (strcmp(type, "reg\0") == 0)
-    {
-        PRINT("Using my new function\n");
-        directoryNodeNum = getIndexNodeNumberFromPathname(pathname, 1);
+    directoryNodeNum = getIndexNodeNumberFromPathname(pathname, 1);
 
-        if (directoryNodeNum == -1)
-            return -1; /* Directory of file does not exist */
-
-        filename = getFileNameFromPath(pathname);
-        insertFileIntoDirectoryNode(directoryNodeNum, indexNodeNumber, filename);
-        printf("***Found direct Num: %d\n", directoryNodeNum);
-
+    if (directoryNodeNum == -1) {
+        PRINT("Error: Directory does not exist.\n");
+        return -1; /* Directory of file does not exist */
     }
-    else
-    {   
-        directoryNodeNum = getIndexNodeNumberFromPathname(pathname, 1);
 
-        printf("***Found direct Num: %d\n", directoryNodeNum);
-        filename = getFileNameFromPath(pathname);
-        insertFileIntoDirectoryNode(directoryNodeNum, indexNodeNumber, filename);
-    }
+    filename = getFileNameFromPath(pathname);
+    insertFileIntoDirectoryNode(directoryNodeNum, indexNodeNumber, filename);
 
 
     /* Set the index node values */
@@ -1212,14 +1200,22 @@ int main()
     /* Now create some more files as a test */
     indexNodeNum = createIndexNode("reg\0", "/myfile.txt\0",  64816);
     printIndexNode(indexNodeNum);
-    printSuperblock();
+    // printSuperblock();
     createIndexNode("reg\0", "/otherfile.txt\0",  200);
     createIndexNode("dir\0", "/myfolder/\0",  400);
-    indexNodeNum = createIndexNode("reg\0", "/myfolder/hello.txt\0",  400);
-    printIndexNode(indexNodeNum);
-    printSuperblock();
+    createIndexNode("dir\0", "/myfolder/myfolder2/\0",  400);
+    indexNodeNum = createIndexNode("reg\0", "/myfolder/myfolder2/myfile2.txt\0",  400);
+    printIndexNode(indexNodeNum-1);
+    
+    createIndexNode("reg\0", "/myfolder/myfolder4\0",  400);
+    createIndexNode("reg\0", "/myfolder/myfolder5\0",  400);
 
-    printIndexNode(0);
+    
+    // printSuperblock();
+    // printIndexNode(0);
+
+    // printIndexNode(3);
+
     return 0;
 }
 
@@ -1284,43 +1280,88 @@ static void __exit cleanup_routine(void)
 static int ramdisk_ioctl(struct inode *inode, struct file *file,
                          unsigned int cmd, unsigned long arg)
 {
+
     switch (cmd)
     {
 
     case RAM_CREATE:
-        my_PRINT("Creating file...\n");
+        PRINT("Creating file...\n");
+
+        RAM_path path;
+        copy_from_user(&path, (struct RAM_path *)arg, 
+           sizeof(struct RAM_path));
+        kr_creat(path);
+
         break;
 
     case RAM_MKDIR:
-        my_PRINT("Making directory...\n");
+        PRINT("Making directory...\n");
+
+        RAM_path path;
+        copy_from_user(&path, (struct RAM_path *)arg, 
+           sizeof(struct RAM_path));
+        kr_mkdir(path);
+
         break;
 
     case RAM_OPEN:
-        my_PRINT("Opening file...\n");
-        break;
+        PRINT("Opening file...\n");
 
-    case RAM_CLOSE:
-        my_PRINT("Closing file...\n");
+        RAM_path path;
+        copy_from_user(&path, (struct RAM_path *)arg, 
+           sizeof(struct RAM_path));
+        kr_open(path);
+
         break;
 
     case RAM_READ:
-        my_PRINT("Reading file...\n");
+        PRINT("Reading file...\n");
+
+        RAM_accessFile file;
+        copy_from_user(&file, (struct RAM_accessFile *)arg, 
+           sizeof(struct RAM_accessFile));
+        kr_read(file);
+
         break;
 
     case RAM_WRITE:
-        my_PRINT("Writing file...\n");
+        PRINT("Writing file...\n");
+
+        RAM_accessFile file;
+        copy_from_user(&file, (struct RAM_accessFile *)arg, 
+           sizeof(struct RAM_accessFile));
+        kr_write(file);
+
         break;
 
     case RAM_LSEEK:
-        my_PRINT("Seeking into file...\n");
+        PRINT("Seeking into file...\n");
+
+        RAM_file file;
+        copy_from_user(&file, (struct RAM_file *)arg, 
+           sizeof(struct RAM_file));
+        kr_lseek(file);
+
         break;
 
     case RAM_UNLINK:
-        my_PRINT("Unlinking file...\n");
+        PRINT("Unlinking file...\n");
+
+        RAM_path path;
+        copy_from_user(&path, (struct RAM_path *)arg, 
+           sizeof(struct RAM_path));
+        kr_unlink(path);
+
         break;
 
     case RAM_READDIR:
-        my_PRINT("Reading file from directory...\n");
+        PRINT("Reading file from directory...\n");
+
+        RAM_accessFile file;
+        copy_from_user(&file, (struct RAM_accessFile *)arg, 
+           sizeof(struct RAM_accessFile));
+        kr_readdir(file);
+
         break;
 
     default:
@@ -1331,7 +1372,80 @@ static int ramdisk_ioctl(struct inode *inode, struct file *file,
     return 0;
 }
 
+/************************ Kernel Implementations *****************************/
+
+/**
+ * Kernel pair for the create function
+ *
+ * @param[in]   input   The RAM_path struct for creating the file
+ */
+void kr_creat(struct RAM_path input) {
+
+}
+
+/**
+ * Kernel pair for making a new directory
+ *
+ * @param[in]   input   The RAM_path struct for creating the file
+ */
+void kr_mkdir(struct RAM_path input) {
+
+}
+
+/**
+ * Kernel pair for opening a file
+ *
+ * @param[in]   input   The RAM_path struct for opening the file
+ */
+void kr_open(struct RAM_path input) {
+
+}
+
+/**
+ * Kernel pair for reading a file
+ *
+ * @param[in]   input   The accessfile struct.  Output read is placed into this struct
+ */
+void kr_read(struct RAM_accessFile input) {
+
+}
+
+/**
+ * Kernel pair for the write function
+ *
+ * @param[in]   input   The accessfile struct.  Input for writing is in this struct
+ */
+void kr_write(struct RAM_accessFile input) {
+
+}
+
+/**
+ * Kernel pair for the seeking function
+ *
+ * @param[in]   input   input, use offset in here to index into file
+ */
+void kr_lseek(struct RAM_file input) {
+
+}
+
+/**
+ * Kernel pair for unlinking a file from the filesystem
+ *
+ * @param[in]   input   Path struct.  Will delete file at the desired RAM_path
+ */
+void kr_unlink(struct RAM_path input) {
+
+}
+
+void kr_readdir(struct RAM_accessFile input) {
+
+}
+
+/************************ End of Kernel Implementations *****************************/
+
 // Init and Exit declaration
 module_init(initialization_routine);
 module_exit(cleanup_routine);
+
+
 #endif
