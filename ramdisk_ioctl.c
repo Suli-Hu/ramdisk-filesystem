@@ -130,6 +130,18 @@ void init_ramdisk(void)
 /************************ INTERNAL HELPER FUNCTIONS **************************/
 
 /**
+ * Writes a new file into a directory, given the file name, and the index node of the directory to write into
+ *
+ * @return    int    -1 on fail, 0 on success
+ * @param[in]    indexNode    the indexnode of the directory 
+ * @param[in]   file    the name of the file to insert into the directory 
+ */
+int insertFileIntoDir(int indexNode, char *filename)
+{
+    
+}
+
+/**
  * Fills the input array with the block numbers of all the allocated blocks for a given index node, valid for both dir and fil
  *
  * @param[in-out]  blockArray  An int array which will hold the values of allocated blocks.
@@ -519,6 +531,7 @@ int stringContainsChar(char *string, char ourchar)
 }
 /**
  * Creates a new index node
+ * @todo Change this file so that it doesn't create an index block with any memory, simply creates the index node
  *
  * @return  type  description
  * @param[in-out]  type  type of the node, 'dir' or 'reg'
