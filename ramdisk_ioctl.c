@@ -120,7 +120,7 @@ void init_ramdisk(void)
     printSuperblock();
 
     /****************Create the root directory******************/
-    createIndexNode("dir\0", "/\0",  256);
+    createIndexNode("dir\0", "/\0",  0);
     printSuperblock();
 
     /****** At start, root directory has no files, so its block is empty (but claimed) at the moment ******/
@@ -1241,6 +1241,17 @@ void printIndexNode(int nodeIndex)
 void testDirCreation()
 {
     /* Creates 20 files that go into the root directory (starts adding files to new data blocks */
+    int ii, indexNodeNum;
+    char filename[80];
+    for (ii = 0 ; ii < 20 ; ii++)
+    {
+        sprintf(filename, "/test%d", ii);
+        indexNodeNum = createIndexNode("reg\0", filename, 0);
+        PRINT("Created index node %d for file %s", indexNodeNum, filename);
+    }
+    /* Print out the root indexNode now */
+    printIndexNode(0);
+    printSuperblock();
 }
 
 /************************INIT AND EXIT ROUTINES*****************************/
@@ -1252,15 +1263,16 @@ int main()
     RAM_memory = (char *)malloc(FS_SIZE*sizeof(char));
     init_ramdisk();
 
+    testDirCreation();
     /* Now create some more files as a test */
-    indexNodeNum = createIndexNode("reg\0", "/myfile.txt\0",  0);
-    printIndexNode(indexNodeNum);
-    printSuperblock();
-    createIndexNode("reg\0", "/otherfile.txt\0",  0);
-    createIndexNode("dir\0", "/myfolder/\0",  0);
-    indexNodeNum = createIndexNode("reg\0", "/myfolder/hello.txt\0",  0);
-    printIndexNode(indexNodeNum);
-    printSuperblock();
+    // indexNodeNum = createIndexNode("reg\0", "/myfile.txt\0",  0);
+    // printIndexNode(indexNodeNum);
+    // printSuperblock();
+    // createIndexNode("reg\0", "/otherfile.txt\0",  0);
+    // createIndexNode("dir\0", "/myfolder/\0",  0);
+    // indexNodeNum = createIndexNode("reg\0", "/myfolder/hello.txt\0",  0);
+    // printIndexNode(indexNodeNum);
+    // printSuperblock();
 
     printIndexNode(0);
     return 0;
