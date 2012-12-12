@@ -833,6 +833,185 @@ void allocMemoryForIndexNode(int indexNodeNumber, int numberOfBlocks)
 }
 
 /************************ MEMORY MANAGEMENT *****************************/
+
+/**
+ * Function that allocates a new block for a given index node
+ *
+ * @return    int    -1 if there is no more room available in the filesystem, 0 otherwise
+ * @param[in]    indexNode    the indexNode to expand
+ * @param[in]    current   the current number of index nodes allocated
+ */
+int allocateNewBlockForIndexNode(int indexNode, int current)
+{
+    int numAvailableBlocks;
+    int inodePointer, doubleOffset, singleOffset;
+    int newSingle, newDouble, newBlock;
+    int ii, negOne;
+    char *nodePointer;
+    char *blockPointer;
+    char *singleIndirPointer;
+    char *doubleIndirPointer;
+
+    /* First, find out the next indexNode which needs to be allocated */
+    negOne = -1;
+    nodePointer = RAM_memory + INDEX_NODE_ARRAY_OFFSET + indexNode *INDEX_NODE_SIZE;
+    numAvailableBlocks = (int) *( (int *)(RAM_memory + SUPERBLOCK_OFFSET) );
+    if (numAvailableBlocks == 0)
+    {
+        PRINT("Out of memory, can not write\n");
+        return -1;
+    }    
+
+    /* Since current is simply the number of blocks we can use this to figure out where the next free pointer is */
+    /* Essentially, loopless block allocation, much quicker than looping through to find the next open slot */
+    if (current < 8)
+    {
+        /* Example: 0 allocated, the free inode pointer is DIRECT_1 at offset 0*/
+        PRINT("Allocating a new direct block for indexNode %d", indexNode);
+        if ( ((int)*((int *)(nodePointer+DIRECT_1+current*4))) != -1)
+        {
+            PRINT("Mem corruption, block pointers are inconsistent\n");
+            return -1;
+        }
+        newBlock = getFreeBlock();
+        /* Current is num allocated blocks, so the next allocatable block is at index current */
+        memcpy(nodePointer+DIRECT_1+current*4, &inodePointer, sizeof(int));
+        return 0;
+    }
+    else if (current < 72)
+    {
+        /* This is in singly indirect territory */
+        if (current == 8)
+        {
+            /** @todo Special Case where we have to allocated an indirect block as well (must num available blocks in order 
+              *  to not leak a block by accident) 
+              */
+            PRINT("Allocating a new single indirect block for indexNode %d", indexNode);
+            if (numAvailableBlocks < 2)
+            {
+                PRINT("Out of memory, no room to allocate both a single indirect and data block\n");
+                return -1; /* Not enough blocks available to allocate a new indirect and data block */
+            }
+            if ( ((int)*((int *)(nodePointer+SINGLE_INDIR))) != -1)
+            {
+                PRINT("Mem corruption, block pointers are inconsistent\n");
+                return -1;
+            }
+
+            newSingle = getFreeBlock();
+            newBlock = getFreeBlock();
+            memcpy(nodePointer+SINGLE_INDIR, &newSingle, sizeof(int));
+            blockPointer = RAM_memory + DATA_BLOCKS_OFFSET + newSingle * RAM_BLOCK_SIZE;
+            /* First clear this block to all -1, since these are all block pointers */
+            for (ii = 0 ; ii < 64 ; ii++)
+                memcpy( blockPointer + ii*4, &negOne, sizeof(int) );
+
+            /* The block is ready for pointing! */
+            memcpy(blockPointer, &newBlock, sizeof(int) );
+            return 0;
+        }
+        else
+        {
+            /* Find out which pointer in the indirect block to give it to */
+            inodePointer = current - 8;
+            blockPointer = RAM_memory + DATA_BLOCKS_OFFSET + ( (int) *( (int *)(nodePointer + SINGLE_INDIR) ) )* RAM_BLOCK_SIZE;
+            if ( ((int)*((int *)(blockPointer + inodePointer * 4))) != -1)
+            {
+                PRINT("Mem corruption, block pointers are inconsistent\n");
+                return -1;
+            }
+            newSingle = getFreeBlock();
+            memcpy( blockPointer + inodePointer * 4, &newSingle, sizeof(int) );
+            return 0;
+        }
+    }
+    else if (current < 4168)
+    {
+        /* Doubly indirect situation, requires a special case on mod 64, to ensure a new block is allocated */
+        inodePointer = current - 72;
+        if (current == 72)
+        {
+            /* First special case, need to allocate the double pointer, and the first single indirect within it */
+            PRINT("Allocating the first doubly indirect block for indexNode %d", indexNode);
+            if (numAvailableBlocks < 3)
+            {
+                /* Not enough blocks available */
+                PRINT("Out of memory, no room to allocate the necessary single, double, and direct blocks\n");
+                return -1;
+            }
+            if ( ((int)*((int *)(nodePointer+DOUBLE_INDIR))) != -1)
+            {
+                PRINT("Mem corruption, block pointers are inconsistent\n");
+                return -1;
+            }
+            newDouble = getFreeBlock();
+            doubleIndirPointer = RAM_memory + DATA_BLOCKS_OFFSET + newDouble * RAM_BLOCK_SIZE;
+            for (ii = 0 ; ii < 64 ; ii++)
+                memcpy(doubleIndirPointer + ii * 4, &negOne, sizeof(int) );
+
+            newSingle = getFreeBlock();
+            singleIndirPointer = RAM_memory + DATA_BLOCKS_OFFSET + newSingle * RAM_BLOCK_SIZE;
+            for (ii = 0 ; ii < 64 ; ii++)
+                memcpy(singleIndirPointer + ii * 4, &negOne, sizeof(int) );
+
+            memcpy(doubleIndirPointer, &newSingle, sizeof(int) );
+
+            newBlock = getFreeBlock();
+            memcpy(singleIndirPointer, &newBlock, sizeof(int) );
+            return 0;
+        }
+        else if ((inodePointer % 64) == 0)
+        {
+            /* Must now add a new singly indirect pointer block, and allocate within there */
+            if (numAvailableBlocks < 2)
+            {
+                /* Not enough blocks available */
+                PRINT("Out of memory, no room to allocate the necessary single, and direct blocks\n");
+                return -1;
+            }
+            doubleOffset = inodePointer / 64;  /* This is now the offset into double indir, where a new block is needed */
+            doubleIndirPointer = RAM_memory + DATA_BLOCKS_OFFSET + ( (int) *( (int *)(nodePointer + DOUBLE_INDIR) ) );
+            if ( ((int)*((int *)(doubleIndirPointer+doubleOffset))) != -1)
+            {
+                PRINT("Mem corruption, block pointers are inconsistent\n");
+                return -1;
+            }
+            /* Get the new single block to store in the double indirect block */
+            newSingle = getFreeBlock();
+            singleIndirPointer = RAM_memory + DATA_BLOCKS_OFFSET + newSingle * RAM_BLOCK_SIZE;
+            for (ii = 0 ; ii < 64 ; ii++)
+                memcpy(singleIndirPointer + ii * 4, &negOne, sizeof(int) );
+
+            memcpy(doubleIndirPointer + doubleOffset, &newSingle, sizeof(int) );
+
+            /* Finally get the new data block for the file */
+            newBlock = getFreeBlock();
+            memcpy(singleIndirPointer, &newBlock, sizeof(int) );
+            return 0;
+        }
+        else 
+        {
+            /* The standard case, inodePointer points to a block pointed to by a block pointed to by the double */
+            doubleOffset = inodePointer / 64; /* Offset into double indirect block */
+            singleOffset = inodePointer % 64; /* Offset from the single block */
+            /* singleOffset can't equal 0 (would have been caught above), so we know that this is not an edge case and division is straightforward */
+            doubleIndirPointer = RAM_memory + DATA_BLOCKS_OFFSET + ( (int) *( (int *)(nodePointer + DOUBLE_INDIR) ) );
+            singleIndirPointer = RAM_memory + DATA_BLOCKS_OFFSET + ( (int) *( (int *)(doubleIndirPointer + 4 * doubleOffset) ) ) * RAM_BLOCK_SIZE;
+            if ( ((int)*((int *)(singleIndirPointer+singleOffset))) != -1)
+            {
+                PRINT("Mem corruption, block pointers are inconsistent\n");
+                return -1;
+            }
+            newBlock = getFreeBlock();
+            memcpy(singleIndirPointer+singleOffset, &newBlock, sizeof(int));
+            return 0;
+        }
+    }
+    /* 4168 is the max blocks available to a file (max size is 1067008), if it made it here, invalid write */
+    return -1;
+}
+
+
 int getFreeBlock(void)
 {
 
