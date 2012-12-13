@@ -872,17 +872,130 @@ void allocMemoryForIndexNode(int indexNodeNumber, int numberOfBlocks)
  * @param[in]    indexNode    index node of the file to write to
  * @param[in]    data    a char * pointer to the userspace memory that needs to be written
  * @param[in]    size    the number of bytes to write into the indexNode
- * @param[in]    offset    the offset into the file to start writing at
+ * @param[in]    offset    the offset into the file to start writing at (offset of 0 is the beginning of the file)
  */
 int writeToFile(int indexNode, char *data, int size, int offset)
 {
     /* Declare all of the vars */
-    char *indexNodePointer;
-    int ii, jj;
-    int currentSize, nextSize;
+    char *indexNodePointer, *blockPointer;
+    int ii, jj, dataCounter;
+    int currentSize, nextSize, diff, toAdd;
+    int numBlocksAfter, numBlocksBefore, blocksToAdd;
+    int allocatedBlocks[MAX_BLOCKS_ALLOCATABLE];
+    int blocksAvailable;
+    int finalBlock, finalOffset, startingBlock, startingOffset;
 
-    
+    /* Access the pointer for size information */
+    indexNodePointer = RAM_memory + INDEX_NODE_ARRAY_OFFSET + indexNode * INDEX_NODE_SIZE;
+    currentSize = (int) *( (int *)(indexNodePointer +INODE_SIZE) );
+    diff = currentSize - offset;
 
+    /* Calculate the number of blocks currently allocated */
+    numBlocksBefore = (currentSize / RAM_BLOCK_SIZE) + 1;
+    if (currentSize == 0)
+    {
+        numBlocksBefore--;
+    } 
+    else if (currentSize % RAM_BLOCK_SIZE == 0)
+    {
+        numBlocksBefore--;
+    }
+
+    /* Calculate how many blocks will be allocated after the write */
+    toAdd = ( (size - diff) > 0 ) ? ( size - diff ) : 0;
+    nextSize = currentSize + toAdd;
+
+    /* Now get the new block count */
+    numBlocksAfter = (nextSize / RAM_BLOCK_SIZE) + 1;
+    if (nextSize == 0)
+    {
+        numBlocksAfter--;
+    } 
+    else if (nextSize % RAM_BLOCK_SIZE == 0)
+    {
+        numBlocksAfter--;
+    }
+
+    /* Get the difference and see if there enough allocatable blocks to write this */
+    blocksToAdd = numBlocksAfter - numBlocksBefore;
+    if (blocksToAdd)
+    {
+        /* Non zero amount needs to be added, check to see if there are enough blocks to allocated, otherwise adjust */
+        /* how much is actually going to be written */
+        blocksAvailable = (int) *( (int *) (RAM_memory + SUPERBLOCK_OFFSET));
+        if (blocksToAdd > blocksAvailable)
+        {
+            diff = blocksToAdd - blocksAvailable;
+            blocksToAdd = blocksAvailable;
+            nextSize -= diff * RAM_BLOCK_SIZE; /* The next size of the file */
+            size -= diff * RAM_BLOCK_SIZE; /* The amount of bytes added to the file */
+        }
+        if (size <= 0)
+        {
+            /* No blocks available to allocate, so could not write anything */
+            return 0;
+        }
+    }
+
+    /* At this point, we can add the blocks need for properly fitting in the data */
+    for (ii = 0 ; ii < blocksToAdd ; ii++)
+    {
+        allocateNewBlockForIndexNode(indexNode, numBlocksBefore);
+    }
+
+    /* Now get all of the allocated blocks */
+    getAllocatedBlockNumbers(allocatedBlocks, indexNode);
+
+    /* Get the starting point from which we will be writing */
+    startingBlock = offset / RAM_BLOCK_SIZE;
+    startingOffset = offset % RAM_BLOCK_SIZE;
+    /* I subtract 1 because while offset starts counting at 0, nextSize starts counting at 1 */
+    finalBlock = (nextSize - 1) / RAM_BLOCK_SIZE;
+    finalOffset = (nextSize - 1) % RAM_BLOCK_SIZE;  /* Note, we have to write into this final offset */
+
+    /* LOOP */
+    dataCounter = 0;
+    for (ii = startingBlock ; ii <= finalBlock ; ii++ )
+    {
+        blockPointer = RAM_memory + DATA_BLOCKS_OFFSET + ii * RAM_BLOCK_SIZE;
+        /* Inner loop checks */
+        if (ii == startingBlock)
+        {
+            /* Use the starting offset */
+            for (jj = startingOffset ; jj < RAM_BLOCK_SIZE ; jj++)
+            {
+                /* Push the data into the block */
+                blockPointer[jj] = data[dataCounter];
+                dataCounter++;
+            }
+        }
+        else if (ii == finalBlock)
+        {
+            /* Go up to and including the final offset */
+            for (jj = 0 ; jj <= finalOffset ; jj++)
+            {
+                /* Push data in */
+                blockPointer[jj] = data[dataCounter];
+                dataCounter++;
+            }
+        }
+        else 
+        {
+            /* All of the in between, fills in the full block */
+            for (jj = 0 ; jj < RAM_BLOCK_SIZE ; jj++)
+            {
+                /* Push data in */
+                blockPointer[jj] = data[dataCounter];
+                dataCounter++;
+            }
+        }
+    }
+
+    if (dataCounter > size)
+    {
+        PRINT("Error in loop, adding more data than intended\n");
+    }
+    return size;
 }
 
 /************************ MEMORY MANAGEMENT *****************************/
@@ -1093,7 +1206,7 @@ int getFreeBlock(void)
 
 void freeBlock(int blockindex)
 {
-    int major, minor, blockCount;
+    int major, minor;
     major = blockindex / 8;
     minor = blockindex % 8;
     minor = 7 - minor;
@@ -1264,6 +1377,22 @@ void testDirCreation()
     printSuperblock();
 }
 
+void testFileCreation()
+{
+    /* Add 2000000 bytes (~2 MB) to a file, this should limit the file size to the max allocatable size */
+    int indexNodeNum, dataSize, sizeWritten;
+    char file[] = "/bigfile";
+    /* Initialize some useless data to 0 so we can verify 0 data is being written later */
+    dataSize = 2000000;
+    char *uselessData = calloc(dataSize, sizeof(char));
+
+    indexNodeNum = createIndexNode("reg\0", file, 0);
+    printIndexNode(0); /* Veryify file was created */
+    sizeWritten = writeToFile(indexNodeNum, uselessData, dataSize, 0);
+    PRINT("Actual size written to index node %d is %d\n", indexNodeNum, sizeWritten);
+    printIndexNode(indexNodeNum); /* Verify size was written */
+}
+
 /************************INIT AND EXIT ROUTINES*****************************/
 #ifdef DEBUG
 
@@ -1311,7 +1440,12 @@ int main()
 
     RAM_memory = (char *)malloc(FS_SIZE*sizeof(char));
     init_ramdisk();
-    testDirCreation();
+    /* Uncomment to test maximum files in folder */
+    // testDirCreation();
+
+    /* Uncomment to test max file size and file write */
+    testFileCreation();
+    
     /* Now create some more files as a test */
     // indexNodeNum = createIndexNode("reg\0", "/myfile.txt\0",  0);
     // printIndexNode(indexNodeNum);
