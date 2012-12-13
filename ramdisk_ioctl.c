@@ -862,6 +862,29 @@ void allocMemoryForIndexNode(int indexNodeNumber, int numberOfBlocks)
     }
 }
 
+/************************ READ AND WRITE FUNC ******************************/
+
+/**
+ * Writes to designated file marked by index node. 
+ * Fails if file is a directory
+ *
+ * @return    int    actual number of bytes written
+ * @param[in]    indexNode    index node of the file to write to
+ * @param[in]    data    a char * pointer to the userspace memory that needs to be written
+ * @param[in]    size    the number of bytes to write into the indexNode
+ * @param[in]    offset    the offset into the file to start writing at
+ */
+int writeToFile(int indexNode, char *data, int size, int offset)
+{
+    /* Declare all of the vars */
+    char *indexNodePointer;
+    int ii, jj;
+    int currentSize, nextSize;
+
+    
+
+}
+
 /************************ MEMORY MANAGEMENT *****************************/
 
 /**
