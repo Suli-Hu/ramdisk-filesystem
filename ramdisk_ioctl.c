@@ -927,12 +927,22 @@ int writeToFile(int indexNode, char *data, int size, int offset)
         {
             diff = blocksToAdd - blocksAvailable;
             blocksToAdd = blocksAvailable;
+            numBlocksAfter = numBlocksBefore + blocksToAdd;
             nextSize -= diff * RAM_BLOCK_SIZE; /* The next size of the file */
             size -= diff * RAM_BLOCK_SIZE; /* The amount of bytes added to the file */
         }
+        /* Also check to make sure the blocks after is not greater than the max allocatable size */
+        if (numBlocksAfter > MAX_BLOCKS_ALLOCATABLE)
+        {
+            diff = numBlocksAfter - MAX_BLOCKS_ALLOCATABLE;
+            blocksToAdd -= diff;
+            numBlocksAfter = MAX_BLOCKS_ALLOCATABLE;
+            size -= diff * RAM_BLOCK_SIZE;
+            nextSize -= diff * RAM_BLOCK_SIZE;
+        }
         if (size <= 0)
         {
-            /* No blocks available to allocate, so could not write anything */
+            /* No blocks available to allocate, or max allocatable reached, so could not write anything */
             return 0;
         }
     }
@@ -1445,7 +1455,7 @@ int main()
 
     /* Uncomment to test max file size and file write */
     testFileCreation();
-    
+
     /* Now create some more files as a test */
     // indexNodeNum = createIndexNode("reg\0", "/myfile.txt\0",  0);
     // printIndexNode(indexNodeNum);
