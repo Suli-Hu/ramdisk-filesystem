@@ -24,7 +24,7 @@ int rd_creat(char *pathname) {
   	ioctl (fd, RAM_CREATE, &rampath);	
 #endif  	
 
-  	kr_creat(rampath);
+  	// kr_creat(rampath);
 
 	return rampath.ret;
 }

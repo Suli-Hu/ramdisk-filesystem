@@ -1245,7 +1245,7 @@ void testDirCreation()
 #ifdef DEBUG
 
 void kr_creat(struct RAM_path input) {
-PRINT("CREATING FILE\n")
+PRINT("CREATING FILE\n");
 }
 
 /**
@@ -1262,7 +1262,7 @@ void kr_mkdir(struct RAM_path input) {
  *
  * @param[in]   input   The RAM_path struct for opening the file
  */
-void kr_open(struct RAM_file input) {
+void kr_open(struct RAM_path input) {
 
 }
 
@@ -1482,7 +1482,7 @@ void kr_mkdir(struct RAM_path input) {
  *
  * @param[in]   input   The RAM_path struct for opening the file
  */
-void kr_open(struct RAM_file input) {
+void kr_open(struct RAM_path input) {
 
 }
 
