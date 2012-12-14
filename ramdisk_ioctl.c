@@ -765,7 +765,6 @@ int insertFileIntoDirectoryNode(int directoryNodeNum, int fileNodeNum, char *fil
 
     // Get allocated blocks for directory node
     getAllocatedBlockNumbers(allocatedBlocks, directoryNodeNum);
-    return -1;
 
     // Find a block that isn't fully allocated of directories
     do
@@ -788,6 +787,7 @@ int insertFileIntoDirectoryNode(int directoryNodeNum, int fileNodeNum, char *fil
         i++;
     }
     while (blocknumber != -1);
+    return -1;
 
     dirlistingstart = RAM_memory + DATA_BLOCKS_OFFSET + (freeblock * RAM_BLOCK_SIZE);
 
