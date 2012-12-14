@@ -757,15 +757,6 @@ int insertFileIntoDirectoryNode(int directoryNodeNum, int fileNodeNum, char *fil
     }
 #endif
 
-#ifdef DEBUG
-    free(blocks);
-    return -1;
-#else
-    kfree(blocks);
-    PRINT("Blocks were properly allocated\n");
-    return -1;
-#endif
-
     freeblock = -1;
     blocknumber = 0;
     i = 0;
@@ -796,6 +787,15 @@ int insertFileIntoDirectoryNode(int directoryNodeNum, int fileNodeNum, char *fil
         #endif
         return -1;
     }
+
+#ifdef DEBUG
+    free(blocks);
+    return -1;
+#else
+    kfree(blocks);
+    PRINT("Blocks were properly allocated\n");
+    return -1;
+#endif
 
     /* Also need to check if the next added file will then require a new block for more storage */
     numFreeBlocks = (int) * ((int *) (RAM_memory + SUPERBLOCK_OFFSET)) ;
