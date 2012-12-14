@@ -595,11 +595,11 @@ int createIndexNode(char *type, char *pathname, int memorysize)
          PRINT("Using my new function\n");
          directoryNodeNum = getIndexNodeNumberFromPathname(pathname, 1);
 
-         if (directoryNodeNum == -1)
-             return -1; /* Directory of file does not exist */
+         // if (directoryNodeNum == -1)
+             // return -1; /* Directory of file does not exist */
 
-         insertFileIntoDirectoryNode(directoryNodeNum, indexNodeNumber, filename);
-         PRINT("***Found direct Num: %d\n", directoryNodeNum);
+         // insertFileIntoDirectoryNode(directoryNodeNum, indexNodeNumber, filename);
+         // PRINT("***Found direct Num: %d\n", directoryNodeNum);
     }
 
     /* Set the index node values */
@@ -1777,7 +1777,7 @@ static int __init initialization_routine(void)
 
     // PRINT("MEM BEFORE\n");
     // printBitmap(400);
-    // indexNodeNum = createIndexNode("reg\0", "/myfile.txt\0",  0);
+    indexNodeNum = createIndexNode("reg\0", "/myfile.txt\0",  0);
     //printIndexNode(indexNodeNum);
     //printIndexNode(0);
 
