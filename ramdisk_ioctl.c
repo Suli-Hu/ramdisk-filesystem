@@ -328,7 +328,6 @@ int getIndexNodeNumberFromPathname(char *pathname, int dirFlag)
         counter++;
     }
 
-    /* TODO: MAKE SURE THIS SKIPS DELETED FILES */
     /* We have the size of the file (counter does not include null byte), so we check to see if this is a directory */
     isDir = pathname[counter - 1] == '/' ? 1 : 0;
     numDirs -= isDir; /* If the file to search is a dir, subtract this from the count to ensure the count is correct below */
@@ -533,6 +532,7 @@ int stringContainsChar(char *string, char ourchar)
     while (currentChar != '\0');
     return -1;
 }
+
 /**
  * Creates a new index node
  *
@@ -682,6 +682,9 @@ int numberOfFilesInMemoryBlock(int memoryBlock)
     for (i = 0; i < (RAM_BLOCK_SIZE / FILE_INFO_SIZE); i++)
     {
         inodeNum = (short) * (short *)(memoryblockStart + i * FILE_INFO_SIZE + INODE_NUM_OFFSET);
+        if (inodeNum == -2)
+            continue; /* Deleted file, skip it */
+
         if (inodeNum > 0)
         {
             numberOfFiles++;
@@ -783,7 +786,7 @@ int insertFileIntoDirectoryNode(int directoryNodeNum, int fileNodeNum, char *fil
     {
         inodeNum = (short) * (short *) (dirlistingstart + i * FILE_INFO_SIZE + INODE_NUM_OFFSET);
 
-        // We have find a directory block with no blocknumber, so its unused
+        // We have found a directory block with no blocknumber or a deleted indicator, so its unused
         if (inodeNum <= 0)
         {
             strcpy(dirlistingstart + i * FILE_INFO_SIZE, filename);
@@ -821,7 +824,6 @@ void allocMemoryForIndexNode(int indexNodeNumber, int numberOfBlocks)
         else
         {
             blockNumber = getFreeBlock();
-            // @todo Weird situation, pointers are 8 bytes, so storing them doesn't make sense, store number instead
             memcpy(indexNodeStart + DIRECT_1 + 4 * i, &blockNumber, sizeof(int));
 
             numberOfBlocks--;
