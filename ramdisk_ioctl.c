@@ -767,7 +767,7 @@ int insertFileIntoDirectoryNode(int directoryNodeNum, int fileNodeNum, char *fil
 
     // Get allocated blocks for directory node
     getAllocatedBlockNumbers(allocatedBlocks, directoryNodeNum);
-    return -1;
+
     // Find a block that isn't fully allocated of directories
     do
     {
@@ -1201,6 +1201,7 @@ int allocateNewBlockForIndexNode(int indexNode, int current)
     char *doubleIndirPointer;
 
     /* First, find out the next indexNode which needs to be allocated */
+    return -1;
     negOne = -1;
     nodePointer = RAM_memory + INDEX_NODE_ARRAY_OFFSET + indexNode * INDEX_NODE_SIZE;
     numAvailableBlocks = (int) * ( (int *)(RAM_memory + SUPERBLOCK_OFFSET) );
