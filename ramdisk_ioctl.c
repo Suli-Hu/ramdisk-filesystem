@@ -787,7 +787,6 @@ int insertFileIntoDirectoryNode(int directoryNodeNum, int fileNodeNum, char *fil
         i++;
     }
     while (blocknumber != -1);
-    return -1;
 
     dirlistingstart = RAM_memory + DATA_BLOCKS_OFFSET + (freeblock * RAM_BLOCK_SIZE);
 
@@ -1207,6 +1206,9 @@ int allocateNewBlockForIndexNode(int indexNode, int current)
         PRINT("Out of memory, can not write\n");
         return -1;
     }
+
+    PRINT("Made it to allocate new block\n");
+    return -1;
 
     /* Since current is simply the number of blocks we can use this to figure out where the next free pointer is */
     /* Essentially, loopless block allocation, much quicker than looping through to find the next open slot */
