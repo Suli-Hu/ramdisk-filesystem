@@ -321,7 +321,7 @@ int getIndexNodeNumberFromPathname(char *pathname, int dirFlag)
     }
 
     /* We have the size of the file (counter does not include null byte), so we check to see if this is a directory */
-    isDir = pathname[counter-1] == '/' ? 1 : 0;
+    isDir = pathname[counter - 1] == '/' ? 1 : 0;
     numDirs -= isDir; /* If the file to search is a dir, subtract this from the count to ensure the count is correct below */
 
     /* We now know how many dirs we are dealing with, and the pathsize, so we can extrac the names of all directories and put them in an array */
@@ -350,7 +350,7 @@ int getIndexNodeNumberFromPathname(char *pathname, int dirFlag)
             /* Break if we have the whole filename now for a directory*/
             if (nextFile[ii] == '/')
             {
-                nextFile[ii+1] = '\0';
+                nextFile[ii + 1] = '\0';
                 break;
             }
         }
@@ -505,21 +505,23 @@ void negateIndexNodePointers(int indexNodeNumber)
  * @return    bool    true - char found  false - char not found
  * @param[in-out]    name    description
  */
-int stringContainsChar(char *string, char ourchar) 
+int stringContainsChar(char *string, char ourchar)
 {
     int i;
     char currentChar;
-    i=0;
-    
-    do 
+    i = 0;
+
+    do
     {
         currentChar = string[i];
-        if (currentChar==ourchar) {
+        if (currentChar == ourchar)
+        {
             return 1;
         }
-            
+
         i++;
-    } while (currentChar!='\0');
+    }
+    while (currentChar != '\0');
     return -1;
 }
 /**
@@ -606,17 +608,21 @@ int createIndexNode(char *type, char *pathname, int memorysize)
     return indexNodeNumber;
 }
 
-char *getIndexNodeType(int indexNode) {
+char *getIndexNodeType(int indexNode)
+{
     char *indexNodeStart;
     char *type;
-    indexNodeStart = RAM_memory+INDEX_NODE_ARRAY_OFFSET+ indexNode*INDEX_NODE_SIZE;
-    if (strcmp("dir\0", indexNodeStart+INODE_TYPE)==0) {
+    indexNodeStart = RAM_memory + INDEX_NODE_ARRAY_OFFSET + indexNode * INDEX_NODE_SIZE;
+    if (strcmp("dir\0", indexNodeStart + INODE_TYPE) == 0)
+    {
         return "dir\0";
     }
-    else if (strcmp("reg\0", indexNodeStart+INODE_TYPE)==0) {
+    else if (strcmp("reg\0", indexNodeStart + INODE_TYPE) == 0)
+    {
         return "reg\0";
     }
-    else {
+    else
+    {
         return "error\0";
     }
 
@@ -632,9 +638,10 @@ char *getFileNameFromPath(char *pathname)
     temp = pathname[index];
     while (temp != '\0')
     {
-        if (temp == delim) {
-            if (pathname[index+1]!='\0')
-            delimPosition = index;
+        if (temp == delim)
+        {
+            if (pathname[index + 1] != '\0')
+                delimPosition = index;
         }
         index++;
         temp = pathname[index];
@@ -693,19 +700,19 @@ int insertFileIntoDirectoryNode(int directoryNodeNum, int fileNodeNum, char *fil
     int dirSize;
     freeblock = -1;
     blocknumber = 0;
-    i=0;
+    i = 0;
     PRINT("Inserting file into directory node\n");
     indexNodeStart = RAM_memory + INDEX_NODE_ARRAY_OFFSET + directoryNodeNum * INDEX_NODE_SIZE;
 
     /* First check if there is an inode available */
-    if (!( (int) *((int *) (RAM_memory + SUPERBLOCK_OFFSET +INODE_COUNT_OFFSET) ) ) )
+    if (!( (int) * ((int *) (RAM_memory + SUPERBLOCK_OFFSET + INODE_COUNT_OFFSET) ) ) )
     {
         /* There are no more inodes left, return */
         return -1;
     }
 
     // Increment file count
-    fileCount = (short)*(short*)(indexNodeStart + INODE_FILE_COUNT);
+    fileCount = (short) * (short *)(indexNodeStart + INODE_FILE_COUNT);
     if (fileCount == 1023)
     {
         /* Max file count already reached, can't add in anymore files */
@@ -713,7 +720,7 @@ int insertFileIntoDirectoryNode(int directoryNodeNum, int fileNodeNum, char *fil
     }
 
     /* Also need to check if the next added file will then require a new block for more storage */
-    numFreeBlocks = (int) *((int *) (RAM_memory + SUPERBLOCK_OFFSET)) ;
+    numFreeBlocks = (int) * ((int *) (RAM_memory + SUPERBLOCK_OFFSET)) ;
     if (!(fileCount  % 16))
     {
         /* On this mod, it means the next addition requires a new block, so check if enough blocks are available */
@@ -733,32 +740,33 @@ int insertFileIntoDirectoryNode(int directoryNodeNum, int fileNodeNum, char *fil
     fileCount++;
     memcpy(indexNodeStart + INODE_FILE_COUNT, (short *)&fileCount , sizeof(short));
     /* Also, increase the file size of the directory */
-    dirSize = (int) *( (int *)(indexNodeStart + INODE_SIZE) );
+    dirSize = (int) * ( (int *)(indexNodeStart + INODE_SIZE) );
     dirSize += 16;
     memcpy(indexNodeStart + INODE_SIZE, &dirSize, sizeof(int) );
 
     // Get allocated blocks for directory node
     int blocks [MAX_BLOCKS_ALLOCATABLE];
     getAllocatedBlockNumbers(blocks, directoryNodeNum);
-    
+
     // Find a block that isn't fully allocated of directories
     do
     {
-        blocknumber=blocks[i];
+        blocknumber = blocks[i];
         if (blocknumber == -1)
         {
             blocknumber = allocateNewBlockForIndexNode(directoryNodeNum, i);
             if (blocknumber == -1)
                 return -1;
-        } 
+        }
         numOfFiles = numberOfFilesInMemoryBlock(blocknumber);
         if (numOfFiles < (RAM_BLOCK_SIZE / FILE_INFO_SIZE))
         {
             freeblock = blocknumber;
             break;
-        }        
+        }
         i++;
-    } while (blocknumber!=-1);
+    }
+    while (blocknumber != -1);
 
     dirlistingstart = RAM_memory + DATA_BLOCKS_OFFSET + (freeblock * RAM_BLOCK_SIZE);
 
@@ -779,7 +787,7 @@ int insertFileIntoDirectoryNode(int directoryNodeNum, int fileNodeNum, char *fil
     return -1; /* Should never reach here, so print out something just in case */
 }
 
-/** 
+/**
  * Allocate memory for index Node given the number of blocks.  This should be done depending on allocation size
  *
  * @param[in]  indexNodeNumber - reference to the index node
@@ -882,18 +890,122 @@ void allocMemoryForIndexNode(int indexNodeNumber, int numberOfBlocks)
     }
 }
 
-/************************ READ AND WRITE FUNC ******************************/
+/************************ READ WRITE DELETE ******************************/
 
 /**
- * Writes to designated file marked by index node. 
- * Fails if file is a directory
+ * Deletes a file from the filesystem, and removes the file from the parent directory
  *
- * @return    int    actual number of bytes written
- * @param[in]    indexNode    index node of the file to write to
- * @param[in]    data    a char * pointer to the userspace memory that needs to be written
- * @param[in]    size    the number of bytes to write into the indexNode
- * @param[in]    offset    the offset into the file to start writing at (offset of 0 is the beginning of the file)
+ * @return    int    -1 on failure, 0 on success
+ * @param[in]    pathname    the absolute path to the file
  */
+int deleteFile(char *pathname)
+{
+    /* Declare all of the vars */
+    int indexNode;
+    int parentIndexNode;
+    short fileCount;
+    int offset;
+    int ii, jj, fileDeleted;
+    char *type;
+    char *filePointer;
+    char *parentPointer;
+    char *blockPointer;
+    char *filename;
+    int parentBlocks[MAX_BLOCKS_ALLOCATABLE];
+    short neg2;
+    neg2 = -2;
+
+    if (strcmp(pathname, "/") == 0)
+    {
+        PRINT("Can not delete root\n");
+        return -1; /* Can't delete root dir */
+    }
+
+    parentIndexNode = getIndexNodeNumberFromPathname(pathname, 1);
+    if (parentIndexNode == -1)
+    {
+        PRINT("Parent dir does not exist\n");
+        return -1; /* Parent dir does not exist */
+    }
+
+    indexNode = getIndexNodeNumberFromPathname(pathname, 0);
+    if (indexNode == -1)
+    {
+        PRINT("File does not exist\n");
+        return -1; /* File does not exist */
+    }
+
+    /* Now, check if the file is a dir itself */
+    filePointer = RAM_memory + INDEX_NODE_ARRAY_OFFSET + indexNode * INDEX_NODE_SIZE;
+    parentPointer = RAM_memory + INDEX_NODE_ARRAY_OFFSET + parentIndexNode + INDEX_NODE_SIZE;
+
+    type = filePointer + INODE_TYPE;
+    if (strcmp(type, "dir\0") == 0)
+    {
+        fileCount = (short) *( (short *) (filePointer + INODE_FILE_COUNT) );
+        if (fileCount)
+        {
+            /* Non zero number of files, can not delete */
+            PRINT("Directory not empty\n");
+            return -1;
+        }
+    }
+
+    /* At this point, we should be able to delete this file, no problem, so we can clear it */
+    clearIndexNode(indexNode);
+
+    /* Now we need to delete this file from the parent, not optimizing right now, so we just delete the file */
+    getAllocatedBlockNumbers(parentBlocks, parentIndexNode);
+    fileCount = (short) *( (short *) (parentPointer + INODE_FILE_COUNT) );
+    filename = getFileNameFromPath(pathname);
+    ii = 0;
+    fileDeleted = 0;
+    while (!fileDeleted)
+    {
+        /* Go through all blocks trying to find the file (we know its here since it was found before */
+        offset = parentBlocks[ii];
+        if (offset == -1)
+        {
+            /* Sanity check, if this happened, some memory got corrupted from before to here */
+            PRINT("Memory corruption detected, failed at deletion\n");
+            return -1;
+        }
+
+        blockPointer = RAM_memory + DATA_BLOCKS_OFFSET + offset * RAM_BLOCK_SIZE;
+        for (jj = 0 ; jj < (RAM_BLOCK_SIZE/FILE_INFO_SIZE) ; jj++)
+        {
+            if (ii == fileCount)
+            {
+                /* This is an error, we couldn't find the file for some reason */
+                PRINT("File was not found after detection, breaking out and failing\n");
+                return -1;
+            }
+            if (strcmp(filename, blockPointer + FILE_INFO_SIZE * jj) == 0)
+            {
+                /* Found the file, set the inode value to -2 to indicate that it has been deleted */
+                memcpy(blockPointer + FILE_INFO_SIZE * jj + INODE_NUM_OFFSET, &neg2, sizeof(short) );
+                fileDeleted = 1;
+            }
+            ii++; /* Sanity count */
+        }
+    }
+
+    /* The file has been successfully deleted, decrement the fileCount of the parent */
+    fileCount--;
+    memcpy(parentPointer + INODE_FILE_COUNT, &fileCount, sizeof(short) );
+    return 0; /* successful deletion */
+}
+
+/**
+* Writes to designated file marked by index node.
+* Fails if file is a directory
+*
+* @return    int    actual number of bytes written
+* @param[in]    indexNode    index node of the file to write to
+* @param[in]    data    a char * pointer to the userspace memory that needs to be written
+* @param[in]    size    the number of bytes to write into the indexNode
+* @param[in]    offset    the offset into the file to start writing at (offset of 0 is the beginning of the file)
+*/
 int writeToFile(int indexNode, char *data, int size, int offset)
 {
     /* Declare all of the vars */
@@ -906,7 +1018,7 @@ int writeToFile(int indexNode, char *data, int size, int offset)
 
     /* Access the pointer for size information */
     indexNodePointer = RAM_memory + INDEX_NODE_ARRAY_OFFSET + indexNode * INDEX_NODE_SIZE;
-    currentSize = (int) *( (int *)(indexNodePointer +INODE_SIZE) );
+    currentSize = (int) * ( (int *)(indexNodePointer + INODE_SIZE) );
     diff = currentSize - offset;
 
     /* Get the allocated blocks currently available*/
@@ -999,7 +1111,8 @@ int writeToFile(int indexNode, char *data, int size, int offset)
 int readFromFile(int indexNode, char *data, int size, int offset)
 {
     // Make sure the indexNode is a file
-    if (strcmp("dir\0", getIndexNodeType(indexNode))==0 || strcmp("error\0", getIndexNodeType(indexNode))==0) {
+    if (strcmp("dir\0", getIndexNodeType(indexNode)) == 0 || strcmp("error\0", getIndexNodeType(indexNode)) == 0)
+    {
         PRINT("Error, cannot read bytes from directory\n");
         return -1;
     }
@@ -1016,15 +1129,17 @@ int readFromFile(int indexNode, char *data, int size, int offset)
     indexNodePointer = RAM_memory + DATA_BLOCKS_OFFSET + blocks[currentBlock] * RAM_BLOCK_SIZE + currentPosition;
 
     // Copy 'size' bytes into data
-    for (i=0; i<size;i++) {
+    for (i = 0; i < size; i++)
+    {
 
         memcpy(data, &(indexNodePointer[0]), sizeof(char));
         // memcpy(data, &a, sizeof(char));
 
         currentPosition++;
         data++;
-        if (currentPosition==256) {
-            currentPosition=0;
+        if (currentPosition == 256)
+        {
+            currentPosition = 0;
             currentBlock++;
         }
 
@@ -1059,13 +1174,13 @@ int allocateNewBlockForIndexNode(int indexNode, int current)
 
     /* First, find out the next indexNode which needs to be allocated */
     negOne = -1;
-    nodePointer = RAM_memory + INDEX_NODE_ARRAY_OFFSET + indexNode *INDEX_NODE_SIZE;
-    numAvailableBlocks = (int) *( (int *)(RAM_memory + SUPERBLOCK_OFFSET) );
+    nodePointer = RAM_memory + INDEX_NODE_ARRAY_OFFSET + indexNode * INDEX_NODE_SIZE;
+    numAvailableBlocks = (int) * ( (int *)(RAM_memory + SUPERBLOCK_OFFSET) );
     if (numAvailableBlocks == 0)
     {
         PRINT("Out of memory, can not write\n");
         return -1;
-    }    
+    }
 
     /* Since current is simply the number of blocks we can use this to figure out where the next free pointer is */
     /* Essentially, loopless block allocation, much quicker than looping through to find the next open slot */
@@ -1073,14 +1188,14 @@ int allocateNewBlockForIndexNode(int indexNode, int current)
     {
         /* Example: 0 allocated, the free inode pointer is DIRECT_1 at offset 0*/
         PRINT("Allocating a new direct block for indexNode %d\n", indexNode);
-        if ( ((int)*((int *)(nodePointer+DIRECT_1+current*4))) != -1)
+        if ( ((int) * ((int *)(nodePointer + DIRECT_1 + current * 4))) != -1)
         {
             PRINT("Mem corruption, block pointers are inconsistent\n");
             return -1;
         }
         newBlock = getFreeBlock();
         /* Current is num allocated blocks, so the next allocatable block is at index current */
-        memcpy(nodePointer+DIRECT_1+current*4, &newBlock, sizeof(int));
+        memcpy(nodePointer + DIRECT_1 + current * 4, &newBlock, sizeof(int));
         return newBlock;
     }
     else if (current < 72)
@@ -1088,8 +1203,8 @@ int allocateNewBlockForIndexNode(int indexNode, int current)
         /* This is in singly indirect territory */
         if (current == 8)
         {
-            /** @todo Special Case where we have to allocated an indirect block as well (must num available blocks in order 
-              *  to not leak a block by accident) 
+            /** @todo Special Case where we have to allocated an indirect block as well (must num available blocks in order
+              *  to not leak a block by accident)
               */
             PRINT("Allocating a new single indirect block for indexNode %d\n", indexNode);
             if (numAvailableBlocks < 2)
@@ -1097,7 +1212,7 @@ int allocateNewBlockForIndexNode(int indexNode, int current)
                 PRINT("Out of memory, no room to allocate both a single indirect and data block\n");
                 return -1; /* Not enough blocks available to allocate a new indirect and data block */
             }
-            if ( ((int)*((int *)(nodePointer+SINGLE_INDIR))) != -1)
+            if ( ((int) * ((int *)(nodePointer + SINGLE_INDIR))) != -1)
             {
                 PRINT("Mem corruption, block pointers are inconsistent\n");
                 return -1;
@@ -1105,11 +1220,11 @@ int allocateNewBlockForIndexNode(int indexNode, int current)
 
             newSingle = getFreeBlock();
             newBlock = getFreeBlock();
-            memcpy(nodePointer+SINGLE_INDIR, &newSingle, sizeof(int));
+            memcpy(nodePointer + SINGLE_INDIR, &newSingle, sizeof(int));
             blockPointer = RAM_memory + DATA_BLOCKS_OFFSET + newSingle * RAM_BLOCK_SIZE;
             /* First clear this block to all -1, since these are all block pointers */
             for (ii = 0 ; ii < 64 ; ii++)
-                memcpy( blockPointer + ii*4, &negOne, sizeof(int) );
+                memcpy( blockPointer + ii * 4, &negOne, sizeof(int) );
 
             /* The block is ready for pointing! */
             memcpy(blockPointer, &newBlock, sizeof(int) );
@@ -1119,8 +1234,8 @@ int allocateNewBlockForIndexNode(int indexNode, int current)
         {
             /* Find out which pointer in the indirect block to give it to */
             inodePointer = current - 8;
-            blockPointer = RAM_memory + DATA_BLOCKS_OFFSET + ( (int) *( (int *)(nodePointer + SINGLE_INDIR) ) )* RAM_BLOCK_SIZE;
-            if ( ((int)*((int *)(blockPointer + inodePointer * 4))) != -1)
+            blockPointer = RAM_memory + DATA_BLOCKS_OFFSET + ( (int) * ( (int *)(nodePointer + SINGLE_INDIR) ) ) * RAM_BLOCK_SIZE;
+            if ( ((int) * ((int *)(blockPointer + inodePointer * 4))) != -1)
             {
                 PRINT("Mem corruption, block pointers are inconsistent\n");
                 return -1;
@@ -1144,7 +1259,7 @@ int allocateNewBlockForIndexNode(int indexNode, int current)
                 PRINT("Out of memory, no room to allocate the necessary single, double, and direct blocks\n");
                 return -1;
             }
-            if ( ((int)*((int *)(nodePointer+DOUBLE_INDIR))) != -1)
+            if ( ((int) * ((int *)(nodePointer + DOUBLE_INDIR))) != -1)
             {
                 PRINT("Mem corruption, block pointers are inconsistent\n");
                 return -1;
@@ -1159,7 +1274,7 @@ int allocateNewBlockForIndexNode(int indexNode, int current)
             for (ii = 0 ; ii < 64 ; ii++)
                 memcpy(singleIndirPointer + ii * 4, &negOne, sizeof(int) );
 
-            memcpy(nodePointer+DOUBLE_INDIR, &newDouble, sizeof(int) );
+            memcpy(nodePointer + DOUBLE_INDIR, &newDouble, sizeof(int) );
             memcpy(doubleIndirPointer, &newSingle, sizeof(int) );
 
             newBlock = getFreeBlock();
@@ -1176,8 +1291,8 @@ int allocateNewBlockForIndexNode(int indexNode, int current)
                 return -1;
             }
             doubleOffset = inodePointer / 64;  /* This is now the offset into double indir, where a new block is needed */
-            doubleIndirPointer = RAM_memory + DATA_BLOCKS_OFFSET + ( (int) *( (int *)(nodePointer + DOUBLE_INDIR) ) ) * RAM_BLOCK_SIZE;
-            if ( ((int)*((int *)(doubleIndirPointer+ (4 * doubleOffset) ))) != -1)
+            doubleIndirPointer = RAM_memory + DATA_BLOCKS_OFFSET + ( (int) * ( (int *)(nodePointer + DOUBLE_INDIR) ) ) * RAM_BLOCK_SIZE;
+            if ( ((int) * ((int *)(doubleIndirPointer + (4 * doubleOffset) ))) != -1)
             {
                 PRINT("Mem corruption, block pointers are inconsistent\n");
                 return -1;
@@ -1195,22 +1310,22 @@ int allocateNewBlockForIndexNode(int indexNode, int current)
             memcpy(singleIndirPointer, &newBlock, sizeof(int) );
             return newBlock;
         }
-        else 
+        else
         {
             /* The standard case, inodePointer points to a block pointed to by a block pointed to by the double */
             doubleOffset = inodePointer / 64; /* Offset into double indirect block */
             singleOffset = inodePointer % 64; /* Offset from the single block */
             /* singleOffset can't equal 0 (would have been caught above), so we know that this is not an edge case and division is straightforward */
-            doubleIndirPointer = RAM_memory + DATA_BLOCKS_OFFSET + ( (int) *( (int *)(nodePointer + DOUBLE_INDIR) ) ) * RAM_BLOCK_SIZE;
-            singleIndirPointer = RAM_memory + DATA_BLOCKS_OFFSET + ( (int) *( (int *)(doubleIndirPointer + 4 * doubleOffset) ) ) * RAM_BLOCK_SIZE;
-            newBlock = (int) *( (int *)(singleIndirPointer + 4 * singleOffset) );
+            doubleIndirPointer = RAM_memory + DATA_BLOCKS_OFFSET + ( (int) * ( (int *)(nodePointer + DOUBLE_INDIR) ) ) * RAM_BLOCK_SIZE;
+            singleIndirPointer = RAM_memory + DATA_BLOCKS_OFFSET + ( (int) * ( (int *)(doubleIndirPointer + 4 * doubleOffset) ) ) * RAM_BLOCK_SIZE;
+            newBlock = (int) * ( (int *)(singleIndirPointer + 4 * singleOffset) );
             if ( newBlock != -1)
             {
                 PRINT("Mem corruption, block pointers are inconsistent\n");
                 return -1;
             }
             newBlock = getFreeBlock();
-            memcpy(singleIndirPointer + (4 *singleOffset), &newBlock, sizeof(int));
+            memcpy(singleIndirPointer + (4 * singleOffset), &newBlock, sizeof(int));
             return newBlock;
         }
     }
@@ -1267,8 +1382,8 @@ void printSuperblock(void)
 {
     /* At the moment, there are only two values in the superblock.  INODE count, and BLOCK count */
     PRINT("\n/-------------Printing Superblock---------------/\n");
-    PRINT("Number of free blocks ---> %d\n", (int) *( (int *)(RAM_memory+SUPERBLOCK_OFFSET) ) );
-    PRINT("Number of free index nodes ---> %d\n", (int) *( (int *)(RAM_memory + SUPERBLOCK_OFFSET + INODE_COUNT_OFFSET) ) );
+    PRINT("Number of free blocks ---> %d\n", (int) * ( (int *)(RAM_memory + SUPERBLOCK_OFFSET) ) );
+    PRINT("Number of free index nodes ---> %d\n", (int) * ( (int *)(RAM_memory + SUPERBLOCK_OFFSET + INODE_COUNT_OFFSET) ) );
     PRINT("\n/-------------Done Printing Block---------------/\n");
 }
 
@@ -1378,11 +1493,12 @@ void printIndexNode(int nodeIndex)
         int nodeBlocks[MAX_BLOCKS_ALLOCATABLE];
         getAllocatedBlockNumbers(nodeBlocks, nodeIndex);
         i = 0;
-        memoryblock=0;
+        memoryblock = 0;
         PRINT("Directory Listing: \n");
 
         // While we haven't reached the end of the memory block, keep printing
-        while (memoryblock!=-1) {
+        while (memoryblock != -1)
+        {
 
             memoryblock = nodeBlocks[i];
             dirlistingstart = RAM_memory + DATA_BLOCKS_OFFSET + (memoryblock * RAM_BLOCK_SIZE);
@@ -1394,7 +1510,7 @@ void printIndexNode(int nodeIndex)
                 {
                     // Print the file name and node type
                     filename = (dirlistingstart + FILE_INFO_SIZE * j);
-                    if (stringContainsChar(filename, '/')==1)
+                    if (stringContainsChar(filename, '/') == 1)
                         PRINT("Directory: %s  Inode: %hd\n", filename, indexNodeNum);
                     else
                         PRINT("File: %s  Inode: %hd\n", filename, indexNodeNum);
@@ -1434,7 +1550,7 @@ void testFileCreation()
     dataSize = 2000000;
     char *uselessData = calloc(dataSize, sizeof(char));
     for (ii = 0 ; ii < dataSize ; ii++)
-    	uselessData[ii] = 2;
+        uselessData[ii] = 2;
 
     indexNodeNum = createIndexNode("reg\0", file, 0);
     printIndexNode(0); /* Veryify file was created */
@@ -1446,8 +1562,9 @@ void testFileCreation()
 /************************INIT AND EXIT ROUTINES*****************************/
 #ifdef DEBUG
 
-void kr_creat(struct RAM_path input) {
-PRINT("CREATING FILE\n");
+void kr_creat(struct RAM_path input)
+{
+    PRINT("CREATING FILE\n");
 }
 
 /**
@@ -1455,7 +1572,8 @@ PRINT("CREATING FILE\n");
  *
  * @param[in]   input   The RAM_path struct for creating the file
  */
-void kr_mkdir(struct RAM_path input) {
+void kr_mkdir(struct RAM_path input)
+{
 
 }
 
@@ -1464,29 +1582,36 @@ void kr_mkdir(struct RAM_path input) {
  *
  * @param[in]   input   The RAM_path struct for opening the file
  */
-void kr_open(struct RAM_path input) {
+void kr_open(struct RAM_path input)
+{
 
 }
 
-void kr_read(struct RAM_accessFile input) {
+void kr_read(struct RAM_accessFile input)
+{
 
 }
 
-void kr_write(struct RAM_accessFile input) {
+void kr_write(struct RAM_accessFile input)
+{
 }
 
-void kr_lseek(struct RAM_file input) {
+void kr_lseek(struct RAM_file input)
+{
 }
 
-void kr_unlink(struct RAM_path input) {
+void kr_unlink(struct RAM_path input)
+{
 }
 
-void kr_readdir(struct RAM_accessFile input) {
+void kr_readdir(struct RAM_accessFile input)
+{
 }
 
-void testReadFromFile() {
+void testReadFromFile()
+{
     int nodeNum, blockNum;
-    char* nodeStart;
+    char *nodeStart;
 
     int byteNum = 12;
     char data[byteNum];
@@ -1506,7 +1631,7 @@ void testReadFromFile() {
     printf("DATA: %s\n", data);
 
     printIndexNode(nodeNum);
-    
+
     // nodeStart = RAM_memory + INDEX_NODE_ARRAY_OFFSET + nodeNum*INDEX_NODE_SIZE;
 
 }
@@ -1515,7 +1640,7 @@ int main()
 {
     int indexNodeNum;
 
-    RAM_memory = (char *)malloc(FS_SIZE*sizeof(char));
+    RAM_memory = (char *)malloc(FS_SIZE * sizeof(char));
     init_ramdisk();
     /* Uncomment to test maximum files in folder */
     // testDirCreation();
@@ -1523,8 +1648,8 @@ int main()
     /* Uncomment to test max file size and file write */
     testFileCreation();
 
-	/* Uncomment to test read files */
-	testReadFromFile();
+    /* Uncomment to test read files */
+    testReadFromFile();
     /* Now create some more files as a test */
     // indexNodeNum = createIndexNode("reg\0", "/myfile.txt\0",  0);
     // printIndexNode(indexNodeNum);
@@ -1611,8 +1736,8 @@ static int ramdisk_ioctl(struct inode *inode, struct file *file,
         PRINT("Creating file...\n");
 
         RAM_path path;
-        copy_from_user(&path, (struct RAM_path *)arg, 
-           sizeof(struct RAM_path));
+        copy_from_user(&path, (struct RAM_path *)arg,
+                       sizeof(struct RAM_path));
         kr_creat(path);
 
         break;
@@ -1621,8 +1746,8 @@ static int ramdisk_ioctl(struct inode *inode, struct file *file,
         PRINT("Making directory...\n");
 
         RAM_path path;
-        copy_from_user(&path, (struct RAM_path *)arg, 
-           sizeof(struct RAM_path));
+        copy_from_user(&path, (struct RAM_path *)arg,
+                       sizeof(struct RAM_path));
         kr_mkdir(path);
 
         break;
@@ -1631,8 +1756,8 @@ static int ramdisk_ioctl(struct inode *inode, struct file *file,
         PRINT("Opening file...\n");
 
         RAM_file file;
-        copy_from_user(&file, (struct RAM_file *)arg, 
-           sizeof(struct RAM_file));
+        copy_from_user(&file, (struct RAM_file *)arg,
+                       sizeof(struct RAM_file));
         kr_open(fileCount);
 
         break;
@@ -1641,8 +1766,8 @@ static int ramdisk_ioctl(struct inode *inode, struct file *file,
         PRINT("Reading file...\n");
 
         RAM_accessFile file;
-        copy_from_user(&file, (struct RAM_accessFile *)arg, 
-           sizeof(struct RAM_accessFile));
+        copy_from_user(&file, (struct RAM_accessFile *)arg,
+                       sizeof(struct RAM_accessFile));
         kr_read(file);
 
         break;
@@ -1651,8 +1776,8 @@ static int ramdisk_ioctl(struct inode *inode, struct file *file,
         PRINT("Writing file...\n");
 
         RAM_accessFile file;
-        copy_from_user(&file, (struct RAM_accessFile *)arg, 
-           sizeof(struct RAM_accessFile));
+        copy_from_user(&file, (struct RAM_accessFile *)arg,
+                       sizeof(struct RAM_accessFile));
         kr_write(file);
 
         break;
@@ -1661,8 +1786,8 @@ static int ramdisk_ioctl(struct inode *inode, struct file *file,
         PRINT("Seeking into file...\n");
 
         RAM_file file;
-        copy_from_user(&file, (struct RAM_file *)arg, 
-           sizeof(struct RAM_file));
+        copy_from_user(&file, (struct RAM_file *)arg,
+                       sizeof(struct RAM_file));
         kr_lseek(file);
 
         break;
@@ -1671,8 +1796,8 @@ static int ramdisk_ioctl(struct inode *inode, struct file *file,
         PRINT("Unlinking file...\n");
 
         RAM_path path;
-        copy_from_user(&path, (struct RAM_path *)arg, 
-           sizeof(struct RAM_path));
+        copy_from_user(&path, (struct RAM_path *)arg,
+                       sizeof(struct RAM_path));
         kr_unlink(path);
 
         break;
@@ -1681,8 +1806,8 @@ static int ramdisk_ioctl(struct inode *inode, struct file *file,
         PRINT("Reading file from directory...\n");
 
         RAM_accessFile file;
-        copy_from_user(&file, (struct RAM_accessFile *)arg, 
-           sizeof(struct RAM_accessFile));
+        copy_from_user(&file, (struct RAM_accessFile *)arg,
+                       sizeof(struct RAM_accessFile));
         kr_readdir(file);
 
         break;
@@ -1702,8 +1827,9 @@ static int ramdisk_ioctl(struct inode *inode, struct file *file,
  *
  * @param[in]   input   The RAM_path struct for creating the file
  */
-void kr_creat(struct RAM_path input) {
-PRINT("CREATING FILE\n")
+void kr_creat(struct RAM_path input)
+{
+    PRINT("CREATING FILE\n")
 }
 
 /**
@@ -1711,7 +1837,8 @@ PRINT("CREATING FILE\n")
  *
  * @param[in]   input   The RAM_path struct for creating the file
  */
-void kr_mkdir(struct RAM_path input) {
+void kr_mkdir(struct RAM_path input)
+{
 
 }
 
@@ -1720,7 +1847,8 @@ void kr_mkdir(struct RAM_path input) {
  *
  * @param[in]   input   The RAM_path struct for opening the file
  */
-void kr_open(struct RAM_path input) {
+void kr_open(struct RAM_path input)
+{
 
 }
 
@@ -1729,7 +1857,8 @@ void kr_open(struct RAM_path input) {
  *
  * @param[in]   input   The accessfile struct.  Output read is placed into this struct
  */
-void kr_read(struct RAM_accessFile input) {
+void kr_read(struct RAM_accessFile input)
+{
 
 }
 
@@ -1738,7 +1867,8 @@ void kr_read(struct RAM_accessFile input) {
  *
  * @param[in]   input   The accessfile struct.  Input for writing is in this struct
  */
-void kr_write(struct RAM_accessFile input) {
+void kr_write(struct RAM_accessFile input)
+{
 
 }
 
@@ -1747,7 +1877,8 @@ void kr_write(struct RAM_accessFile input) {
  *
  * @param[in]   input   input, use offset in here to index into file
  */
-void kr_lseek(struct RAM_file input) {
+void kr_lseek(struct RAM_file input)
+{
 
 }
 
@@ -1756,11 +1887,13 @@ void kr_lseek(struct RAM_file input) {
  *
  * @param[in]   input   Path struct.  Will delete file at the desired RAM_path
  */
-void kr_unlink(struct RAM_path input) {
+void kr_unlink(struct RAM_path input)
+{
 
 }
 
-void kr_readdir(struct RAM_accessFile input) {
+void kr_readdir(struct RAM_accessFile input)
+{
 
 }
 
