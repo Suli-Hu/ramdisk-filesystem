@@ -1,10 +1,8 @@
 # Compile RAMDISK module under linux 2.6.x
 
-ifeq ($(MAKECMDGOALS), kernel)
-	obj-m += ramdisk_ioctl.o
-endif
+obj-m += ramdisk_ioctl.o
 
-kernel:
+all:
 	make -C /usr/src/kernels/2.6.32-131.12.1.el6.x86_64/ -r SUBDIRS=$$PWD modules
 
 debug:

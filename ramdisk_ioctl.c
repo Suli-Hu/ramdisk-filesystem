@@ -241,7 +241,7 @@ int findFileIndexNodeInDir(int indexNode, char *filename)
 #ifdef DEBUG
     nodeBlocks = (int *)malloc(sizeof(int) * MAX_BLOCKS_ALLOCATABLE);
 #else
-    nodeBlocks = (int *)kmalloc(sizeof(int) * MAX_BLOCKS_ALLOCATABLE, GFP_KERNEL);
+    nodeBlocks = (int *)kmalloc(sizeof(int) * MAX_BLOCKS_ALLOCATABLE, GFP_ATOMIC);
 #endif
 
     /* The index node we want */
@@ -743,7 +743,7 @@ int insertFileIntoDirectoryNode(int directoryNodeNum, int fileNodeNum, char *fil
 #ifdef DEBUG
     blocks = (int *)malloc(sizeof(int) * MAX_BLOCKS_ALLOCATABLE);
 #else
-    blocks = (int *)kmalloc(sizeof(int) * MAX_BLOCKS_ALLOCATABLE, GFP_KERNEL);
+    blocks = (int *)kmalloc(sizeof(int) * MAX_BLOCKS_ALLOCATABLE, GFP_ATOMIC);
 #endif
     freeblock = -1;
     blocknumber = 0;
@@ -1000,7 +1000,7 @@ int deleteFile(char *pathname)
 #ifdef DEBUG
     parentBlocks = (int *)malloc(sizeof(int) * MAX_BLOCKS_ALLOCATABLE);
 #else
-    parentBlocks = (int *)kmalloc(sizeof(int) * MAX_BLOCKS_ALLOCATABLE, GFP_KERNEL);
+    parentBlocks = (int *)kmalloc(sizeof(int) * MAX_BLOCKS_ALLOCATABLE, GFP_ATOMIC);
 #endif
     neg2 = -2;
 
@@ -1142,7 +1142,7 @@ int writeToFile(int indexNode, char *data, int size, int offset)
 #ifdef DEBUG
     allocatedBlocks = (int *)malloc(sizeof(int) * MAX_BLOCKS_ALLOCATABLE);
 #else
-    allocatedBlocks = (int *)kmalloc(sizeof(int) * MAX_BLOCKS_ALLOCATABLE, GFP_KERNEL);
+    allocatedBlocks = (int *)kmalloc(sizeof(int) * MAX_BLOCKS_ALLOCATABLE, GFP_ATOMIC);
 #endif
 
     /* Access the pointer for size information */
@@ -1279,7 +1279,7 @@ int readFromFile(int indexNode, char *data, int size, int offset)
 #ifdef DEBUG
     blocks = (int *)malloc(sizeof(int) * MAX_BLOCKS_ALLOCATABLE);
 #else
-    blocks = (int *)kmalloc(sizeof(int) * MAX_BLOCKS_ALLOCATABLE, GFP_KERNEL);
+    blocks = (int *)kmalloc(sizeof(int) * MAX_BLOCKS_ALLOCATABLE, GFP_ATOMIC);
 #endif
 
     // Make sure the indexNode is a file
@@ -1607,7 +1607,7 @@ void printIndexNode(int nodeIndex)
 #ifdef DEBUG
     nodeBlocks = (int *)malloc(sizeof(int) * MAX_BLOCKS_ALLOCATABLE);
 #else
-    nodeBlocks = (int *)kmalloc(sizeof(int) * MAX_BLOCKS_ALLOCATABLE, GFP_KERNEL);
+    nodeBlocks = (int *)kmalloc(sizeof(int) * MAX_BLOCKS_ALLOCATABLE, GFP_ATOMIC);
 #endif
 
     indexNodeStart = RAM_memory + INDEX_NODE_ARRAY_OFFSET + nodeIndex * INDEX_NODE_SIZE;
@@ -1740,7 +1740,7 @@ void testFileCreation(void)
 #ifdef DEBUG
     uselessData = calloc(dataSize, sizeof(char));
 #else
-    uselessData = kmalloc(dataSize * sizeof(char), GFP_KERNEL);
+    uselessData = kmalloc(dataSize * sizeof(char), GFP_ATOMIC);
 #endif
     for (ii = 0 ; ii < dataSize ; ii++)
         uselessData[ii] = 2;
@@ -1764,7 +1764,7 @@ void testReadFromFile(void) {
 #ifdef DEBUG
     uselessData = calloc(dataSize, sizeof(char));
 #else
-    uselessData = kmalloc(dataSize * sizeof(char), GFP_KERNEL);
+    uselessData = kmalloc(dataSize * sizeof(char), GFP_ATOMIC);
 #endif
 
     for (ii = 0 ; ii < dataSize ; ii++)
