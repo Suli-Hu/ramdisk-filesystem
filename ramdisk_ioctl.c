@@ -233,6 +233,7 @@ int findFileIndexNodeInDir(int indexNode, char *filename)
     short fileCount;
     char *directory;
     char *blockPointer;
+    int deletedFileTest;
     int counter, ii, jj;
     int outputNode;
 
@@ -266,15 +267,22 @@ int findFileIndexNodeInDir(int indexNode, char *filename)
         }
         blockPointer = RAM_memory + DATA_BLOCKS_OFFSET + nodeBlocks[ii] * RAM_BLOCK_SIZE;
         /* Now, look through this block for the filename */
-        for (jj = 0 ; jj < 64 ; jj++)
+        for (jj = 0 ; jj < (RAM_BLOCK_SIZE/FILE_INFO_SIZE) ; jj++)
         {
             if (counter >= fileCount)
                 return -1; /* Exceeded the file count */
 
+            outputNode = (int) * ( (short *) (blockPointer + INODE_NUM_OFFSET) );
+            if (outputNode == -2)
+            {
+                /* This is a deleted file, ignore it and continue */
+                blockPointer += FILE_INFO_SIZE; /* Move to next data block */
+                continue;
+            }
+
             if ( !strcmp(blockPointer, filename) )
             {
                 /* We found the file */
-                outputNode = (int) * ( (short *) (blockPointer + INODE_NUM_OFFSET) );
                 return outputNode;
             }
             counter++;
@@ -320,6 +328,7 @@ int getIndexNodeNumberFromPathname(char *pathname, int dirFlag)
         counter++;
     }
 
+    /* TODO: MAKE SURE THIS SKIPS DELETED FILES */
     /* We have the size of the file (counter does not include null byte), so we check to see if this is a directory */
     isDir = pathname[counter - 1] == '/' ? 1 : 0;
     numDirs -= isDir; /* If the file to search is a dir, subtract this from the count to ensure the count is correct below */
@@ -611,7 +620,6 @@ int createIndexNode(char *type, char *pathname, int memorysize)
 char *getIndexNodeType(int indexNode)
 {
     char *indexNodeStart;
-    char *type;
     indexNodeStart = RAM_memory + INDEX_NODE_ARRAY_OFFSET + indexNode * INDEX_NODE_SIZE;
     if (strcmp("dir\0", indexNodeStart + INODE_TYPE) == 0)
     {
@@ -1065,10 +1073,7 @@ int writeToFile(int indexNode, char *data, int size, int offset)
                 }
 
                 // blockPointer[jj] = data[dataCounter];
-                // printf("Writing: %c\n", data[dataCounter]);
-                memcpy(&(data[dataCounter]), &(blockPointer[jj]), sizeof(char));
-                // memcpy(data[dataCounter], &(blockPointer[jj]), sizeof(char));
-
+                memcpy(blockPointer + jj, &(data[dataCounter]), sizeof(char));
                 dataCounter++;
             }
         }
@@ -1083,7 +1088,7 @@ int writeToFile(int indexNode, char *data, int size, int offset)
                     return size;
                 }
                 // blockPointer[jj] = data[dataCounter];
-                memcpy(&(data[dataCounter]), &(blockPointer[jj]), sizeof(char));
+                memcpy(blockPointer + jj, &(data[dataCounter]), sizeof(char));
 
                 dataCounter++;
             }
@@ -1126,7 +1131,7 @@ int readFromFile(int indexNode, char *data, int size, int offset)
 
     /* Declare all of the vars */
     char *indexNodePointer;
-    int i, j, currentBlock, currentPosition;
+    int i, currentBlock, currentPosition;
     currentBlock = offset / RAM_BLOCK_SIZE;
     currentPosition = offset % RAM_BLOCK_SIZE;
 
@@ -1580,7 +1585,7 @@ void testReadFromFile() {
     for (ii = 0 ; ii < dataSize ; ii++)
         uselessData[ii] = 'z';
 
-    nodeNum = createIndexNode("reg\0", "/otherfile.txt\0",  255);
+    nodeNum = createIndexNode("reg\0", "/otherfile.txt\0",  0);
     sizeWritten = writeToFile(nodeNum, uselessData, dataSize, 0);
 
     // int blocks [MAX_BLOCKS_ALLOCATABLE];
@@ -1721,7 +1726,7 @@ static int __init initialization_routine(void)
 
     // PRINT("MEM BEFORE\n");
     // printBitmap(400);
-    indexNodeNum = createIndexNode("reg\0", "/myfile.txt\0",  64816);
+    indexNodeNum = createIndexNode("reg\0", "/myfile.txt\0",  0);
     printIndexNode(indexNodeNum);
     printIndexNode(0);
 
