@@ -1633,7 +1633,7 @@ void testReadFromFile(void) {
     for (ii=0; ii<dataSize+5; ii++) {
     PRINT("%d:%c ", ii, data[ii]);
     }
-    printf("\n");
+    PRINT("\n");
     // printf("Data: %s\n", data);
 
     printIndexNode(0);
