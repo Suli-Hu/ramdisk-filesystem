@@ -1565,7 +1565,7 @@ void testFileCreation()
 #ifdef DEBUG
     uselessData = calloc(dataSize, sizeof(char));
 #else
-    uselessData = kmalloc(dataSize * sizeof(char));
+    uselessData = kmalloc(dataSize * sizeof(char), GFP_KERNEL);
 #endif
     for (ii = 0 ; ii < dataSize ; ii++)
         uselessData[ii] = 2;
@@ -1589,7 +1589,7 @@ void testReadFromFile() {
 #ifdef DEBUG
     uselessData = calloc(dataSize, sizeof(char));
 #else
-    uselessData = kmalloc(dataSize * sizeof(char));
+    uselessData = kmalloc(dataSize * sizeof(char), GFP_KERNEL);
 #endif
 
     for (ii = 0 ; ii < dataSize ; ii++)
@@ -1607,11 +1607,11 @@ void testReadFromFile() {
 
     readFromFile(nodeNum, data, byteNum, 0);
 
-    printf("NODE: %d\n", nodeNum);
-    printf("DATA: %c\n", data[0]);
-    printf("DATA: %c\n", data[1]);
-    printf("DATA: %c\n", data[2]);
-    printf("DATA: %c\n", data[3]);
+    PRINT("NODE: %d\n", nodeNum);
+    PRINT("DATA: %c\n", data[0]);
+    PRINT("DATA: %c\n", data[1]);
+    PRINT("DATA: %c\n", data[2]);
+    PRINT("DATA: %c\n", data[3]);
     // printf("Data: %s\n", data);
 
     printIndexNode(nodeNum);
@@ -1766,14 +1766,15 @@ static void __exit cleanup_routine(void)
 static int ramdisk_ioctl(struct inode *inode, struct file *file,
                          unsigned int cmd, unsigned long arg)
 {
-
+    struct RAM_path path;
+    struct RAM_file file;
+    struct RAM_accessFile access;
     switch (cmd)
     {
 
     case RAM_CREATE:
         PRINT("Creating file...\n");
 
-        RAM_path path;
         copy_from_user(&path, (struct RAM_path *)arg,
                        sizeof(struct RAM_path));
         kr_creat(path);
@@ -1783,7 +1784,6 @@ static int ramdisk_ioctl(struct inode *inode, struct file *file,
     case RAM_MKDIR:
         PRINT("Making directory...\n");
 
-        RAM_path path;
         copy_from_user(&path, (struct RAM_path *)arg,
                        sizeof(struct RAM_path));
         kr_mkdir(path);
@@ -1793,7 +1793,6 @@ static int ramdisk_ioctl(struct inode *inode, struct file *file,
     case RAM_OPEN:
         PRINT("Opening file...\n");
 
-        RAM_file file;
         copy_from_user(&file, (struct RAM_file *)arg,
                        sizeof(struct RAM_file));
         kr_open(fileCount);
@@ -1802,28 +1801,24 @@ static int ramdisk_ioctl(struct inode *inode, struct file *file,
 
     case RAM_READ:
         PRINT("Reading file...\n");
-
-        RAM_accessFile file;
-        copy_from_user(&file, (struct RAM_accessFile *)arg,
+        copy_from_user(&accessFile, (struct RAM_accessFile *)arg,
                        sizeof(struct RAM_accessFile));
-        kr_read(file);
+        kr_read(accessFile);
 
         break;
 
     case RAM_WRITE:
-        PRINT("Writing file...\n");
+        PRINT("Writing accessFile...\n");
 
-        RAM_accessFile file;
-        copy_from_user(&file, (struct RAM_accessFile *)arg,
+        copy_from_user(&accessFile, (struct RAM_accessFile *)arg,
                        sizeof(struct RAM_accessFile));
-        kr_write(file);
+        kr_write(accessFile);
 
         break;
 
     case RAM_LSEEK:
         PRINT("Seeking into file...\n");
 
-        RAM_file file;
         copy_from_user(&file, (struct RAM_file *)arg,
                        sizeof(struct RAM_file));
         kr_lseek(file);
@@ -1833,7 +1828,6 @@ static int ramdisk_ioctl(struct inode *inode, struct file *file,
     case RAM_UNLINK:
         PRINT("Unlinking file...\n");
 
-        RAM_path path;
         copy_from_user(&path, (struct RAM_path *)arg,
                        sizeof(struct RAM_path));
         kr_unlink(path);
@@ -1843,7 +1837,6 @@ static int ramdisk_ioctl(struct inode *inode, struct file *file,
     case RAM_READDIR:
         PRINT("Reading file from directory...\n");
 
-        RAM_accessFile file;
         copy_from_user(&file, (struct RAM_accessFile *)arg,
                        sizeof(struct RAM_accessFile));
         kr_readdir(file);
@@ -1867,7 +1860,7 @@ static int ramdisk_ioctl(struct inode *inode, struct file *file,
  */
 void kr_creat(struct RAM_path input)
 {
-    PRINT("CREATING FILE\n")
+    PRINT("CREATING FILE\n");
 }
 
 /**

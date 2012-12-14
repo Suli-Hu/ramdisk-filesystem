@@ -20,7 +20,7 @@
 	#include <linux/string.h>
 	#include <linux/interrupt.h>
 
-	#define PRINT printK
+	#define PRINT printk
 #endif
 
 #include "structs.h"
