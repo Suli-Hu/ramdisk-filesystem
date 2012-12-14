@@ -734,7 +734,6 @@ int insertFileIntoDirectoryNode(int directoryNodeNum, int fileNodeNum, char *fil
         return -1;
     }
 
-    return -1;
 
     /* Also need to check if the next added file will then require a new block for more storage */
     numFreeBlocks = (int) * ((int *) (RAM_memory + SUPERBLOCK_OFFSET)) ;
@@ -755,6 +754,8 @@ int insertFileIntoDirectoryNode(int directoryNodeNum, int fileNodeNum, char *fil
             }
         }
     }
+
+    return -1;
 
     /* Good, we can properly add this file */
     fileCount++;
