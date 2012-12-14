@@ -408,6 +408,7 @@ int getIndexNodeNumberFromPathname(char *pathname, int dirFlag)
             }
         }
         /* Get the index node of the next directory */
+        PRINT("GOING TO FIND FILE INDEX NODE\n");
         nextIndexNode = findFileIndexNodeInDir(currentIndexNode, nextFile);
 
         if (nextIndexNode == -1)
