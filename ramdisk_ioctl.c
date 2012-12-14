@@ -1213,6 +1213,7 @@ int allocateNewBlockForIndexNode(int indexNode, int current)
     return -1;
     if (current < 8)
     {
+        PRINT("BLOCK\n");
         /* Example: 0 allocated, the free inode pointer is DIRECT_1 at offset 0*/
         PRINT("Allocating a new direct block for indexNode %d\n", indexNode);
         if ( ((int) * ((int *)(nodePointer + DIRECT_1 + current * 4))) != -1)
@@ -1228,6 +1229,8 @@ int allocateNewBlockForIndexNode(int indexNode, int current)
     else if (current < 72)
     {
         /* This is in singly indirect territory */
+        PRINT("SINGLE\n");
+        return -1;
         if (current == 8)
         {
             /** @todo Special Case where we have to allocated an indirect block as well (must num available blocks in order
@@ -1274,6 +1277,7 @@ int allocateNewBlockForIndexNode(int indexNode, int current)
     }
     else if (current < 4168)
     {
+        PRINT("DOUBLE\n");
         /* Doubly indirect situation, requires a special case on mod 64, to ensure a new block is allocated */
         inodePointer = current - 72;
         if (current == 72)
