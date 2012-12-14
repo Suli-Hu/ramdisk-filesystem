@@ -598,7 +598,7 @@ int createIndexNode(char *type, char *pathname, int memorysize)
             return -1; /* Directory of file does not exist */
 
         insertFileIntoDirectoryNode(directoryNodeNum, indexNodeNumber, filename);
-        printf("***Found direct Num: %d\n", directoryNodeNum);
+        PRINT("***Found direct Num: %d\n", directoryNodeNum);
     }
 
     /* Set the index node values */
@@ -668,14 +668,12 @@ char *getFileNameFromPath(char *pathname)
  */
 int numberOfFilesInMemoryBlock(int memoryBlock)
 {
-
-    if (memoryBlock == -1)
-        return 0;
-
     char *filename;
     char *memoryblockStart;
     short inodeNum;
     int i, numberOfFiles;
+    if (memoryBlock == -1)
+        return 0;
     numberOfFiles = 0;
     memoryblockStart = RAM_memory + DATA_BLOCKS_OFFSET + (memoryBlock * RAM_BLOCK_SIZE);
 
@@ -709,6 +707,7 @@ int insertFileIntoDirectoryNode(int directoryNodeNum, int fileNodeNum, char *fil
     int i, blocknumber, freeblock, numOfFiles;
     short inodeNum, fileCount, numFreeBlocks;
     int dirSize;
+    int blocks [MAX_BLOCKS_ALLOCATABLE];
     freeblock = -1;
     blocknumber = 0;
     i = 0;
@@ -756,7 +755,6 @@ int insertFileIntoDirectoryNode(int directoryNodeNum, int fileNodeNum, char *fil
     memcpy(indexNodeStart + INODE_SIZE, &dirSize, sizeof(int) );
 
     // Get allocated blocks for directory node
-    int blocks [MAX_BLOCKS_ALLOCATABLE];
     getAllocatedBlockNumbers(blocks, directoryNodeNum);
 
     // Find a block that isn't fully allocated of directories
@@ -1124,25 +1122,25 @@ int writeToFile(int indexNode, char *data, int size, int offset)
  */
 int readFromFile(int indexNode, char *data, int size, int offset)
 {
+    /* Declare all of the vars */
+    char *indexNodePointer;
+    int i, currentBlock, currentPosition;
+    int blocks [MAX_BLOCKS_ALLOCATABLE];
+
     // Make sure the indexNode is a file
     if (strcmp("dir\0", getIndexNodeType(indexNode)) == 0 || strcmp("error\0", getIndexNodeType(indexNode)) == 0)
     {
         PRINT("Error, cannot read bytes from directory\n");
         return -1;
     }
-
-    /* Declare all of the vars */
-    char *indexNodePointer;
-    int i, currentBlock, currentPosition;
     currentBlock = offset / RAM_BLOCK_SIZE;
     currentPosition = offset % RAM_BLOCK_SIZE;
 
     // Get allocated blocks for directory node
-    int blocks [MAX_BLOCKS_ALLOCATABLE];
     getAllocatedBlockNumbers(blocks, indexNode);
     indexNodePointer = RAM_memory + DATA_BLOCKS_OFFSET + blocks[currentBlock] * RAM_BLOCK_SIZE + currentPosition;
 
-    printf("block[currentBlock] = %d\n", blocks[currentBlock]);
+    PRINT("block[currentBlock] = %d\n", blocks[currentBlock]);
 
     // Copy 'size' bytes into data
     for (i = 0; i < size; i++)
@@ -1561,9 +1559,14 @@ void testFileCreation()
     /* Add 2000000 bytes (~2 MB) to a file, this should limit the file size to the max allocatable size */
     int indexNodeNum, dataSize, sizeWritten, ii;
     char file[] = "/bigfile";
+    char *uselessData;
     /* Initialize some useless data to 0 so we can verify 0 data is being written later */
     dataSize = 2000000;
-    char *uselessData = calloc(dataSize, sizeof(char));
+#ifdef DEBUG
+    uselessData = calloc(dataSize, sizeof(char));
+#else
+    uselessData = kmalloc(dataSize * sizeof(char));
+#endif
     for (ii = 0 ; ii < dataSize ; ii++)
         uselessData[ii] = 2;
 
@@ -1581,8 +1584,13 @@ void testReadFromFile() {
     int byteNum = 12;
     char data[byteNum];
     int sizeWritten, dataSize;    
+    char *uselessData;
     dataSize = 200000;
-    char *uselessData = calloc(dataSize, sizeof(char));
+#ifdef DEBUG
+    uselessData = calloc(dataSize, sizeof(char));
+#else
+    uselessData = kmalloc(dataSize * sizeof(char));
+#endif
 
     for (ii = 0 ; ii < dataSize ; ii++)
         uselessData[ii] = 'z';
