@@ -828,9 +828,6 @@ int insertFileIntoDirectoryNode(int directoryNodeNum, int fileNodeNum, char *fil
     dirSize += 16;
     memcpy(indexNodeStart + INODE_SIZE, &dirSize, sizeof(int) );
 
-    // Get allocated blocks for directory node
-    getAllocatedBlockNumbers(blocks, directoryNodeNum);
-
 #ifdef DEBUG
     free(blocks);
     return -1;
@@ -839,6 +836,9 @@ int insertFileIntoDirectoryNode(int directoryNodeNum, int fileNodeNum, char *fil
     PRINT("The number of free blocks is %d, Blocks were properly allocated\n", numFreeBlocks);
     return -1;
 #endif
+
+    // Get allocated blocks for directory node
+    getAllocatedBlockNumbers(blocks, directoryNodeNum);
 
     // Find a block that isn't fully allocated of directories
     do
