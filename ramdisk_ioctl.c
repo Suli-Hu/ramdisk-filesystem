@@ -935,6 +935,7 @@ int deleteFile(char *pathname)
     }
 
     parentIndexNode = getIndexNodeNumberFromPathname(pathname, 1);
+
     if (parentIndexNode == -1)
     {
         PRINT("Parent dir does not exist\n");
@@ -942,6 +943,8 @@ int deleteFile(char *pathname)
     }
 
     indexNode = getIndexNodeNumberFromPathname(pathname, 0);
+
+
     if (indexNode == -1)
     {
         PRINT("File does not exist\n");
@@ -950,7 +953,7 @@ int deleteFile(char *pathname)
 
     /* Now, check if the file is a dir itself */
     filePointer = RAM_memory + INDEX_NODE_ARRAY_OFFSET + indexNode * INDEX_NODE_SIZE;
-    parentPointer = RAM_memory + INDEX_NODE_ARRAY_OFFSET + parentIndexNode + INDEX_NODE_SIZE;
+    parentPointer = RAM_memory + INDEX_NODE_ARRAY_OFFSET + parentIndexNode * INDEX_NODE_SIZE;
 
     type = filePointer + INODE_TYPE;
     if (strcmp(type, "dir\0") == 0)
@@ -998,6 +1001,7 @@ int deleteFile(char *pathname)
                 /* Found the file, set the inode value to -2 to indicate that it has been deleted */
                 memcpy(blockPointer + FILE_INFO_SIZE * jj + INODE_NUM_OFFSET, &neg2, sizeof(short) );
                 fileDeleted = 1;
+                return 0;
             }
             ii++; /* Sanity count */
         }
@@ -1478,7 +1482,7 @@ void printIndexNode(int nodeIndex)
     doubleIndirectStart = RAM_memory + DATA_BLOCKS_OFFSET + (doubleDirectBlock * RAM_BLOCK_SIZE);
 
     PRINT("MEM DOUBLE INDIR: \n");
-    if (doubleDirectBlock != -1)
+    if (doubleDirectBlock != -1 && strlen(indexNodeStart+INODE_TYPE)>1)
     {
         for (i = 0; i < RAM_BLOCK_SIZE / 4; i++)
         {
@@ -1562,7 +1566,7 @@ void testFileCreation(void)
     char file[] = "/bigfile";
     char *uselessData;
     /* Initialize some useless data to 0 so we can verify 0 data is being written later */
-    dataSize = 2000000;
+    dataSize = 400;
 #ifdef DEBUG
     uselessData = calloc(dataSize, sizeof(char));
 #else
@@ -1588,10 +1592,11 @@ void testReadFromFile(void) {
     char* nodeStart;
 
     int byteNum = 12;
-    char data[byteNum];
     int sizeWritten, dataSize;    
     char *uselessData;
-    dataSize = 200000;
+    dataSize = 300;
+    char data[dataSize];
+
 #ifdef DEBUG
     uselessData = calloc(dataSize, sizeof(char));
 #else
@@ -1609,6 +1614,11 @@ void testReadFromFile(void) {
     nodeNum = createIndexNode("reg\0", "/otherfile.txt\0",  0);
     sizeWritten = writeToFile(nodeNum, uselessData, dataSize, 0);
 
+    for (ii = 0 ; ii < dataSize ; ii++)
+        uselessData[ii] = 'X';
+
+    sizeWritten = writeToFile(nodeNum, uselessData, 50, 200);
+
     // int blocks [MAX_BLOCKS_ALLOCATABLE];
     // getAllocatedBlockNumbers(blocks, nodeNum);
     // blockNum = blocks[0];
@@ -1616,13 +1626,14 @@ void testReadFromFile(void) {
     // nodeStart = RAM_memory + DATA_BLOCKS_OFFSET + blockNum * RAM_BLOCK_SIZE;
     // strcpy(nodeStart, "hello world\0");
 
-    readFromFile(nodeNum, data, byteNum, 0);
+    readFromFile(nodeNum, data, dataSize, 0);
 
     PRINT("NODE: %d\n", nodeNum);
-    PRINT("DATA: %c\n", data[0]);
-    PRINT("DATA: %c\n", data[1]);
-    PRINT("DATA: %c\n", data[2]);
-    PRINT("DATA: %c\n", data[3]);
+
+    for (ii=0; ii<dataSize+5; ii++) {
+    PRINT("%d:%c ", ii, data[ii]);
+    }
+    printf("\n");
     // printf("Data: %s\n", data);
 
     printIndexNode(0);
@@ -1632,6 +1643,19 @@ void testReadFromFile(void) {
 
 }
 
+void testFileDeletion() {
+    int indexNodeNum;
+
+    indexNodeNum = createIndexNode("reg\0", "/myfile.txt\0",  0);
+    indexNodeNum = createIndexNode("reg\0", "/myfile2.txt\0",  0);
+    indexNodeNum = createIndexNode("dir\0", "/folder/\0",  0);
+    createIndexNode("reg\0", "/folder/newfile\0",  0);
+
+    printIndexNode(indexNodeNum);
+
+    deleteFile("/folder/newfile\0");
+    printIndexNode(indexNodeNum);    
+}
 
 /************************INIT AND EXIT ROUTINES*****************************/
 #ifdef DEBUG
@@ -1699,9 +1723,14 @@ int main()
     // testFileCreation();
 
     /* Uncomment to test read files */
-    testReadFromFile();
+    // testReadFromFile();
     /* Now create some more files as a test */
-    // indexNodeNum = createIndexNode("reg\0", "/myfile.txt\0",  0);
+
+    testFileDeletion();
+
+    // printIndexNode(indexNodeNum);
+    // deleteFile("/folder\0");
+    // printIndexNode(indexNodeNum);
     // printIndexNode(indexNodeNum);
     // printSuperblock();
     // createIndexNode("reg\0", "/otherfile.txt\0",  0);
@@ -1709,9 +1738,9 @@ int main()
     // indexNodeNum = createIndexNode("reg\0", "/myfolder/hello.txt\0",  0);
     // printIndexNode(indexNodeNum);
     // printSuperblock();
-    // printIndexNode(0);
+    printIndexNode(0);
 
-    // printIndexNode(0);
+    // printIndexNode(indexNodeNum);
     return 0;
 }
 
