@@ -25,7 +25,6 @@
 
 #include "structs.h"
 
-///// TO DO, MARK FILE THAT HAS BEEN DELETED WITH -2 IN 16 BYTE MEMORY PARITITION
 /****************************IOCTL DECLARATIONS*******************************/
 
 #define RAM_CREATE _IOWR(0, 6, struct path)
