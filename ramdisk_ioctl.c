@@ -242,6 +242,11 @@ int findFileIndexNodeInDir(int indexNode, char *filename)
     nodeBlocks = (int *)malloc(sizeof(int) * MAX_BLOCKS_ALLOCATABLE);
 #else
     nodeBlocks = (int *)kmalloc(sizeof(int) * MAX_BLOCKS_ALLOCATABLE, GFP_ATOMIC);
+    if (!nodeBlocks)
+    {
+        PRINT("ALLOCATION FAILED\n");
+        return -1;
+    }
 #endif
 
     /* The index node we want */
@@ -1912,8 +1917,8 @@ static int __init initialization_routine(void)
     // PRINT("MEM BEFORE\n");
     // printBitmap(400);
     indexNodeNum = createIndexNode("reg\0", "/myfile.txt\0",  0);
-    printIndexNode(indexNodeNum);
-    printIndexNode(0);
+    //printIndexNode(indexNodeNum);
+    //printIndexNode(0);
 
     // clearIndexNode(indexNodeNum);
     // PRINT("MEM AFTER\n");
