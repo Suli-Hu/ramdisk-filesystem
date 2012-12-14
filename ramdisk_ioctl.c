@@ -629,7 +629,7 @@ int createIndexNode(char *type, char *pathname, int memorysize)
     if (strcmp(pathname, "/\0"))
     {
         PRINT("Using my new function\n");
-        // directoryNodeNum = getIndexNodeNumberFromPathname(pathname, 1);
+        directoryNodeNum = getIndexNodeNumberFromPathname(pathname, 1);
 
         // if (directoryNodeNum == -1)
             // return -1; /* Directory of file does not exist */
