@@ -629,13 +629,13 @@ int createIndexNode(char *type, char *pathname, int memorysize)
     if (strcmp(pathname, "/\0"))
     {
         PRINT("Using my new function\n");
-        directoryNodeNum = getIndexNodeNumberFromPathname(pathname, 1);
+        // directoryNodeNum = getIndexNodeNumberFromPathname(pathname, 1);
 
-        if (directoryNodeNum == -1)
-            return -1; /* Directory of file does not exist */
+        // if (directoryNodeNum == -1)
+            // return -1; /* Directory of file does not exist */
 
-        insertFileIntoDirectoryNode(directoryNodeNum, indexNodeNumber, filename);
-        PRINT("***Found direct Num: %d\n", directoryNodeNum);
+        // insertFileIntoDirectoryNode(directoryNodeNum, indexNodeNumber, filename);
+        // PRINT("***Found direct Num: %d\n", directoryNodeNum);
     }
 
     /* Set the index node values */
