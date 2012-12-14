@@ -677,6 +677,8 @@ int numberOfFilesInMemoryBlock(int memoryBlock)
     char *memoryblockStart;
     short inodeNum;
     int i, numberOfFiles;
+    PRINT("MADE IT TO NUM FILES IN BLOCK\n");
+    return -1;
     if (memoryBlock == -1)
         return 0;
     numberOfFiles = 0;
@@ -755,7 +757,6 @@ int insertFileIntoDirectoryNode(int directoryNodeNum, int fileNodeNum, char *fil
         }
     }
 
-    return -1;
     /* Good, we can properly add this file */
     fileCount++;
     memcpy(indexNodeStart + INODE_FILE_COUNT, &fileCount , sizeof(short));
@@ -764,6 +765,7 @@ int insertFileIntoDirectoryNode(int directoryNodeNum, int fileNodeNum, char *fil
     dirSize += 16;
     memcpy(indexNodeStart + INODE_SIZE, &dirSize, sizeof(int) );
 
+    return -1;
     // Get allocated blocks for directory node
     getAllocatedBlockNumbers(allocatedBlocks, directoryNodeNum);
 
@@ -780,6 +782,7 @@ int insertFileIntoDirectoryNode(int directoryNodeNum, int fileNodeNum, char *fil
             }
         }
         numOfFiles = numberOfFilesInMemoryBlock(blocknumber);
+        return -1;
         if (numOfFiles < (RAM_BLOCK_SIZE / FILE_INFO_SIZE))
         {
             freeblock = blocknumber;
