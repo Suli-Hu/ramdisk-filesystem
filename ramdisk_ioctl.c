@@ -238,13 +238,23 @@ int findFileIndexNodeInDir(int indexNode, char *filename)
     int outputNode;
 
     /* The array of all of the allocated blocks for this indexNode */
-    int nodeBlocks[MAX_BLOCKS_ALLOCATABLE];
+    int *nodeBlocks;
+#ifdef DEBUG
+    nodeBlocks = (int *)malloc(sizeof(int) * MAX_BLOCKS_ALLOCATABLE);
+#else
+    nodeBlocks = (int *)kmalloc(sizeof(int) * MAX_BLOCKS_ALLOCATABLE, GFP_KERNEL);
+#endif
 
     /* The index node we want */
     directory = RAM_memory + INDEX_NODE_ARRAY_OFFSET + (INDEX_NODE_SIZE * indexNode);
     if ( strcmp(directory + INODE_TYPE, "dir\0") )
     {
         /* These are not equal, thus the inode is not a directory, fail here */
+        #ifdef DEBUG
+            free(nodeBlocks);
+        #else
+            kfree(nodeBlocks);
+        #endif
         return -2;
     }
 
@@ -263,6 +273,12 @@ int findFileIndexNodeInDir(int indexNode, char *filename)
             /* Did not find the file */
             if (counter < fileCount)
                 PRINT("Data corruption, saved fileCount and actual file count mismatch\n");
+
+            #ifdef DEBUG
+                free(nodeBlocks);
+            #else
+                kfree(nodeBlocks);
+            #endif
             return -1;
         }
         blockPointer = RAM_memory + DATA_BLOCKS_OFFSET + nodeBlocks[ii] * RAM_BLOCK_SIZE;
@@ -270,7 +286,14 @@ int findFileIndexNodeInDir(int indexNode, char *filename)
         for (jj = 0 ; jj < (RAM_BLOCK_SIZE/FILE_INFO_SIZE) ; jj++)
         {
             if (counter >= fileCount)
+            {
+                #ifdef DEBUG
+                    free(nodeBlocks);
+                #else
+                    kfree(nodeBlocks);
+                #endif
                 return -1; /* Exceeded the file count */
+            }
 
             outputNode = (int) * ( (short *) (blockPointer + INODE_NUM_OFFSET) );
             if (outputNode == -2)
@@ -283,6 +306,11 @@ int findFileIndexNodeInDir(int indexNode, char *filename)
             if ( !strcmp(blockPointer, filename) )
             {
                 /* We found the file */
+                #ifdef DEBUG
+                    free(nodeBlocks);
+                #else
+                    kfree(nodeBlocks);
+                #endif
                 return outputNode;
             }
             counter++;
@@ -290,6 +318,11 @@ int findFileIndexNodeInDir(int indexNode, char *filename)
         }
     }
     /* If it made it to this point, then directory had max possible files, and the file was also not found */
+    #ifdef DEBUG
+        free(nodeBlocks);
+    #else
+        kfree(nodeBlocks);
+    #endif
     return -1;
 }
 
@@ -707,7 +740,12 @@ int insertFileIntoDirectoryNode(int directoryNodeNum, int fileNodeNum, char *fil
     int i, blocknumber, freeblock, numOfFiles;
     short inodeNum, fileCount, numFreeBlocks;
     int dirSize;
-    int blocks [MAX_BLOCKS_ALLOCATABLE];
+    int *blocks;
+#ifdef DEBUG
+    blocks = (int *)malloc(sizeof(int) * MAX_BLOCKS_ALLOCATABLE);
+#else
+    blocks = (int *)kmalloc(sizeof(int) * MAX_BLOCKS_ALLOCATABLE, GFP_KERNEL);
+#endif
     freeblock = -1;
     blocknumber = 0;
     i = 0;
@@ -718,6 +756,11 @@ int insertFileIntoDirectoryNode(int directoryNodeNum, int fileNodeNum, char *fil
     if (!( (int) * ((int *) (RAM_memory + SUPERBLOCK_OFFSET + INODE_COUNT_OFFSET) ) ) )
     {
         /* There are no more inodes left, return */
+        #ifdef DEBUG
+            free(blocks);
+        #else
+            kfree(blocks);
+        #endif
         return -1;
     }
 
@@ -726,6 +769,11 @@ int insertFileIntoDirectoryNode(int directoryNodeNum, int fileNodeNum, char *fil
     if (fileCount == 1023)
     {
         /* Max file count already reached, can't add in anymore files */
+        #ifdef DEBUG
+            free(blocks);
+        #else
+            kfree(blocks);
+        #endif
         return -1;
     }
 
@@ -736,6 +784,11 @@ int insertFileIntoDirectoryNode(int directoryNodeNum, int fileNodeNum, char *fil
         /* On this mod, it means the next addition requires a new block, so check if enough blocks are available */
         if (numFreeBlocks < 1)
         {
+            #ifdef DEBUG
+                free(blocks);
+            #else
+                kfree(blocks);
+            #endif
             return -1;
         }
 
@@ -743,7 +796,14 @@ int insertFileIntoDirectoryNode(int directoryNodeNum, int fileNodeNum, char *fil
         if (fileCount == 128)
         {
             if (numFreeBlocks < 2)
+            {
+                #ifdef DEBUG
+                    free(blocks);
+                #else
+                    kfree(blocks);
+                #endif
                 return -1;
+            }
         }
     }
     /* Good, we can properly add this file */
@@ -765,7 +825,14 @@ int insertFileIntoDirectoryNode(int directoryNodeNum, int fileNodeNum, char *fil
         {
             blocknumber = allocateNewBlockForIndexNode(directoryNodeNum, i);
             if (blocknumber == -1)
+            {
+                #ifdef DEBUG
+                    free(blocks);
+                #else
+                    kfree(blocks);
+                #endif
                 return -1;
+            }
         }
         numOfFiles = numberOfFilesInMemoryBlock(blocknumber);
         if (numOfFiles < (RAM_BLOCK_SIZE / FILE_INFO_SIZE))
@@ -789,10 +856,20 @@ int insertFileIntoDirectoryNode(int directoryNodeNum, int fileNodeNum, char *fil
         {
             strcpy(dirlistingstart + i * FILE_INFO_SIZE, filename);
             memcpy(dirlistingstart + i * FILE_INFO_SIZE + INODE_NUM_OFFSET, (short *)&fileNodeNum , sizeof(short));
+            #ifdef DEBUG
+                free(blocks);
+            #else
+                kfree(blocks);
+            #endif
             return 0;
         }
     }
     PRINT("File Count corruption detected, could not insert file into inode %c\n", directoryNodeNum);
+    #ifdef DEBUG
+        free(blocks);
+    #else
+        kfree(blocks);
+    #endif
     return -1; /* Should never reach here, so print out something just in case */
 }
 
@@ -919,13 +996,23 @@ int deleteFile(char *pathname)
     char *parentPointer;
     char *blockPointer;
     char *filename;
-    int parentBlocks[MAX_BLOCKS_ALLOCATABLE];
     short neg2;
+    int *parentBlocks;
+#ifdef DEBUG
+    parentBlocks = (int *)malloc(sizeof(int) * MAX_BLOCKS_ALLOCATABLE);
+#else
+    parentBlocks = (int *)kmalloc(sizeof(int) * MAX_BLOCKS_ALLOCATABLE, GFP_KERNEL);
+#endif
     neg2 = -2;
 
     if (strcmp(pathname, "/") == 0)
     {
         PRINT("Can not delete root\n");
+        #ifdef DEBUG
+            free(parentBlocks);
+        #else
+            kfree(parentBlocks);
+        #endif
         return -1; /* Can't delete root dir */
     }
 
@@ -933,6 +1020,11 @@ int deleteFile(char *pathname)
     if (parentIndexNode == -1)
     {
         PRINT("Parent dir does not exist\n");
+        #ifdef DEBUG
+            free(parentBlocks);
+        #else
+            kfree(parentBlocks);
+        #endif
         return -1; /* Parent dir does not exist */
     }
 
@@ -940,6 +1032,11 @@ int deleteFile(char *pathname)
     if (indexNode == -1)
     {
         PRINT("File does not exist\n");
+        #ifdef DEBUG
+            free(parentBlocks);
+        #else
+            kfree(parentBlocks);
+        #endif
         return -1; /* File does not exist */
     }
 
@@ -955,6 +1052,11 @@ int deleteFile(char *pathname)
         {
             /* Non zero number of files, can not delete */
             PRINT("Directory not empty\n");
+            #ifdef DEBUG
+                free(parentBlocks);
+            #else
+                kfree(parentBlocks);
+            #endif
             return -1;
         }
     }
@@ -976,6 +1078,11 @@ int deleteFile(char *pathname)
         {
             /* Sanity check, if this happened, some memory got corrupted from before to here */
             PRINT("Memory corruption detected, failed at deletion\n");
+            #ifdef DEBUG
+                free(parentBlocks);
+            #else
+                kfree(parentBlocks);
+            #endif
             return -1;
         }
 
@@ -986,6 +1093,11 @@ int deleteFile(char *pathname)
             {
                 /* This is an error, we couldn't find the file for some reason */
                 PRINT("File was not found after detection, breaking out and failing\n");
+                #ifdef DEBUG
+                    free(parentBlocks);
+                #else
+                    kfree(parentBlocks);
+                #endif
                 return -1;
             }
             if (strcmp(filename, blockPointer + FILE_INFO_SIZE * jj) == 0)
@@ -1001,6 +1113,11 @@ int deleteFile(char *pathname)
     /* The file has been successfully deleted, decrement the fileCount of the parent */
     fileCount--;
     memcpy(parentPointer + INODE_FILE_COUNT, &fileCount, sizeof(short) );
+    #ifdef DEBUG
+        free(parentBlocks);
+    #else
+        kfree(parentBlocks);
+    #endif
     return 0; /* successful deletion */
 }
 
@@ -1020,9 +1137,14 @@ int writeToFile(int indexNode, char *data, int size, int offset)
     char *indexNodePointer, *blockPointer;
     int ii, jj, dataCounter;
     int currentSize, diff;
-    int allocatedBlocks[MAX_BLOCKS_ALLOCATABLE];
+    int *allocatedBlocks;
     int currentBlock;
     int startingBlock, startingOffset;
+#ifdef DEBUG
+    allocatedBlocks = (int *)malloc(sizeof(int) * MAX_BLOCKS_ALLOCATABLE);
+#else
+    allocatedBlocks = (int *)kmalloc(sizeof(int) * MAX_BLOCKS_ALLOCATABLE, GFP_KERNEL);
+#endif
 
     /* Access the pointer for size information */
     indexNodePointer = RAM_memory + INDEX_NODE_ARRAY_OFFSET + indexNode * INDEX_NODE_SIZE;
@@ -1044,6 +1166,11 @@ int writeToFile(int indexNode, char *data, int size, int offset)
         {
             /* Trying to access a block past the max available, therefore, we break out now */
             memcpy(indexNodePointer + INODE_SIZE, &dataCounter, sizeof(int));
+            #ifdef DEBUG
+                free(allocatedBlocks);
+            #else
+                kfree(allocatedBlocks);
+            #endif
             return dataCounter;
         }
         currentBlock = allocatedBlocks[ii];
@@ -1055,6 +1182,11 @@ int writeToFile(int indexNode, char *data, int size, int offset)
             {
                 /* could not allocate a new block, return the amount of data actually written */
                 memcpy(indexNodePointer + INODE_SIZE, &dataCounter, sizeof(int));
+                #ifdef DEBUG
+                    free(allocatedBlocks);
+                #else
+                    kfree(allocatedBlocks);
+                #endif
                 return dataCounter;
             }
         }
@@ -1069,6 +1201,11 @@ int writeToFile(int indexNode, char *data, int size, int offset)
                 {
                     /* Finished writing all the data, we are done */
                     memcpy(indexNodePointer + INODE_SIZE, &size, sizeof(int));
+                    #ifdef DEBUG
+                        free(allocatedBlocks);
+                    #else
+                        kfree(allocatedBlocks);
+                    #endif
                     return size;
                 }
 
@@ -1085,6 +1222,11 @@ int writeToFile(int indexNode, char *data, int size, int offset)
                 {
                     /* Finished writing all the data, we are done */
                     memcpy(indexNodePointer + INODE_SIZE, &size, sizeof(int));
+                    #ifdef DEBUG
+                        free(allocatedBlocks);
+                    #else
+                        kfree(allocatedBlocks);
+                    #endif
                     return size;
                 }
                 // blockPointer[jj] = data[dataCounter];
@@ -1098,6 +1240,11 @@ int writeToFile(int indexNode, char *data, int size, int offset)
         {
             /* Finished writing all the data, we are done */
             memcpy(indexNodePointer + INODE_SIZE, &size, sizeof(int));
+            #ifdef DEBUG
+                free(allocatedBlocks);
+            #else
+                kfree(allocatedBlocks);
+            #endif
             return size;
         }
     }
@@ -1106,7 +1253,11 @@ int writeToFile(int indexNode, char *data, int size, int offset)
     {
         PRINT("Error in loop, adding more data than intended\n");
     }
-
+    #ifdef DEBUG
+        free(allocatedBlocks);
+    #else
+        kfree(allocatedBlocks);
+    #endif
     return size;
 }
 
@@ -1125,12 +1276,22 @@ int readFromFile(int indexNode, char *data, int size, int offset)
     /* Declare all of the vars */
     char *indexNodePointer;
     int i, currentBlock, currentPosition;
-    int blocks [MAX_BLOCKS_ALLOCATABLE];
+    int *blocks;
+#ifdef DEBUG
+    blocks = (int *)malloc(sizeof(int) * MAX_BLOCKS_ALLOCATABLE);
+#else
+    blocks = (int *)kmalloc(sizeof(int) * MAX_BLOCKS_ALLOCATABLE, GFP_KERNEL);
+#endif
 
     // Make sure the indexNode is a file
     if (strcmp("dir\0", getIndexNodeType(indexNode)) == 0 || strcmp("error\0", getIndexNodeType(indexNode)) == 0)
     {
         PRINT("Error, cannot read bytes from directory\n");
+        #ifdef DEBUG
+            free(blocks);
+        #else
+            kfree(blocks);
+        #endif
         return -1;
     }
     currentBlock = offset / RAM_BLOCK_SIZE;
@@ -1160,6 +1321,11 @@ int readFromFile(int indexNode, char *data, int size, int offset)
     }
 
     // If we have reached this point, we have read enough bytes, return
+    #ifdef DEBUG
+        free(blocks);
+    #else
+        kfree(blocks);
+    #endif
     return 1;
 }
 
@@ -1438,6 +1604,12 @@ void printIndexNode(int nodeIndex)
     char *doubleIndirectStart, *dirlistingstart, *filename;
     int singleDirectBlock, doubleDirectBlock, memoryblock, memoryblockinner, i, j;
     short indexNodeNum;
+    int *nodeBlocks;
+#ifdef DEBUG
+    nodeBlocks = (int *)malloc(sizeof(int) * MAX_BLOCKS_ALLOCATABLE);
+#else
+    nodeBlocks = (int *)kmalloc(sizeof(int) * MAX_BLOCKS_ALLOCATABLE, GFP_KERNEL);
+#endif
 
     indexNodeStart = RAM_memory + INDEX_NODE_ARRAY_OFFSET + nodeIndex * INDEX_NODE_SIZE;
     PRINT("-----Printing indexNode %d-----\n", nodeIndex);
@@ -1503,7 +1675,6 @@ void printIndexNode(int nodeIndex)
 
     if (strcmp("dir\0",  indexNodeStart + INODE_TYPE) == 0)
     {
-        int nodeBlocks[MAX_BLOCKS_ALLOCATABLE];
         getAllocatedBlockNumbers(nodeBlocks, nodeIndex);
         i = 0;
         memoryblock = 0;
@@ -1535,6 +1706,11 @@ void printIndexNode(int nodeIndex)
     }
 
     PRINT("-----End of Printing indexNode %d-----\n", nodeIndex);
+    #ifdef DEBUG
+        free(blocks);
+    #else
+        kfree(blocks);
+    #endif
 }
 
 /****************************Testing Routines*********************************/
