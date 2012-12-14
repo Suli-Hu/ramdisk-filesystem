@@ -1795,24 +1795,24 @@ static int ramdisk_ioctl(struct inode *inode, struct file *file,
 
         copy_from_user(&file, (struct RAM_file *)arg,
                        sizeof(struct RAM_file));
-        kr_open(fileCount);
+        kr_open(file);
 
         break;
 
     case RAM_READ:
         PRINT("Reading file...\n");
-        copy_from_user(&accessFile, (struct RAM_accessFile *)arg,
+        copy_from_user(&access, (struct RAM_accessFile *)arg,
                        sizeof(struct RAM_accessFile));
-        kr_read(accessFile);
+        kr_read(access);
 
         break;
 
     case RAM_WRITE:
         PRINT("Writing accessFile...\n");
 
-        copy_from_user(&accessFile, (struct RAM_accessFile *)arg,
+        copy_from_user(&access, (struct RAM_accessFile *)arg,
                        sizeof(struct RAM_accessFile));
-        kr_write(accessFile);
+        kr_write(access);
 
         break;
 
@@ -1837,9 +1837,9 @@ static int ramdisk_ioctl(struct inode *inode, struct file *file,
     case RAM_READDIR:
         PRINT("Reading file from directory...\n");
 
-        copy_from_user(&file, (struct RAM_accessFile *)arg,
+        copy_from_user(&access, (struct RAM_accessFile *)arg,
                        sizeof(struct RAM_accessFile));
-        kr_readdir(file);
+        kr_readdir(access);
 
         break;
 
