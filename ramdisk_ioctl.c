@@ -233,7 +233,6 @@ int findFileIndexNodeInDir(int indexNode, char *filename)
     short fileCount;
     char *directory;
     char *blockPointer;
-    int deletedFileTest;
     int counter, ii, jj;
     int outputNode;
 
@@ -1707,9 +1706,9 @@ void printIndexNode(int nodeIndex)
 
     PRINT("-----End of Printing indexNode %d-----\n", nodeIndex);
     #ifdef DEBUG
-        free(blocks);
+        free(nodeBlocks);
     #else
-        kfree(blocks);
+        kfree(nodeBlocks);
     #endif
 }
 
