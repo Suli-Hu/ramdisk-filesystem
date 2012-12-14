@@ -249,14 +249,6 @@ int findFileIndexNodeInDir(int indexNode, char *filename)
     }
 #endif
 
-#ifdef DEBUG
-    free(nodeBlocks);
-#else
-    kfree(nodeBlocks);
-    PRINT("ALLOCATED MEMORY, LEAVING NOW\n");
-    return -1;
-#endif
-
     /* The index node we want */
     directory = RAM_memory + INDEX_NODE_ARRAY_OFFSET + (INDEX_NODE_SIZE * indexNode);
     if ( strcmp(directory + INODE_TYPE, "dir\0") )
@@ -380,6 +372,7 @@ int getIndexNodeNumberFromPathname(char *pathname, int dirFlag)
     /* We now know how many dirs we are dealing with, and the pathsize, so we can extrac the names of all directories and put them in an array */
     currentIndexNode = 0; /* Root always at 0 */
     counter = 1; /* Used to keep track of the pathname index, starts at 1 to ignore root */
+    PRINT("NumDirs is %d", numDirs);
     if (dirFlag)
     {
         numDirs--;  /* Loop through one less directory to return the directory inode, now the file inode */
@@ -408,7 +401,6 @@ int getIndexNodeNumberFromPathname(char *pathname, int dirFlag)
             }
         }
         /* Get the index node of the next directory */
-        PRINT("GOING TO FIND FILE INDEX NODE\n");
         nextIndexNode = findFileIndexNodeInDir(currentIndexNode, nextFile);
 
         if (nextIndexNode == -1)
@@ -640,8 +632,8 @@ int createIndexNode(char *type, char *pathname, int memorysize)
         PRINT("Using my new function\n");
         directoryNodeNum = getIndexNodeNumberFromPathname(pathname, 1);
 
-        // if (directoryNodeNum == -1)
-            // return -1; /* Directory of file does not exist */
+        if (directoryNodeNum == -1)
+            return -1; /* Directory of file does not exist */
 
         // insertFileIntoDirectoryNode(directoryNodeNum, indexNodeNumber, filename);
         // PRINT("***Found direct Num: %d\n", directoryNodeNum);
@@ -764,6 +756,16 @@ int insertFileIntoDirectoryNode(int directoryNodeNum, int fileNodeNum, char *fil
         return -1;
     }
 #endif
+
+#ifdef DEBUG
+    free(blocks);
+    return -1;
+#else
+    kfree(blocks);
+    PRINT("Blocks were properly allocated\n");
+    return -1;
+#endif
+
     freeblock = -1;
     blocknumber = 0;
     i = 0;
