@@ -1210,11 +1210,11 @@ int allocateNewBlockForIndexNode(int indexNode, int current)
     /* Since current is simply the number of blocks we can use this to figure out where the next free pointer is */
     /* Essentially, loopless block allocation, much quicker than looping through to find the next open slot */
     PRINT("Made it to allocate new block, current = %d, indexNode = %d\n");
-    return -1;
     if (current < 8)
     {
         /* Example: 0 allocated, the free inode pointer is DIRECT_1 at offset 0*/
         PRINT("Allocating a new direct block for indexNode %d\n", indexNode);
+        return -1;
         if ( ((int) * ((int *)(nodePointer + DIRECT_1 + current * 4))) != -1)
         {
             PRINT("Mem corruption, block pointers are inconsistent\n");
