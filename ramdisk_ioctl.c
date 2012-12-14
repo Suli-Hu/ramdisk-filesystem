@@ -762,10 +762,10 @@ int insertFileIntoDirectoryNode(int directoryNodeNum, int fileNodeNum, char *fil
     dirSize = (int) * ( (int *)(indexNodeStart + INODE_SIZE) );
     dirSize += 16;
     memcpy(indexNodeStart + INODE_SIZE, &dirSize, sizeof(int) );
-    return -1;
 
     // Get allocated blocks for directory node
     getAllocatedBlockNumbers(allocatedBlocks, directoryNodeNum);
+    return -1;
 
     // Find a block that isn't fully allocated of directories
     do
