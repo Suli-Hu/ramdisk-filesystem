@@ -718,7 +718,6 @@ int insertFileIntoDirectoryNode(int directoryNodeNum, int fileNodeNum, char *fil
     i = 0;
     PRINT("Inserting file into directory node\n");
     indexNodeStart = RAM_memory + INDEX_NODE_ARRAY_OFFSET + directoryNodeNum * INDEX_NODE_SIZE;
-    return -1;
 
     /* First check if there is an inode available */
     if (!( (int) * ((int *) (RAM_memory + SUPERBLOCK_OFFSET + INODE_COUNT_OFFSET) ) ) )
@@ -734,6 +733,8 @@ int insertFileIntoDirectoryNode(int directoryNodeNum, int fileNodeNum, char *fil
         /* Max file count already reached, can't add in anymore files */
         return -1;
     }
+
+    return -1;
 
     /* Also need to check if the next added file will then require a new block for more storage */
     numFreeBlocks = (int) * ((int *) (RAM_memory + SUPERBLOCK_OFFSET)) ;
