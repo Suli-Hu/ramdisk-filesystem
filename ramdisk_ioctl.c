@@ -717,7 +717,6 @@ int insertFileIntoDirectoryNode(int directoryNodeNum, int fileNodeNum, char *fil
     blocknumber = 0;
     i = 0;
     PRINT("Inserting file into directory node\n");
-    return -1;
     indexNodeStart = RAM_memory + INDEX_NODE_ARRAY_OFFSET + directoryNodeNum * INDEX_NODE_SIZE;
 
     /* First check if there is an inode available */
@@ -756,6 +755,7 @@ int insertFileIntoDirectoryNode(int directoryNodeNum, int fileNodeNum, char *fil
         }
     }
 
+    return -1;
     /* Good, we can properly add this file */
     fileCount++;
     memcpy(indexNodeStart + INODE_FILE_COUNT, &fileCount , sizeof(short));
