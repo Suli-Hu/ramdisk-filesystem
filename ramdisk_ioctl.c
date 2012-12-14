@@ -1201,9 +1201,10 @@ int allocateNewBlockForIndexNode(int indexNode, int current)
     char *doubleIndirPointer;
 
     /* First, find out the next indexNode which needs to be allocated */
-    return -1;
     negOne = -1;
     nodePointer = RAM_memory + INDEX_NODE_ARRAY_OFFSET + indexNode * INDEX_NODE_SIZE;
+    PRINT("Made it to allocate new block, current = %d, indexNode = %d\n", current, indexNode);
+    return -1;
     numAvailableBlocks = (int) * ( (int *)(RAM_memory + SUPERBLOCK_OFFSET) );
     if (numAvailableBlocks == 0)
     {
