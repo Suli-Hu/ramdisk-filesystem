@@ -1063,7 +1063,12 @@ int writeToFile(int indexNode, char *data, int size, int offset)
                     memcpy(indexNodePointer + INODE_SIZE, &size, sizeof(int));
                     return size;
                 }
-                blockPointer[jj] = data[dataCounter];
+
+                // blockPointer[jj] = data[dataCounter];
+                // printf("Writing: %c\n", data[dataCounter]);
+                memcpy(&(data[dataCounter]), &(blockPointer[jj]), sizeof(char));
+                // memcpy(data[dataCounter], &(blockPointer[jj]), sizeof(char));
+
                 dataCounter++;
             }
         }
@@ -1077,7 +1082,9 @@ int writeToFile(int indexNode, char *data, int size, int offset)
                     memcpy(indexNodePointer + INODE_SIZE, &size, sizeof(int));
                     return size;
                 }
-                blockPointer[jj] = data[dataCounter];
+                // blockPointer[jj] = data[dataCounter];
+                memcpy(&(data[dataCounter]), &(blockPointer[jj]), sizeof(char));
+
                 dataCounter++;
             }
         }
@@ -1128,18 +1135,19 @@ int readFromFile(int indexNode, char *data, int size, int offset)
     getAllocatedBlockNumbers(blocks, indexNode);
     indexNodePointer = RAM_memory + DATA_BLOCKS_OFFSET + blocks[currentBlock] * RAM_BLOCK_SIZE + currentPosition;
 
+    printf("block[currentBlock] = %d\n", blocks[currentBlock]);
+
     // Copy 'size' bytes into data
     for (i = 0; i < size; i++)
     {
 
-        memcpy(data, &(indexNodePointer[0]), sizeof(char));
+        memcpy(&(data[i]), &(indexNodePointer[0]), sizeof(char));
         // memcpy(data, &a, sizeof(char));
 
         currentPosition++;
-        data++;
-        if (currentPosition == 256)
-        {
-            currentPosition = 0;
+        // data++;
+        if (currentPosition==256) {
+            currentPosition=0;
             currentBlock++;
         }
 
@@ -1559,6 +1567,45 @@ void testFileCreation()
     printIndexNode(indexNodeNum); /* Verify size was written */
 }
 
+void testReadFromFile() {
+    int nodeNum, blockNum, ii;
+    char* nodeStart;
+
+    int byteNum = 12;
+    char data[byteNum];
+    int sizeWritten, dataSize;    
+    dataSize = 200000;
+    char *uselessData = calloc(dataSize, sizeof(char));
+
+    for (ii = 0 ; ii < dataSize ; ii++)
+        uselessData[ii] = 'z';
+
+    nodeNum = createIndexNode("reg\0", "/otherfile.txt\0",  255);
+    sizeWritten = writeToFile(nodeNum, uselessData, dataSize, 0);
+
+    // int blocks [MAX_BLOCKS_ALLOCATABLE];
+    // getAllocatedBlockNumbers(blocks, nodeNum);
+    // blockNum = blocks[0];
+    // printf("Block num:%d\n", blockNum);
+    // nodeStart = RAM_memory + DATA_BLOCKS_OFFSET + blockNum * RAM_BLOCK_SIZE;
+    // strcpy(nodeStart, "hello world\0");
+
+    readFromFile(nodeNum, data, byteNum, 0);
+
+    printf("NODE: %d\n", nodeNum);
+    printf("DATA: %c\n", data[0]);
+    printf("DATA: %c\n", data[1]);
+    printf("DATA: %c\n", data[2]);
+    printf("DATA: %c\n", data[3]);
+    // printf("Data: %s\n", data);
+
+    printIndexNode(nodeNum);
+    
+    // nodeStart = RAM_memory + INDEX_NODE_ARRAY_OFFSET + nodeNum*INDEX_NODE_SIZE;
+
+}
+
+
 /************************INIT AND EXIT ROUTINES*****************************/
 #ifdef DEBUG
 
@@ -1587,13 +1634,17 @@ void kr_open(struct RAM_path input)
 
 }
 
-void kr_read(struct RAM_accessFile input)
-{
-
+void kr_read(struct RAM_accessFile input) {
+    readFromFile(input.indexNode, input.address, input.numBytes, input.offset);
 }
 
-void kr_write(struct RAM_accessFile input)
-{
+/**
+ * Kernel pair for the write function
+ *
+ * @param[in]   input   The accessfile struct.  Input for writing is in this struct
+ */
+void kr_write(struct RAM_accessFile input) {
+    writeToFile(input.indexNode, input.address, input.numBytes, input.offset);
 }
 
 void kr_lseek(struct RAM_file input)
@@ -1608,34 +1659,6 @@ void kr_readdir(struct RAM_accessFile input)
 {
 }
 
-void testReadFromFile()
-{
-    int nodeNum, blockNum;
-    char *nodeStart;
-
-    int byteNum = 12;
-    char data[byteNum];
-
-    nodeNum = createIndexNode("reg\0", "/otherfile.txt\0",  255);
-    int blocks [MAX_BLOCKS_ALLOCATABLE];
-    getAllocatedBlockNumbers(blocks, nodeNum);
-    blockNum = blocks[0];
-
-    printf("Block num:%d\n", blockNum);
-    nodeStart = RAM_memory + DATA_BLOCKS_OFFSET + blockNum * RAM_BLOCK_SIZE;
-    strcpy(nodeStart, "hello world\0");
-
-    readFromFile(nodeNum, data, byteNum, 0);
-
-
-    printf("DATA: %s\n", data);
-
-    printIndexNode(nodeNum);
-
-    // nodeStart = RAM_memory + INDEX_NODE_ARRAY_OFFSET + nodeNum*INDEX_NODE_SIZE;
-
-}
-
 int main()
 {
     int indexNodeNum;
@@ -1646,7 +1669,7 @@ int main()
     // testDirCreation();
 
     /* Uncomment to test max file size and file write */
-    testFileCreation();
+    // testFileCreation();
 
     /* Uncomment to test read files */
     testReadFromFile();
