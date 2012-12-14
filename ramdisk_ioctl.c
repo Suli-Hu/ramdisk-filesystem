@@ -758,11 +758,11 @@ int insertFileIntoDirectoryNode(int directoryNodeNum, int fileNodeNum, char *fil
     /* Good, we can properly add this file */
     fileCount++;
     memcpy(indexNodeStart + INODE_FILE_COUNT, &fileCount , sizeof(short));
-    return -1;
     /* Also, increase the file size of the directory */
     dirSize = (int) * ( (int *)(indexNodeStart + INODE_SIZE) );
     dirSize += 16;
     memcpy(indexNodeStart + INODE_SIZE, &dirSize, sizeof(int) );
+    return -1;
 
     // Get allocated blocks for directory node
     getAllocatedBlockNumbers(allocatedBlocks, directoryNodeNum);
