@@ -1767,7 +1767,7 @@ static int ramdisk_ioctl(struct inode *inode, struct file *file,
                          unsigned int cmd, unsigned long arg)
 {
     struct RAM_path path;
-    struct RAM_file file;
+    struct RAM_file ramFile;
     struct RAM_accessFile access;
     switch (cmd)
     {
@@ -1793,9 +1793,9 @@ static int ramdisk_ioctl(struct inode *inode, struct file *file,
     case RAM_OPEN:
         PRINT("Opening file...\n");
 
-        copy_from_user(&file, (struct RAM_file *)arg,
-                       sizeof(struct RAM_file));
-        kr_open(file);
+        copy_from_user(&path, (struct RAM_path *)arg,
+                       sizeof(struct RAM_path));
+        kr_open(path);
 
         break;
 
@@ -1819,9 +1819,9 @@ static int ramdisk_ioctl(struct inode *inode, struct file *file,
     case RAM_LSEEK:
         PRINT("Seeking into file...\n");
 
-        copy_from_user(&file, (struct RAM_file *)arg,
+        copy_from_user(&ramFile, (struct RAM_file *)arg,
                        sizeof(struct RAM_file));
-        kr_lseek(file);
+        kr_lseek(ramFile);
 
         break;
 
