@@ -145,6 +145,10 @@ void getAllocatedBlockNumbers(int *blockArray, int inodeNum)
     char *doubleIndirPointer;
     char *blockPointer;
 
+    /* First, fill everything with -1 */
+    for (ii = 0 ; ii < MAX_BLOCKS_ALLOCATABLE ; ii++)
+        blockArray[ii] = -1;
+
     /* Now, travel through the directory to get all of the block numbers */
     counter = 0;
 
@@ -879,136 +883,82 @@ int writeToFile(int indexNode, char *data, int size, int offset)
     /* Declare all of the vars */
     char *indexNodePointer, *blockPointer;
     int ii, jj, dataCounter;
-    int currentSize, nextSize, diff, toAdd;
-    int numBlocksAfter, numBlocksBefore, blocksToAdd;
+    int currentSize, diff;
     int allocatedBlocks[MAX_BLOCKS_ALLOCATABLE];
-    int blocksAvailable;
-    int finalBlock, finalOffset, startingBlock, startingOffset;
+    int currentBlock;
+    int startingBlock, startingOffset;
 
     /* Access the pointer for size information */
     indexNodePointer = RAM_memory + INDEX_NODE_ARRAY_OFFSET + indexNode * INDEX_NODE_SIZE;
     currentSize = (int) *( (int *)(indexNodePointer +INODE_SIZE) );
     diff = currentSize - offset;
 
-    /* Calculate the number of blocks currently allocated */
-    numBlocksBefore = (currentSize / RAM_BLOCK_SIZE) + 1;
-    if (currentSize == 0)
-    {
-        numBlocksBefore--;
-    } 
-    else if (currentSize % RAM_BLOCK_SIZE == 0)
-    {
-        numBlocksBefore--;
-    }
-
-    /* Calculate how many blocks will be allocated after the write */
-    toAdd = ( (size - diff) > 0 ) ? ( size - diff ) : 0;
-    nextSize = currentSize + toAdd;
-
-    /* Now get the new block count */
-    numBlocksAfter = (nextSize / RAM_BLOCK_SIZE) + 1;
-    /* @todo adjust this to take into account the needed blocks for added indirect blocks */
-    if (numBlocksAfter != numBlocksBefore)
-    {
-        /* Take into account all of the special cases of blocks necessary */
-    }
-    if (nextSize == 0)
-    {
-        numBlocksAfter--;
-    } 
-    else if (nextSize % RAM_BLOCK_SIZE == 0)
-    {
-        numBlocksAfter--;
-    }
-
-    /* REDO THIS:  INSTEAD OF PRECALCULATING THE BLOCKS TO ADD, SIMPLY LOOP AND HAVE THE BREAKING CONDITION BE
-    * WHEN -1 IS RETURNED, THIS IS A MORE ELEGANT SOLUTION TO MY PROBLEM
-    */
-
-    /* Get the difference and see if there enough allocatable blocks to write this */
-    blocksToAdd = numBlocksAfter - numBlocksBefore;
-    if (blocksToAdd)
-    {
-        /* Non zero amount needs to be added, check to see if there are enough blocks to allocated, otherwise adjust */
-        /* how much is actually going to be written */
-        blocksAvailable = (int) *( (int *) (RAM_memory + SUPERBLOCK_OFFSET));
-        if (blocksToAdd > blocksAvailable)
-        {
-            diff = blocksToAdd - blocksAvailable;
-            blocksToAdd = blocksAvailable;
-            numBlocksAfter = numBlocksBefore + blocksToAdd;
-
-            size -= ( ( (diff-1) * RAM_BLOCK_SIZE) + nextSize % RAM_BLOCK_SIZE ); /* The amount of bytes added to the file */
-            nextSize -= ( ( (diff-1) * RAM_BLOCK_SIZE) + nextSize % RAM_BLOCK_SIZE ); /* The next size of the file */
-        }
-        /* Also check to make sure the blocks after is not greater than the max allocatable size */
-        if (numBlocksAfter > MAX_BLOCKS_ALLOCATABLE)
-        {
-            diff = numBlocksAfter - MAX_BLOCKS_ALLOCATABLE;
-            blocksToAdd -= diff;
-            numBlocksAfter = MAX_BLOCKS_ALLOCATABLE;
-
-            size -= ( ( (diff-1) * RAM_BLOCK_SIZE) + nextSize % RAM_BLOCK_SIZE ); /* The amount of bytes added to the file */
-            nextSize -= ( ( (diff-1) * RAM_BLOCK_SIZE) + nextSize % RAM_BLOCK_SIZE ); /* The next size of the file */
-        }
-        if (size <= 0)
-        {
-            /* No blocks available to allocate, or max allocatable reached, so could not write anything */
-            return 0;
-        }
-    }
-
-    /* At this point, we can add the blocks need for properly fitting in the data */
-    for (ii = 0 ; ii < blocksToAdd ; ii++)
-    {
-        allocateNewBlockForIndexNode(indexNode, numBlocksBefore);
-    }
-
-    /* Now get all of the allocated blocks */
+    /* Get the allocated blocks currently available*/
     getAllocatedBlockNumbers(allocatedBlocks, indexNode);
 
-    /* Get the starting point from which we will be writing */
+    /* Get the starting block and offset for writing */
     startingBlock = offset / RAM_BLOCK_SIZE;
     startingOffset = offset % RAM_BLOCK_SIZE;
-    /* I subtract 1 because while offset starts counting at 0, nextSize starts counting at 1 */
-    finalBlock = (nextSize - 1) / RAM_BLOCK_SIZE;
-    finalOffset = (nextSize - 1) % RAM_BLOCK_SIZE;  /* Note, we have to write into this final offset */
 
-    /* LOOP */
+    /* Now, loop through allocated blocks, adding blocks as necessary to expand the file, and always writing */
     dataCounter = 0;
-    for (ii = startingBlock ; ii <= finalBlock ; ii++ )
+    for (ii = startingBlock; ; ii++)
     {
-        blockPointer = RAM_memory + DATA_BLOCKS_OFFSET + ii * RAM_BLOCK_SIZE;
-        /* Inner loop checks */
+        if (ii >= MAX_BLOCKS_ALLOCATABLE)
+        {
+            /* Trying to access a block past the max available, therefore, we break out now */
+            memcpy(indexNodePointer + INODE_SIZE, &dataCounter, sizeof(int));
+            return dataCounter;
+        }
+        currentBlock = allocatedBlocks[ii];
+        if (currentBlock == -1)
+        {
+            /* Need to allocate a new block for this file */
+            currentBlock = allocateNewBlockForIndexNode(indexNode, ii);
+            if (currentBlock == -1)
+            {
+                /* could not allocate a new block, return the amount of data actually written */
+                memcpy(indexNodePointer + INODE_SIZE, &dataCounter, sizeof(int));
+                return dataCounter;
+            }
+        }
+
+        blockPointer = RAM_memory + DATA_BLOCKS_OFFSET + currentBlock * RAM_BLOCK_SIZE;
         if (ii == startingBlock)
         {
-            /* Use the starting offset */
+            /* Start writing from the offset */
             for (jj = startingOffset ; jj < RAM_BLOCK_SIZE ; jj++)
             {
-                /* Push the data into the block */
+                if (dataCounter == size)
+                {
+                    /* Finished writing all the data, we are done */
+                    memcpy(indexNodePointer + INODE_SIZE, &size, sizeof(int));
+                    return size;
+                }
                 blockPointer[jj] = data[dataCounter];
                 dataCounter++;
             }
         }
-        else if (ii == finalBlock)
+        else
         {
-            /* Go up to and including the final offset */
-            for (jj = 0 ; jj <= finalOffset ; jj++)
-            {
-                /* Push data in */
-                blockPointer[jj] = data[dataCounter];
-                dataCounter++;
-            }
-        }
-        else 
-        {
-            /* All of the in between, fills in the full block */
             for (jj = 0 ; jj < RAM_BLOCK_SIZE ; jj++)
             {
-                /* Push data in */
+                if (dataCounter == size)
+                {
+                    /* Finished writing all the data, we are done */
+                    memcpy(indexNodePointer + INODE_SIZE, &size, sizeof(int));
+                    return size;
+                }
                 blockPointer[jj] = data[dataCounter];
                 dataCounter++;
             }
+        }
+
+        if (dataCounter == size)
+        {
+            /* Finished writing all the data, we are done */
+            memcpy(indexNodePointer + INODE_SIZE, &size, sizeof(int));
+            return size;
         }
     }
 
@@ -1016,6 +966,7 @@ int writeToFile(int indexNode, char *data, int size, int offset)
     {
         PRINT("Error in loop, adding more data than intended\n");
     }
+
     return size;
 }
 
@@ -1141,6 +1092,7 @@ int allocateNewBlockForIndexNode(int indexNode, int current)
             for (ii = 0 ; ii < 64 ; ii++)
                 memcpy(singleIndirPointer + ii * 4, &negOne, sizeof(int) );
 
+            memcpy(nodePointer+DOUBLE_INDIR, &newDouble, sizeof(int) );
             memcpy(doubleIndirPointer, &newSingle, sizeof(int) );
 
             newBlock = getFreeBlock();
@@ -1157,8 +1109,8 @@ int allocateNewBlockForIndexNode(int indexNode, int current)
                 return -1;
             }
             doubleOffset = inodePointer / 64;  /* This is now the offset into double indir, where a new block is needed */
-            doubleIndirPointer = RAM_memory + DATA_BLOCKS_OFFSET + ( (int) *( (int *)(nodePointer + DOUBLE_INDIR) ) );
-            if ( ((int)*((int *)(doubleIndirPointer+doubleOffset))) != -1)
+            doubleIndirPointer = RAM_memory + DATA_BLOCKS_OFFSET + ( (int) *( (int *)(nodePointer + DOUBLE_INDIR) ) ) * RAM_BLOCK_SIZE;
+            if ( ((int)*((int *)(doubleIndirPointer+ (4 * doubleOffset) ))) != -1)
             {
                 PRINT("Mem corruption, block pointers are inconsistent\n");
                 return -1;
@@ -1169,7 +1121,7 @@ int allocateNewBlockForIndexNode(int indexNode, int current)
             for (ii = 0 ; ii < 64 ; ii++)
                 memcpy(singleIndirPointer + ii * 4, &negOne, sizeof(int) );
 
-            memcpy(doubleIndirPointer + doubleOffset, &newSingle, sizeof(int) );
+            memcpy(doubleIndirPointer + (4 * doubleOffset), &newSingle, sizeof(int) );
 
             /* Finally get the new data block for the file */
             newBlock = getFreeBlock();
@@ -1182,15 +1134,16 @@ int allocateNewBlockForIndexNode(int indexNode, int current)
             doubleOffset = inodePointer / 64; /* Offset into double indirect block */
             singleOffset = inodePointer % 64; /* Offset from the single block */
             /* singleOffset can't equal 0 (would have been caught above), so we know that this is not an edge case and division is straightforward */
-            doubleIndirPointer = RAM_memory + DATA_BLOCKS_OFFSET + ( (int) *( (int *)(nodePointer + DOUBLE_INDIR) ) );
+            doubleIndirPointer = RAM_memory + DATA_BLOCKS_OFFSET + ( (int) *( (int *)(nodePointer + DOUBLE_INDIR) ) ) * RAM_BLOCK_SIZE;
             singleIndirPointer = RAM_memory + DATA_BLOCKS_OFFSET + ( (int) *( (int *)(doubleIndirPointer + 4 * doubleOffset) ) ) * RAM_BLOCK_SIZE;
-            if ( ((int)*((int *)(singleIndirPointer+singleOffset))) != -1)
+            newBlock = (int) *( (int *)(singleIndirPointer + 4 * singleOffset) );
+            if ( newBlock != -1)
             {
                 PRINT("Mem corruption, block pointers are inconsistent\n");
                 return -1;
             }
             newBlock = getFreeBlock();
-            memcpy(singleIndirPointer+singleOffset, &newBlock, sizeof(int));
+            memcpy(singleIndirPointer + (4 *singleOffset), &newBlock, sizeof(int));
             return newBlock;
         }
     }
@@ -1401,11 +1354,13 @@ void testDirCreation()
 void testFileCreation()
 {
     /* Add 2000000 bytes (~2 MB) to a file, this should limit the file size to the max allocatable size */
-    int indexNodeNum, dataSize, sizeWritten;
+    int indexNodeNum, dataSize, sizeWritten, ii;
     char file[] = "/bigfile";
     /* Initialize some useless data to 0 so we can verify 0 data is being written later */
     dataSize = 2000000;
     char *uselessData = calloc(dataSize, sizeof(char));
+    for (ii = 0 ; ii < dataSize ; ii++)
+    	uselessData[ii] = 2;
 
     indexNodeNum = createIndexNode("reg\0", file, 0);
     printIndexNode(0); /* Veryify file was created */
