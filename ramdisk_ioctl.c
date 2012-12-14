@@ -1748,7 +1748,7 @@ static int __init initialization_routine(void)
 
     // PRINT("MEM BEFORE\n");
     // printBitmap(400);
-    indexNodeNum = createIndexNode("reg\0", "/myfile.txt\0",  0);
+    // indexNodeNum = createIndexNode("reg\0", "/myfile.txt\0",  0);
     //printIndexNode(indexNodeNum);
     //printIndexNode(0);
 
