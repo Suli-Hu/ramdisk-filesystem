@@ -907,6 +907,11 @@ int writeToFile(int indexNode, char *data, int size, int offset)
 
     /* Now get the new block count */
     numBlocksAfter = (nextSize / RAM_BLOCK_SIZE) + 1;
+    /* @todo adjust this to take into account the needed blocks for added indirect blocks */
+    if (numBlocksAfter != numBlocksBefore)
+    {
+        /* Take into account all of the special cases of blocks necessary */
+    }
     if (nextSize == 0)
     {
         numBlocksAfter--;
@@ -915,6 +920,10 @@ int writeToFile(int indexNode, char *data, int size, int offset)
     {
         numBlocksAfter--;
     }
+
+    /* REDO THIS:  INSTEAD OF PRECALCULATING THE BLOCKS TO ADD, SIMPLY LOOP AND HAVE THE BREAKING CONDITION BE
+    * WHEN -1 IS RETURNED, THIS IS A MORE ELEGANT SOLUTION TO MY PROBLEM
+    */
 
     /* Get the difference and see if there enough allocatable blocks to write this */
     blocksToAdd = numBlocksAfter - numBlocksBefore;
@@ -928,8 +937,9 @@ int writeToFile(int indexNode, char *data, int size, int offset)
             diff = blocksToAdd - blocksAvailable;
             blocksToAdd = blocksAvailable;
             numBlocksAfter = numBlocksBefore + blocksToAdd;
-            nextSize -= diff * RAM_BLOCK_SIZE; /* The next size of the file */
-            size -= diff * RAM_BLOCK_SIZE; /* The amount of bytes added to the file */
+
+            size -= ( ( (diff-1) * RAM_BLOCK_SIZE) + nextSize % RAM_BLOCK_SIZE ); /* The amount of bytes added to the file */
+            nextSize -= ( ( (diff-1) * RAM_BLOCK_SIZE) + nextSize % RAM_BLOCK_SIZE ); /* The next size of the file */
         }
         /* Also check to make sure the blocks after is not greater than the max allocatable size */
         if (numBlocksAfter > MAX_BLOCKS_ALLOCATABLE)
@@ -937,8 +947,9 @@ int writeToFile(int indexNode, char *data, int size, int offset)
             diff = numBlocksAfter - MAX_BLOCKS_ALLOCATABLE;
             blocksToAdd -= diff;
             numBlocksAfter = MAX_BLOCKS_ALLOCATABLE;
-            size -= diff * RAM_BLOCK_SIZE;
-            nextSize -= diff * RAM_BLOCK_SIZE;
+
+            size -= ( ( (diff-1) * RAM_BLOCK_SIZE) + nextSize % RAM_BLOCK_SIZE ); /* The amount of bytes added to the file */
+            nextSize -= ( ( (diff-1) * RAM_BLOCK_SIZE) + nextSize % RAM_BLOCK_SIZE ); /* The next size of the file */
         }
         if (size <= 0)
         {
