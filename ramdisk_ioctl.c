@@ -249,6 +249,14 @@ int findFileIndexNodeInDir(int indexNode, char *filename)
     }
 #endif
 
+#ifdef DEBUG
+    free(nodeBlocks);
+#else
+    kfree(nodeBlocks);
+    PRINT("ALLOCATED MEMORY, LEAVING NOW\n");
+    return -1;
+#endif
+
     /* The index node we want */
     directory = RAM_memory + INDEX_NODE_ARRAY_OFFSET + (INDEX_NODE_SIZE * indexNode);
     if ( strcmp(directory + INODE_TYPE, "dir\0") )
@@ -400,7 +408,7 @@ int getIndexNodeNumberFromPathname(char *pathname, int dirFlag)
             }
         }
         /* Get the index node of the next directory */
-        nextIndexNode = -1;//findFileIndexNodeInDir(currentIndexNode, nextFile);
+        nextIndexNode = findFileIndexNodeInDir(currentIndexNode, nextFile);
 
         if (nextIndexNode == -1)
         {
