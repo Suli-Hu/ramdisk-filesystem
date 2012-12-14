@@ -635,7 +635,7 @@ int createIndexNode(char *type, char *pathname, int memorysize)
         if (directoryNodeNum == -1)
             return -1; /* Directory of file does not exist */
 
-        // insertFileIntoDirectoryNode(directoryNodeNum, indexNodeNumber, filename);
+        insertFileIntoDirectoryNode(directoryNodeNum, indexNodeNumber, filename);
         // PRINT("***Found direct Num: %d\n", directoryNodeNum);
     }
 
