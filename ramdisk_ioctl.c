@@ -759,6 +759,15 @@ int insertFileIntoDirectoryNode(int directoryNodeNum, int fileNodeNum, char *fil
     }
 #endif
 
+#ifdef DEBUG
+    free(blocks);
+    return -1;
+#else
+    kfree(blocks);
+    PRINT("The number of free blocks is %d, Blocks were properly allocated\n", numFreeBlocks);
+    return -1;
+#endif
+
     freeblock = -1;
     blocknumber = 0;
     i = 0;
@@ -820,15 +829,6 @@ int insertFileIntoDirectoryNode(int directoryNodeNum, int fileNodeNum, char *fil
         }
     }
 
-#ifdef DEBUG
-    free(blocks);
-    return -1;
-#else
-    kfree(blocks);
-    PRINT("The number of free blocks is %d, Blocks were properly allocated\n", numFreeBlocks);
-    return -1;
-#endif
-    
     /* Good, we can properly add this file */
     fileCount++;
     memcpy(indexNodeStart + INODE_FILE_COUNT, (short *)&fileCount , sizeof(short));
