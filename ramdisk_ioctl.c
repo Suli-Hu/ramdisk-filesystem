@@ -755,11 +755,10 @@ int insertFileIntoDirectoryNode(int directoryNodeNum, int fileNodeNum, char *fil
         }
     }
 
-    return -1;
-
     /* Good, we can properly add this file */
     fileCount++;
-    memcpy(indexNodeStart + INODE_FILE_COUNT, (short *)&fileCount , sizeof(short));
+    memcpy(indexNodeStart + INODE_FILE_COUNT, &fileCount , sizeof(short));
+    return -1;
     /* Also, increase the file size of the directory */
     dirSize = (int) * ( (int *)(indexNodeStart + INODE_SIZE) );
     dirSize += 16;
