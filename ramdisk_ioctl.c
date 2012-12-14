@@ -145,6 +145,8 @@ void getAllocatedBlockNumbers(int *blockArray, int inodeNum)
     char *doubleIndirPointer;
     char *blockPointer;
 
+    PRINT("Made it in to the get allocated function\n");
+    return;
     /* First, fill everything with -1 */
     for (ii = 0 ; ii < MAX_BLOCKS_ALLOCATABLE ; ii++)
         blockArray[ii] = -1;
@@ -818,14 +820,6 @@ int insertFileIntoDirectoryNode(int directoryNodeNum, int fileNodeNum, char *fil
         }
     }
 
-#ifdef DEBUG
-    free(blocks);
-    return -1;
-#else
-    kfree(blocks);
-    PRINT("The number of free blocks is %d, Blocks were properly allocated\n", numFreeBlocks);
-    return -1;
-#endif
     /* Good, we can properly add this file */
     fileCount++;
     memcpy(indexNodeStart + INODE_FILE_COUNT, (short *)&fileCount , sizeof(short));
@@ -836,6 +830,15 @@ int insertFileIntoDirectoryNode(int directoryNodeNum, int fileNodeNum, char *fil
 
     // Get allocated blocks for directory node
     getAllocatedBlockNumbers(blocks, directoryNodeNum);
+
+#ifdef DEBUG
+    free(blocks);
+    return -1;
+#else
+    kfree(blocks);
+    PRINT("The number of free blocks is %d, Blocks were properly allocated\n", numFreeBlocks);
+    return -1;
+#endif
 
     // Find a block that isn't fully allocated of directories
     do
