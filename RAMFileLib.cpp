@@ -2,12 +2,12 @@
 #include <stdlib.h>
 #include "RAMFileLib.h"
 #include "structs.h"
-#include <list>
+#include <vector>
 
 using namespace std;
 
 // Declaring global variables
-list<FD_entry> fd_Table;
+vector<FD_entry> fd_Table;
 
 
 #ifdef KERNERLREADY
@@ -70,6 +70,12 @@ int rd_open(char *pathname) {
 	return entry.fd;
 }
 
+void kr_close(int fd) {
+
+	// Closing a file simply means removing a file from the FD table
+	deleteFileFromFDTable(fd);
+}
+
 int rd_read(int fd, char *address, int num_bytes) {
 	RAM_accessFile file;
 	file.fd = fd;
@@ -85,7 +91,13 @@ int rd_read(int fd, char *address, int num_bytes) {
 
 #ifdef KERNERLREADY
   	ioctl (fd, RAM_READ, &file);	
-#endif  	
+#endif
+
+  	// Update the offset after reading the file
+	FD_entry *entry;
+	entry = getEntryFromFd(fd);
+	entry->offset = file.offset;
+
 	return file.ret;
 }
 
@@ -105,6 +117,12 @@ int rd_write(int fd, char *address, int num_bytes) {
 #ifdef KERNERLREADY
   	ioctl (fd, RAM_WRITE, &file);	
 #endif  	
+
+  	// Update the offset after reading the file
+	FD_entry *entry;
+	entry = getEntryFromFd(fd);
+	entry->offset = file.offset;
+
 	return file.ret;
 }
 
@@ -120,16 +138,19 @@ int rd_lseek(int fd, int offset) {
 
 	// If the offset the user specifies is greater than the file size
 	// move the pointer to end of file
-	FD_entry entry;
+	FD_entry *entry;
 	entry = getEntryFromFd(fd);
-	if (offset>entry.fileSize) {
-		file.offset = entry.fileSize;
+	if (offset>entry->fileSize) {
+		file.offset = entry->fileSize;
 	}
 
 
 #ifdef KERNERLREADY
   	ioctl (fd, RAM_LSEEK, &file);	
-#endif  		
+#endif
+
+	entry->offset = file.offset;
+
 	return file.ret;
 }
 
@@ -161,7 +182,7 @@ int rd_readdir(int fd, char *address) {
 
 /******************* HELPER FUNCTION ********************/
 int checkIfFileExists(int fd) {
-	list<FD_entry>::iterator it;
+	vector<FD_entry>::iterator it;
 	for (it = fd_Table.begin() ; it != fd_Table.end() ; it++) 
 	{
 		if (it->fd==fd) 
@@ -171,21 +192,8 @@ int checkIfFileExists(int fd) {
 	return -1;
 }
 
-FD_entry getEntryFromFd(int fd) {
-	list<FD_entry>::iterator it;
-	FD_entry entry;
-
-	for (it = fd_Table.begin() ; it != fd_Table.end() ; it++) 
-	{
-		if (it->fd==fd) 
-			return *it;
-		
-	}	
-	return entry;	
-}
-
 int fdFromIndexNode(int indexNode) {
-	list<FD_entry>::iterator it;
+	vector<FD_entry>::iterator it;
 	for (it = fd_Table.begin() ; it != fd_Table.end() ; it++) 
 	{
 		if (it->indexNode==indexNode) 
@@ -196,7 +204,7 @@ int fdFromIndexNode(int indexNode) {
 }
 
 int indexNodeFromfd(int fd) {
-	list<FD_entry>::iterator it;
+	vector<FD_entry>::iterator it;
 	for (it = fd_Table.begin() ; it != fd_Table.end() ; it++) 
 	{
 		if (it->fd==fd) 
@@ -206,7 +214,48 @@ int indexNodeFromfd(int fd) {
 	return -1;	
 }
 
+void printfdTable (){
+	vector<FD_entry>::iterator it;
+	printf("---------FD Table---------\n");	
+	for (it = fd_Table.begin() ; it != fd_Table.end() ; it++) 
+	{
+		printf("fd: %d  indexNode: %d  offset: %d  fileSize: %d\n", it->fd, it->indexNode, it->offset, it->fileSize);
+	}
+	printf("---------End of FD Table---------\n");		
+}
+
+FD_entry* getEntryFromFd(int fd) {
+
+	FD_entry *entry;
+	int i;
+
+	for (i=0; i<fd_Table.size();i++) {
+		entry = &(fd_Table[i]);
+		if (entry->fd=fd)
+			return entry;
+	} 
+	return entry;	
+}
+
+void deleteFileFromFDTable(int fd) {
+	vector<FD_entry>::iterator it;
+	for (it = fd_Table.begin() ; it != fd_Table.end() ; it++) 
+	{
+		fd_Table.erase(it);
+		return;
+	}	
+}
+
 int main () {
 	printf("Hello world\n");
-	rd_creat("/file.txt");
+
+	FD_entry entry;
+	entry.indexNode = 1;
+	entry.offset = 0;	// Default file pointer to the start of file
+	entry.fileSize=10;	// -1 indicates the file does not have size yet
+	entry.fd = 1;	// Set file descriptor
+	fd_Table.push_back(entry);
+
+
+	printfdTable();
 }

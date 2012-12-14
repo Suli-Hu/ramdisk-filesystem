@@ -23,6 +23,7 @@ struct RAM_accessFile
     int numBytes;    /** Number of bytes to transfer into userspace (Used if regular file) */
     int ret;              /** Return value */
     int indexNode;
+    int offset;
     char *address;  /** User space address to which to send data */
 };
 
@@ -103,6 +104,6 @@ void kr_readdir(struct RAM_accessFile input);
 
 /********** Helper Function Declarations **********/
 int fdFromIndexNode(int indexNode);
-struct FD_entry getEntryFromFd(int fd);
+struct FD_entry* getEntryFromFd(int fd);
 int checkIfFileExists(int fd);
 int indexNodeFromfd(int fd);

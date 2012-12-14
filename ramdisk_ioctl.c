@@ -602,6 +602,22 @@ int createIndexNode(char *type, char *pathname, int memorysize)
     return indexNodeNumber;
 }
 
+char *getIndexNodeType(int indexNode) {
+    char *indexNodeStart;
+    char *type;
+    indexNodeStart = RAM_memory+INDEX_NODE_ARRAY_OFFSET+ indexNode*INDEX_NODE_SIZE;
+    if (strcmp("dir\0", indexNodeStart+INODE_TYPE)==0) {
+        return "dir\0";
+    }
+    else if (strcmp("reg\0", indexNodeStart+INODE_TYPE)==0) {
+        return "reg\0";
+    }
+    else {
+        return "error\0";
+    }
+
+}
+
 char *getFileNameFromPath(char *pathname)
 {
 
@@ -884,6 +900,57 @@ int writeToFile(int indexNode, char *data, int size, int offset)
     
 
 }
+
+/**
+ * Read specify number of bytes to destinated location
+ * Fails if file is a directory
+ *
+ * @return    int    1=success -1=fail
+ * @param[in]    indexNode    index node of the file to read from
+ * @param[in]    data    a char * pointer to the userspace memory that needs to be read to
+ * @param[in]    size    the number of bytes to read into the indexNode
+ * @param[in]    offset    the offset into the file to start reading at
+ */
+int readFromFile(int indexNode, char *data, int size, int offset)
+{
+    // Make sure the indexNode is a file
+    if (strcmp("dir\0", getIndexNodeType(indexNode))==0 || strcmp("error\0", getIndexNodeType(indexNode))==0) {
+        PRINT("Error, cannot read bytes from directory\n");
+        return -1;
+    }
+
+    /* Declare all of the vars */
+    char *indexNodePointer;
+    int i, j, currentBlock, currentPosition;
+    currentBlock = offset / RAM_BLOCK_SIZE;
+    currentPosition = offset % RAM_BLOCK_SIZE;
+
+    // Get allocated blocks for directory node
+    int blocks [MAX_BLOCKS_ALLOCATABLE];
+    getAllocatedBlockNumbers(blocks, indexNode);
+    indexNodePointer = RAM_memory + DATA_BLOCKS_OFFSET + blocks[currentBlock] * RAM_BLOCK_SIZE + currentPosition;
+
+    // Copy 'size' bytes into data
+    for (i=0; i<size;i++) {
+
+        memcpy(data, &(indexNodePointer[0]), sizeof(char));
+        // memcpy(data, &a, sizeof(char));
+
+        currentPosition++;
+        data++;
+        if (currentPosition==256) {
+            currentPosition=0;
+            currentBlock++;
+        }
+
+        indexNodePointer = RAM_memory + DATA_BLOCKS_OFFSET + blocks[currentBlock] * RAM_BLOCK_SIZE + currentPosition;
+    }
+
+    // If we have reached this point, we have read enough bytes, return
+    return 1;
+}
+
+
 
 /************************ MEMORY MANAGEMENT *****************************/
 
@@ -1218,21 +1285,25 @@ void printIndexNode(int nodeIndex)
     }
 
     // If directory, print all the files in the directory
-
     if (strcmp("dir\0",  indexNodeStart + INODE_TYPE) == 0)
     {
+        int nodeBlocks[MAX_BLOCKS_ALLOCATABLE];
+        getAllocatedBlockNumbers(nodeBlocks, nodeIndex);
+        i = 0;
+        memoryblock=0;
         PRINT("Directory Listing: \n");
-        for (i = 0; i <= 7; i++)
-        {
 
-            memoryblock = (int) * ((int *)(indexNodeStart + DIRECT_1 + 4 * i));
+        // While we haven't reached the end of the memory block, keep printing
+        while (memoryblock!=-1) {
+
+            memoryblock = nodeBlocks[i];
             dirlistingstart = RAM_memory + DATA_BLOCKS_OFFSET + (memoryblock * RAM_BLOCK_SIZE);
-
             for (j = 0; j < RAM_BLOCK_SIZE / FILE_INFO_SIZE; j++)
             {
                 indexNodeNum = (short) * (short *)(dirlistingstart + FILE_INFO_SIZE * j + INODE_NUM_OFFSET);
                 if (indexNodeNum > 0 && memoryblock > -1)
                 {
+                    // Print the file name and node type
                     filename = (dirlistingstart + FILE_INFO_SIZE * j);
                     if (stringContainsChar(filename, '/')==1)
                         PRINT("Directory: %s  Inode: %hd\n", filename, indexNodeNum);
@@ -1240,8 +1311,9 @@ void printIndexNode(int nodeIndex)
                         PRINT("File: %s  Inode: %hd\n", filename, indexNodeNum);
                 }
             }
+            i++;
         }
-        PRINT("\n");
+
     }
 
     PRINT("-----End of Printing indexNode %d-----\n", nodeIndex);
@@ -1255,10 +1327,10 @@ void testDirCreation()
     char filename[80];
     for (ii = 0 ; ii < 1024 ; ii++)
     {
-        sprintf(filename, "/test%d", ii);
+        sprintf(filename, "/test%d.txt", ii);
         indexNodeNum = createIndexNode("reg\0", filename, 0);
         PRINT("Created index node %d for file %s\n", indexNodeNum, filename);
-        printIndexNode(0);
+        // printIndexNode(0);
     }
     /* Print out the root indexNode now */
     printSuperblock();
@@ -1305,13 +1377,41 @@ void kr_unlink(struct RAM_path input) {
 void kr_readdir(struct RAM_accessFile input) {
 }
 
+void testReadFromFile() {
+    int nodeNum, blockNum;
+    char* nodeStart;
+
+    int byteNum = 12;
+    char data[byteNum];
+
+    nodeNum = createIndexNode("reg\0", "/otherfile.txt\0",  255);
+    int blocks [MAX_BLOCKS_ALLOCATABLE];
+    getAllocatedBlockNumbers(blocks, nodeNum);
+    blockNum = blocks[0];
+
+    printf("Block num:%d\n", blockNum);
+    nodeStart = RAM_memory + DATA_BLOCKS_OFFSET + blockNum * RAM_BLOCK_SIZE;
+    strcpy(nodeStart, "hello world\0");
+
+    readFromFile(nodeNum, data, byteNum, 0);
+
+
+    printf("DATA: %s\n", data);
+
+    printIndexNode(nodeNum);
+    
+    // nodeStart = RAM_memory + INDEX_NODE_ARRAY_OFFSET + nodeNum*INDEX_NODE_SIZE;
+
+}
+
 int main()
 {
     int indexNodeNum;
 
     RAM_memory = (char *)malloc(FS_SIZE*sizeof(char));
     init_ramdisk();
-    testDirCreation();
+    // testDirCreation();
+    testReadFromFile();
     /* Now create some more files as a test */
     // indexNodeNum = createIndexNode("reg\0", "/myfile.txt\0",  0);
     // printIndexNode(indexNodeNum);
@@ -1323,9 +1423,11 @@ int main()
     // printSuperblock();
     // printIndexNode(0);
 
-    printIndexNode(0);
+    // printIndexNode(0);
     return 0;
 }
+
+
 
 #else
 /**
