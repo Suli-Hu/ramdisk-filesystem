@@ -749,6 +749,11 @@ int insertFileIntoDirectoryNode(int directoryNodeNum, int fileNodeNum, char *fil
     blocks = (int *)malloc(sizeof(int) * MAX_BLOCKS_ALLOCATABLE);
 #else
     blocks = (int *)kmalloc(sizeof(int) * MAX_BLOCKS_ALLOCATABLE, GFP_ATOMIC);
+    if (!blocks)
+    {
+        PRINT("ALLOCATION FAILED\n");
+        return -1;
+    }
 #endif
     freeblock = -1;
     blocknumber = 0;
@@ -1006,6 +1011,11 @@ int deleteFile(char *pathname)
     parentBlocks = (int *)malloc(sizeof(int) * MAX_BLOCKS_ALLOCATABLE);
 #else
     parentBlocks = (int *)kmalloc(sizeof(int) * MAX_BLOCKS_ALLOCATABLE, GFP_ATOMIC);
+    if (!parentBlocks)
+    {
+        PRINT("ALLOCATION FAILED\n");
+        return -1;
+    }
 #endif
     neg2 = -2;
 
@@ -1148,6 +1158,11 @@ int writeToFile(int indexNode, char *data, int size, int offset)
     allocatedBlocks = (int *)malloc(sizeof(int) * MAX_BLOCKS_ALLOCATABLE);
 #else
     allocatedBlocks = (int *)kmalloc(sizeof(int) * MAX_BLOCKS_ALLOCATABLE, GFP_ATOMIC);
+    if (!allocatedBlocks)
+    {
+        PRINT("ALLOCATION FAILED\n");
+        return -1;
+    }
 #endif
 
     /* Access the pointer for size information */
@@ -1285,6 +1300,11 @@ int readFromFile(int indexNode, char *data, int size, int offset)
     blocks = (int *)malloc(sizeof(int) * MAX_BLOCKS_ALLOCATABLE);
 #else
     blocks = (int *)kmalloc(sizeof(int) * MAX_BLOCKS_ALLOCATABLE, GFP_ATOMIC);
+    if (!blocks)
+    {
+        PRINT("ALLOCATION FAILED\n");
+        return -1;
+    }
 #endif
 
     // Make sure the indexNode is a file
@@ -1613,6 +1633,11 @@ void printIndexNode(int nodeIndex)
     nodeBlocks = (int *)malloc(sizeof(int) * MAX_BLOCKS_ALLOCATABLE);
 #else
     nodeBlocks = (int *)kmalloc(sizeof(int) * MAX_BLOCKS_ALLOCATABLE, GFP_ATOMIC);
+    if (!nodeBlocks)
+    {
+        PRINT("ALLOCATION FAILED\n");
+        return;
+    }
 #endif
 
     indexNodeStart = RAM_memory + INDEX_NODE_ARRAY_OFFSET + nodeIndex * INDEX_NODE_SIZE;
@@ -1746,6 +1771,11 @@ void testFileCreation(void)
     uselessData = calloc(dataSize, sizeof(char));
 #else
     uselessData = kmalloc(dataSize * sizeof(char), GFP_ATOMIC);
+    if (!uselessData)
+    {
+        PRINT("ALLOCATION FAILED\n");
+        return;
+    }
 #endif
     for (ii = 0 ; ii < dataSize ; ii++)
         uselessData[ii] = 2;
@@ -1770,6 +1800,11 @@ void testReadFromFile(void) {
     uselessData = calloc(dataSize, sizeof(char));
 #else
     uselessData = kmalloc(dataSize * sizeof(char), GFP_ATOMIC);
+    if (!uselessData)
+    {
+        PRINT("ALLOCATION FAILED\n");
+        return;
+    }
 #endif
 
     for (ii = 0 ; ii < dataSize ; ii++)
