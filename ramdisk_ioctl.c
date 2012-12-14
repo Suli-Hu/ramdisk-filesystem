@@ -1713,7 +1713,7 @@ void printIndexNode(int nodeIndex)
 }
 
 /****************************Testing Routines*********************************/
-void testDirCreation()
+void testDirCreation(void)
 {
     /* Creates 20 files that go into the root directory (starts adding files to new data blocks */
     int ii, indexNodeNum;
@@ -1729,7 +1729,7 @@ void testDirCreation()
     printSuperblock();
 }
 
-void testFileCreation()
+void testFileCreation(void)
 {
     /* Add 2000000 bytes (~2 MB) to a file, this should limit the file size to the max allocatable size */
     int indexNodeNum, dataSize, sizeWritten, ii;
@@ -1752,7 +1752,7 @@ void testFileCreation()
     printIndexNode(indexNodeNum); /* Verify size was written */
 }
 
-void testReadFromFile() {
+void testReadFromFile(void) {
     int nodeNum, blockNum, ii;
     char* nodeStart;
 
