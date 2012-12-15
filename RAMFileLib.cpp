@@ -16,6 +16,16 @@ int fd;
 
 int currentFdNum;
 
+void printfdTable (){
+	vector<FD_entry>::iterator it;
+	printf("---------FD Table---------\n");	
+	for (it = fd_Table.begin() ; it != fd_Table.end() ; it++) 
+	{
+		printf("fd: %d  indexNode: %d  offset: %d  fileSize: %d\n", it->fd, it->indexNode, it->offset, it->fileSize);
+	}
+	printf("---------End of FD Table---------\n");		
+}
+
 int rd_creat(char *pathname) {
 	struct RAM_path rampath;
 	rampath.name = pathname;
@@ -44,6 +54,7 @@ int rd_open(char *pathname) {
 
   	// If the file open failed, return an error
   	printf("Index node - %d\n", file.indexNode);
+  	printfdTable();
   	if (file.ret<0)
   		return file.ret;
 
@@ -232,16 +243,6 @@ int indexNodeFromfd(int fd) {
 		
 	}	
 	return -1;	
-}
-
-void printfdTable (){
-	vector<FD_entry>::iterator it;
-	printf("---------FD Table---------\n");	
-	for (it = fd_Table.begin() ; it != fd_Table.end() ; it++) 
-	{
-		printf("fd: %d  indexNode: %d  offset: %d  fileSize: %d\n", it->fd, it->indexNode, it->offset, it->fileSize);
-	}
-	printf("---------End of FD Table---------\n");		
 }
 
 FD_entry* getEntryFromFd(int fd) {
