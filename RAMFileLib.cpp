@@ -43,6 +43,7 @@ int rd_open(char *pathname) {
 #endif
 
   	// If the file open failed, return an error
+  	printf("Index node - %d\n", file.indexNode);
   	if (file.ret<0)
   		return file.ret;
 
