@@ -113,6 +113,7 @@ void kr_readdir(struct RAM_accessFile *input);
 
 
 /********** Helper Function Declarations **********/
+int checkIfIndexNodeAlreadyExists(int inode);
 int fdFromIndexNode(int indexNode);
 struct FD_entry *getEntryFromFd(int fd);
 int checkIfFileExists(int fd);

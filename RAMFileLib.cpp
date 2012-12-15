@@ -3,6 +3,8 @@
 #include "RAMFileLib.h"
 #include "structs.h"
 #include <vector>
+#include <unistd.h>
+#include <string.h>
 
 using namespace std;
 
