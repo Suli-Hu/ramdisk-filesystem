@@ -774,7 +774,7 @@ int insertFileIntoDirectoryNode(int directoryNodeNum, int fileNodeNum, char *fil
         blocknumber = allocatedBlocks[i];
         if (blocknumber == -1)
         {
-            blocknumber = allocateNewBlockForIndexNode(directoryNodeNum, i);
+            blocknumber = allocBlockForNode(directoryNodeNum, i);
             if (blocknumber == -1)
             {
                 return -1;
@@ -1066,7 +1066,7 @@ int writeToFile(int indexNode, char *data, int size, int offset)
         if (currentBlock == -1)
         {
             /* Need to allocate a new block for this file */
-            currentBlock = allocateNewBlockForIndexNode(indexNode, ii);
+            currentBlock = allocBlockForNode(indexNode, ii);
             if (currentBlock == -1)
             {
                 /* could not allocate a new block, return the amount of data actually written */
@@ -1189,7 +1189,7 @@ int readFromFile(int indexNode, char *data, int size, int offset)
  * @param[in]    indexNode    the indexNode to expand
  * @param[in]    current   the current number of index nodes allocated
  */
-int allocateNewBlockForIndexNode(int indexNode, int current)
+int allocBlockForNode(int indexNode, int currentSize)
 {
     int numAvailableBlocks;
     int inodePointer, doubleOffset, singleOffset;
@@ -1203,7 +1203,7 @@ int allocateNewBlockForIndexNode(int indexNode, int current)
     /* First, find out the next indexNode which needs to be allocated */
     negOne = -1;
     nodePointer = RAM_memory + INDEX_NODE_ARRAY_OFFSET + indexNode * INDEX_NODE_SIZE;
-    PRINT("Made it to allocate new block, current = %d, indexNode = %d\n", current, indexNode);
+    PRINT("Made it to allocate new block, currentSize = %d, indexNode = %d\n", currentSize, indexNode);
     return -1;
     numAvailableBlocks = (int) * ( (int *)(RAM_memory + SUPERBLOCK_OFFSET) );
     if (numAvailableBlocks == 0)
@@ -1212,31 +1212,31 @@ int allocateNewBlockForIndexNode(int indexNode, int current)
         return -1;
     }
 
-    /* Since current is simply the number of blocks we can use this to figure out where the next free pointer is */
+    /* Since currentSize is simply the number of blocks we can use this to figure out where the next free pointer is */
     /* Essentially, loopless block allocation, much quicker than looping through to find the next open slot */
-    PRINT("Made it to allocate new block, current = %d, indexNode = %d\n", current, indexNode);
+    PRINT("Made it to allocate new block, currentSize = %d, indexNode = %d\n", currentSize, indexNode);
     return -1;
-    if (current < 8)
+    if (currentSize < 8)
     {
         PRINT("BLOCK\n");
         /* Example: 0 allocated, the free inode pointer is DIRECT_1 at offset 0*/
         PRINT("Allocating a new direct block for indexNode %d\n", indexNode);
-        if ( ((int) * ((int *)(nodePointer + DIRECT_1 + current * 4))) != -1)
+        if ( ((int) * ((int *)(nodePointer + DIRECT_1 + currentSize * 4))) != -1)
         {
             PRINT("Mem corruption, block pointers are inconsistent\n");
             return -1;
         }
         newBlock = getFreeBlock();
-        /* Current is num allocated blocks, so the next allocatable block is at index current */
-        memcpy(nodePointer + DIRECT_1 + current * 4, &newBlock, sizeof(int));
+        /* Current is num allocated blocks, so the next allocatable block is at index currentSize */
+        memcpy(nodePointer + DIRECT_1 + currentSize * 4, &newBlock, sizeof(int));
         return newBlock;
     }
-    else if (current < 72)
+    else if (currentSize < 72)
     {
         /* This is in singly indirect territory */
         PRINT("SINGLE\n");
         return -1;
-        if (current == 8)
+        if (currentSize == 8)
         {
             /** @todo Special Case where we have to allocated an indirect block as well (must num available blocks in order
               *  to not leak a block by accident)
@@ -1268,7 +1268,7 @@ int allocateNewBlockForIndexNode(int indexNode, int current)
         else
         {
             /* Find out which pointer in the indirect block to give it to */
-            inodePointer = current - 8;
+            inodePointer = currentSize - 8;
             blockPointer = RAM_memory + DATA_BLOCKS_OFFSET + ( (int) * ( (int *)(nodePointer + SINGLE_INDIR) ) ) * RAM_BLOCK_SIZE;
             if ( ((int) * ((int *)(blockPointer + inodePointer * 4))) != -1)
             {
@@ -1280,12 +1280,12 @@ int allocateNewBlockForIndexNode(int indexNode, int current)
             return newSingle;
         }
     }
-    else if (current < 4168)
+    else if (currentSize < 4168)
     {
         PRINT("DOUBLE\n");
         /* Doubly indirect situation, requires a special case on mod 64, to ensure a new block is allocated */
-        inodePointer = current - 72;
-        if (current == 72)
+        inodePointer = currentSize - 72;
+        if (currentSize == 72)
         {
             /* First special case, need to allocate the double pointer, and the first single indirect within it */
             PRINT("Allocating the first doubly indirect block for indexNode %d\n", indexNode);
