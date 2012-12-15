@@ -2109,6 +2109,7 @@ void kr_open(struct RAM_file *input)
     input->indexNode = indexNodeNum;
     input->fileSize = fileSize;
     printIndexNode(0);
+    printSuperblock();
 }
 
 void kr_read(struct RAM_accessFile *input)
