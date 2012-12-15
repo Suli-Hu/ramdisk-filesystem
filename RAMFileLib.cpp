@@ -394,6 +394,7 @@ int main ()
         memset (pathname, 0, 80);
     }
 
+    printf("Made it here\n");
     /* Delete all the files created */
     for (i = 0; i < MAX_FILES; i++)
     {
