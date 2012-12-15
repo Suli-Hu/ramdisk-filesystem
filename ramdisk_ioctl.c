@@ -2095,6 +2095,7 @@ void kr_open(struct RAM_file *input)
 {
     char *indexNodeStart;
     int indexNodeNum, fileSize;
+    printk("Pathname - %s", input->name);
     indexNodeNum = getIndexNodeNumberFromPathname(input->name, 0);
     indexNodeStart = RAM_memory + INDEX_NODE_ARRAY_OFFSET + indexNodeNum * INDEX_NODE_SIZE;
     fileSize = (int) * (int *) (indexNodeStart + INODE_SIZE);
@@ -2137,7 +2138,7 @@ void kr_unlink(struct RAM_path *input)
 void kr_readdir(struct RAM_accessFile *input)
 {
     int ret;
-    printk("Reading the dir %d\n", input->indexNode);
+    printk("Reading the dir %d\n", input->indexNode);g
     ret = readFileName(input->indexNode, input->address, input->dirIndex);
     if (ret > -1)
         input->ret = 1;
