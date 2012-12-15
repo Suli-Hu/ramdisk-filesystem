@@ -1068,6 +1068,7 @@ int deleteFile(char *pathname)
         if (offset == -1)
         {
             /* Sanity check, if this happened, some memory got corrupted from before to here */
+            print("offset %d\n", offset);
             PRINT("%d\n", ii);
             PRINT("Memory corruption detected, failed at deletion\n");
             return -1;
