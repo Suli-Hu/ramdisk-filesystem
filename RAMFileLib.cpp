@@ -306,6 +306,7 @@ int main () {
 	rd_read(inode, output, 12);
 	printf("The file has - %s\n", output);
 	rd_readdir(inode, output);
+	printf("The file in the dir - %s\n", output);
 	rd_unlink("/mytxt.txt\0");
 
 }
