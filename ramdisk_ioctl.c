@@ -803,6 +803,77 @@ int insertFileIntoDirectoryNode(int directoryNodeNum, int fileNodeNum, char *fil
 }
 
 /**
+ * Reads a file name from a path name which is a directory
+ *
+ * @return    type    description
+ * @param[in-out]    name    description
+ */
+int readFileName(int indexNodeNum, char* address, int index) {
+    
+    char *indexNodeStart, *dirlistingstart, *filename;
+    int i, j, memoryblock, dirIndex, numOfFiles, k;
+    dirIndex=0;
+
+    indexNodeStart = RAM_memory + INDEX_NODE_ARRAY_OFFSET + indexNodeNum * INODE_SIZE;
+    numOfFiles = (int)*(int*)(indexNodeStart +INODE_FILE_COUNT);
+    
+    // Make sure the file index is not greater than the number of files
+    if (index>=numOfFiles)
+        index=0;
+
+    if (strcmp("dir\0",  indexNodeStart + INODE_TYPE) == 0)
+    {
+        getAllocatedBlockNumbers(allocatedBlocks, indexNodeNum);
+        i = 0;
+        memoryblock = allocatedBlocks[i];
+
+        // While we haven't reached the end of the memory block, keep printing
+        while (memoryblock != -1)
+        {
+
+            memoryblock = allocatedBlocks[i];
+            dirlistingstart = RAM_memory + DATA_BLOCKS_OFFSET + (memoryblock * RAM_BLOCK_SIZE);
+
+            for (j = 0; j < RAM_BLOCK_SIZE / FILE_INFO_SIZE; j++)
+            {
+                indexNodeNum = (short) * (short *)(dirlistingstart + FILE_INFO_SIZE * j + INODE_NUM_OFFSET);
+                
+                // If this file is a gap, skip it
+                if (indexNodeNum==-2)
+                    continue;
+
+                if (indexNodeNum > 0 && memoryblock > -1)
+                {
+                    // Get file name
+                    filename = (dirlistingstart + FILE_INFO_SIZE * j);
+                    // Copy the filename into the specified address
+                    if (dirIndex==index) {
+                        k=0;
+                        while (1) {
+                            memcpy(&(address[k]), &(filename[k]), sizeof(char));
+                            if (filename[k]=='\0')
+                                break;                            
+                            k++;
+                        }
+                            // memcpy(&(address[k]), &('\0'), sizeof(char));                        
+
+                        return numOfFiles;
+                    }
+
+                    dirIndex++;
+                }
+            }
+            i++;
+        }
+
+    }
+    else {
+        PRINT("Error: File is not a directory.\n");
+        return -1;
+    }
+}
+
+/**
  * Allocate memory for index Node given the number of blocks.  This should be done depending on allocation size
  *
  * @param[in]  indexNodeNumber - reference to the index node
@@ -1553,8 +1624,12 @@ void testDirCreation(void)
         sprintf(filename, "/test%d.txt", ii);
         indexNodeNum = createIndexNode("reg\0", filename, 0);
         PRINT("Created index node %d for file %s\n", indexNodeNum, filename);
+
         // printIndexNode(0);
     }
+
+    printIndexNode(0);
+
     /* Print out the root indexNode now */
     printSuperblock();
 }
@@ -1633,7 +1708,7 @@ void testReadFromFile(void) {
     for (ii=0; ii<dataSize+5; ii++) {
     PRINT("%d:%c ", ii, data[ii]);
     }
-    printf("\n");
+    PRINT("\n");
     // printf("Data: %s\n", data);
 
     printIndexNode(0);
@@ -1657,12 +1732,32 @@ void testFileDeletion() {
     printIndexNode(indexNodeNum);    
 }
 
+void testReadDir() {
+
+    int indexNodeNum;
+
+    createIndexNode("reg\0", "/myfile.txt\0",  0);
+    createIndexNode("reg\0", "/myfile2.txt\0",  0);
+    indexNodeNum = createIndexNode("dir\0", "/folder/\0",  0);
+
+    printIndexNode(indexNodeNum);
+
+//    ret = readFileName(input->indexNode, input->address, input->dirIndex);
+
+    char blah[30];
+    readFileName(0, blah, 3);
+    printf("Result: %s\n", blah);
+
+}
+
 /************************INIT AND EXIT ROUTINES*****************************/
 #ifdef DEBUG
 
-void kr_creat(struct RAM_path input)
+void kr_creat(struct RAM_path *input)
 {
-    PRINT("CREATING FILE\n");
+    int indexNodeNum;
+    indexNodeNum = createIndexNode("reg\0", input->name, 0);
+    input->ret = indexNodeNum;
 }
 
 /**
@@ -1670,9 +1765,11 @@ void kr_creat(struct RAM_path input)
  *
  * @param[in]   input   The RAM_path struct for creating the file
  */
-void kr_mkdir(struct RAM_path input)
+void kr_mkdir(struct RAM_path *input)
 {
-
+    int indexNodeNum;
+    indexNodeNum = createIndexNode("dir\0", input->name, 0);
+    input->ret = indexNodeNum;
 }
 
 /**
@@ -1680,13 +1777,22 @@ void kr_mkdir(struct RAM_path input)
  *
  * @param[in]   input   The RAM_path struct for opening the file
  */
-void kr_open(struct RAM_path input)
+void kr_open(struct RAM_file *input)
 {
+    char *indexNodeStart;
+    int indexNodeNum, fileSize;
+    indexNodeNum = getIndexNodeNumberFromPathname(input->name, 0);
+    indexNodeStart = RAM_memory + INDEX_NODE_ARRAY_OFFSET + indexNodeNum * INDEX_NODE_SIZE;
+    fileSize = (int)*(int *) (indexNodeStart + INODE_SIZE);
 
+    input->indexNode = indexNodeNum;
+    input->fileSize = fileSize;
 }
 
-void kr_read(struct RAM_accessFile input) {
-    readFromFile(input.indexNode, input.address, input.numBytes, input.offset);
+void kr_read(struct RAM_accessFile *input) {
+    int ret;
+    ret = readFromFile(input->indexNode, input->address, input->numBytes, input->offset);
+    input->ret = ret;
 }
 
 /**
@@ -1694,21 +1800,34 @@ void kr_read(struct RAM_accessFile input) {
  *
  * @param[in]   input   The accessfile struct.  Input for writing is in this struct
  */
-void kr_write(struct RAM_accessFile input) {
-    writeToFile(input.indexNode, input.address, input.numBytes, input.offset);
+void kr_write(struct RAM_accessFile *input) {
+    int ret;
+    ret = writeToFile(input->indexNode, input->address, input->numBytes, input->offset);
+    input->ret = ret;
 }
 
-void kr_lseek(struct RAM_file input)
+// This function is in user level
+void kr_lseek(struct RAM_file *input)
+{}
+
+void kr_unlink(struct RAM_path *input)
 {
+    int ret;
+    ret = deleteFile(input->name);
+    input->ret = ret;
 }
 
-void kr_unlink(struct RAM_path input)
-{
+void kr_readdir(struct RAM_accessFile *input)
+{   
+    int ret;
+    ret = readFileName(input->indexNode, input->address, input->dirIndex);
+    if (ret>-1)
+        input->ret = 1;
+    else
+        input->ret = -1;
+    input->numOfFiles = ret;
 }
 
-void kr_readdir(struct RAM_accessFile input)
-{
-}
 
 int main()
 {
@@ -1717,7 +1836,7 @@ int main()
     RAM_memory = (char *)malloc(FS_SIZE * sizeof(char));
     init_ramdisk();
     /* Uncomment to test maximum files in folder */
-    // testDirCreation();
+    testDirCreation();
 
     /* Uncomment to test max file size and file write */
     // testFileCreation();
@@ -1726,7 +1845,9 @@ int main()
     // testReadFromFile();
     /* Now create some more files as a test */
 
-    testFileDeletion();
+    // testFileDeletion();
+    //testReadDir();
+    testDirCreation();
 
     // printIndexNode(indexNodeNum);
     // deleteFile("/folder\0");
@@ -1738,7 +1859,7 @@ int main()
     // indexNodeNum = createIndexNode("reg\0", "/myfolder/hello.txt\0",  0);
     // printIndexNode(indexNodeNum);
     // printSuperblock();
-    printIndexNode(0);
+    // printIndexNode(0);
 
     // printIndexNode(indexNodeNum);
     return 0;
@@ -1818,7 +1939,8 @@ static int ramdisk_ioctl(struct inode *inode, struct file *file,
 
         copy_from_user(&path, (struct RAM_path *)arg,
                        sizeof(struct RAM_path));
-        kr_creat(path);
+        kr_creat(&path);
+        copy_to_user((struct RAM_path *)arg, &path, sizeof(struct RAM_path));
 
         break;
 
@@ -1827,16 +1949,18 @@ static int ramdisk_ioctl(struct inode *inode, struct file *file,
 
         copy_from_user(&path, (struct RAM_path *)arg,
                        sizeof(struct RAM_path));
-        kr_mkdir(path);
+        kr_mkdir(&path);
+        copy_to_user((struct RAM_path *)arg, &path, sizeof(struct RAM_path));
 
         break;
 
     case RAM_OPEN:
         PRINT("Opening file...\n");
 
-        copy_from_user(&path, (struct RAM_path *)arg,
-                       sizeof(struct RAM_path));
-        kr_open(path);
+        copy_from_user(&ramFile, (struct RAM_file *)arg,
+                       sizeof(struct RAM_file));
+        kr_open(&ramFile);
+        copy_to_user((struct RAM_file *)arg, &ramFile, sizeof(struct RAM_file));        
 
         break;
 
@@ -1844,7 +1968,8 @@ static int ramdisk_ioctl(struct inode *inode, struct file *file,
         PRINT("Reading file...\n");
         copy_from_user(&access, (struct RAM_accessFile *)arg,
                        sizeof(struct RAM_accessFile));
-        kr_read(access);
+        kr_read(&access);
+        copy_to_user((struct RAM_accessFile *)arg, &access, sizeof(struct RAM_accessFile));        
 
         break;
 
@@ -1853,7 +1978,8 @@ static int ramdisk_ioctl(struct inode *inode, struct file *file,
 
         copy_from_user(&access, (struct RAM_accessFile *)arg,
                        sizeof(struct RAM_accessFile));
-        kr_write(access);
+        kr_write(&access);
+        copy_to_user((struct RAM_accessFile *)arg, &access, sizeof(struct RAM_accessFile));                
 
         break;
 
@@ -1862,7 +1988,8 @@ static int ramdisk_ioctl(struct inode *inode, struct file *file,
 
         copy_from_user(&ramFile, (struct RAM_file *)arg,
                        sizeof(struct RAM_file));
-        kr_lseek(ramFile);
+        kr_lseek(&ramFile);
+        copy_to_user((struct RAM_file *)arg, &ramFile, sizeof(struct RAM_file));                
 
         break;
 
@@ -1871,7 +1998,8 @@ static int ramdisk_ioctl(struct inode *inode, struct file *file,
 
         copy_from_user(&path, (struct RAM_path *)arg,
                        sizeof(struct RAM_path));
-        kr_unlink(path);
+        kr_unlink(&path);
+        copy_to_user((struct RAM_path *)arg, &path, sizeof(struct RAM_path));        
 
         break;
 
@@ -1880,7 +2008,8 @@ static int ramdisk_ioctl(struct inode *inode, struct file *file,
 
         copy_from_user(&access, (struct RAM_accessFile *)arg,
                        sizeof(struct RAM_accessFile));
-        kr_readdir(access);
+        kr_readdir(&access);
+        copy_to_user((struct RAM_accessFile *)arg, &access, sizeof(struct RAM_accessFile));                        
 
         break;
 
@@ -1899,9 +2028,11 @@ static int ramdisk_ioctl(struct inode *inode, struct file *file,
  *
  * @param[in]   input   The RAM_path struct for creating the file
  */
-void kr_creat(struct RAM_path input)
+void kr_creat(struct RAM_path *input)
 {
-    PRINT("CREATING FILE\n");
+    int indexNodeNum;
+    indexNodeNum = createIndexNode("reg\0", input.name, 0);
+
 }
 
 /**
@@ -1909,7 +2040,7 @@ void kr_creat(struct RAM_path input)
  *
  * @param[in]   input   The RAM_path struct for creating the file
  */
-void kr_mkdir(struct RAM_path input)
+void kr_mkdir(struct RAM_path *input)
 {
 
 }
@@ -1919,7 +2050,7 @@ void kr_mkdir(struct RAM_path input)
  *
  * @param[in]   input   The RAM_path struct for opening the file
  */
-void kr_open(struct RAM_path input)
+void kr_open(struct RAM_file *input)
 {
 
 }
@@ -1929,7 +2060,7 @@ void kr_open(struct RAM_path input)
  *
  * @param[in]   input   The accessfile struct.  Output read is placed into this struct
  */
-void kr_read(struct RAM_accessFile input)
+void kr_read(struct RAM_accessFile *input)
 {
 
 }
@@ -1939,7 +2070,7 @@ void kr_read(struct RAM_accessFile input)
  *
  * @param[in]   input   The accessfile struct.  Input for writing is in this struct
  */
-void kr_write(struct RAM_accessFile input)
+void kr_write(struct RAM_accessFile *input)
 {
 
 }
@@ -1949,7 +2080,7 @@ void kr_write(struct RAM_accessFile input)
  *
  * @param[in]   input   input, use offset in here to index into file
  */
-void kr_lseek(struct RAM_file input)
+void kr_lseek(struct RAM_file *input)
 {
 
 }
@@ -1959,12 +2090,12 @@ void kr_lseek(struct RAM_file input)
  *
  * @param[in]   input   Path struct.  Will delete file at the desired RAM_path
  */
-void kr_unlink(struct RAM_path input)
+void kr_unlink(struct RAM_path *input)
 {
 
 }
 
-void kr_readdir(struct RAM_accessFile input)
+void kr_readdir(struct RAM_accessFile *input)
 {
 
 }

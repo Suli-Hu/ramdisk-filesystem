@@ -60,9 +60,9 @@ int rd_open(char *pathname) {
 	if (fileAlreadyOpen==-1) {
 		entry.indexNode = file.indexNode;
 		entry.offset = 0;	// Default file pointer to the start of file
-		entry.fileSize=-1;	// -1 indicates the file does not have size yet
 		entry.fd = currentFdNum++;	// Set file descriptor
 		entry.fileSize = file.fileSize;
+		entry.dirIndex = 0;	// Initially the file pointer is 0 (first file in dir)
 		fd_Table.push_back(entry);
 		return entry.fd;
 	}
@@ -127,8 +127,6 @@ int rd_write(int fd, char *address, int num_bytes) {
 }
 
 int rd_lseek(int fd, int offset) {
-	RAM_file file;
-	file.offset=offset;
 
 	// Make sure the file exists
 	if (checkIfFileExists(fd)==-1){
@@ -141,17 +139,14 @@ int rd_lseek(int fd, int offset) {
 	FD_entry *entry;
 	entry = getEntryFromFd(fd);
 	if (offset>entry->fileSize) {
-		file.offset = entry->fileSize;
+		entry->offset= entry->fileSize;
 	}
 
+	if (entry->offset<0)
+		return -1;
+	else
+		return 1;
 
-#ifdef KERNERLREADY
-  	ioctl (fd, RAM_LSEEK, &file);	
-#endif
-
-	entry->offset = file.offset;
-
-	return file.ret;
 }
 
 int rd_unlink(char *pathname) {
@@ -168,6 +163,12 @@ int rd_readdir(int fd, char *address) {
 	file.fd = fd;
 	file.address=address;
 
+	FD_entry *entry;
+	entry = getEntryFromFd(fd);
+
+	file.indexNode = entry->indexNode;
+	file.dirIndex = entry->dirIndex;
+
 	// Make sure the file exists
 	if (checkIfFileExists(fd)==-1){
 		printf("fd does not exist in the file descriptor table.\n");
@@ -176,7 +177,14 @@ int rd_readdir(int fd, char *address) {
 
 #ifdef KERNERLREADY
   	ioctl (fd, RAM_READDIR, &file);	
-#endif  	
+#endif
+
+  	// If the number of files pointer have exceeded total num of files, reset it
+  	entry->numOfFiles = file.numOfFiles;
+  	entry->dirIndex = entry->dirIndex+1;
+  	if (entry->dirIndex==(entry->numOfFiles-1))
+  		entry->dirIndex=0;
+
 	return file.ret;
 }
 
