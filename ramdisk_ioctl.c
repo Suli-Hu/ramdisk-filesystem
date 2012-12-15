@@ -1805,7 +1805,9 @@ void kr_open(struct RAM_file *input)
 
 void kr_read(struct RAM_accessFile *input)
 {
-    readFromFile(input->indexNode, input->address, input->numBytes, input->offset);
+    int ret;
+    ret = readFromFile(input->indexNode, input->address, input->numBytes, input->offset);
+    input->ret = ret;
 }
 
 /**
@@ -1815,7 +1817,10 @@ void kr_read(struct RAM_accessFile *input)
  */
 void kr_write(struct RAM_accessFile *input)
 {
-    writeToFile(input->indexNode, input->address, input->numBytes, input->offset);
+    int ret;
+    ret = writeToFile(input->indexNode, input->address, input->numBytes, input->offset);
+    PRINT("Bytes written: %d\n", ret);
+    input->ret = ret;
 }
 
 // This function is in user level
@@ -1944,8 +1949,8 @@ static int ramdisk_ioctl(struct inode *inode, struct file *file,
     struct RAM_path path;
     struct RAM_file ramFile;
     struct RAM_accessFile access;
+    PRINT("--GETTING IOCTL !\n");
 
-    PRINT("GETTING IOCTL MESSAGE\n");
     switch (cmd)
     {
 
@@ -2029,6 +2034,7 @@ static int ramdisk_ioctl(struct inode *inode, struct file *file,
         break;
 
     default:
+    PRINT("--DEFAULT!\n");
         return -EINVAL;
         break;
     }
@@ -2075,6 +2081,7 @@ void kr_open(struct RAM_file *input)
     indexNodeStart = RAM_memory + INDEX_NODE_ARRAY_OFFSET + indexNodeNum * INDEX_NODE_SIZE;
     fileSize = (int)*(int *) (indexNodeStart + INODE_SIZE);
 
+    PRINT("INDEX NODE: %d\n", indexNodeNum);
     input->indexNode = indexNodeNum;
     input->fileSize = fileSize;
 }
@@ -2092,6 +2099,7 @@ void kr_read(struct RAM_accessFile *input)
 void kr_write(struct RAM_accessFile *input)
 {
     writeToFile(input->indexNode, input->address, input->numBytes, input->offset);
+
 }
 
 // This function is in user level

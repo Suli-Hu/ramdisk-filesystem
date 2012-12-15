@@ -13,16 +13,14 @@ vector<FD_entry> fd_Table;
 #if 1
 int fd;
 #endif
-static int currentFdNum = 0;
-// currentFdNum=0;
+
+int currentFdNum;
 
 int rd_creat(char *pathname) {
 	struct RAM_path rampath;
 	rampath.name = pathname;
 #if 1
-	printf("IM HERE\n");
-  	ioctl (fd, RAM_CREATE, &rampath);
-	printf("IM HERE\n");	
+  	ioctl (fd, RAM_CREATE, &rampath);	
 #endif  	
 
 	return rampath.ret;
@@ -54,8 +52,7 @@ int rd_open(char *pathname) {
 	// If there is already an index node relating to this file, do not create new entry
   	int fileAlreadyOpen;
   	fileAlreadyOpen=checkIfFileExists(file.indexNode);
-  	entry.fd = fdFromIndexNode(file.indexNode);
-
+	
 	if (fileAlreadyOpen==-1) {
 		entry.indexNode = file.indexNode;
 		entry.offset = 0;	// Default file pointer to the start of file
@@ -63,7 +60,13 @@ int rd_open(char *pathname) {
 		entry.fileSize = file.fileSize;
 		entry.dirIndex = 0;	// Initially the file pointer is 0 (first file in dir)
 		fd_Table.push_back(entry);
+
+		printf("Inserting fd entry with fd=%d inode=%d\n", entry.fd, entry.indexNode);
 		return entry.fd;
+	}
+	else {
+  		entry.fd = fdFromIndexNode(file.indexNode);
+		printf("File already open\n");
 	}
 
 	return entry.fd;
@@ -75,18 +78,20 @@ void kr_close(int fd) {
 	deleteFileFromFDTable(fd);
 }
 
-int rd_read(int fd, char *address, int num_bytes) {
-	struct RAM_accessFile file;
-	file.fd = fd;
-	file.address=address;
-	file.numBytes = num_bytes;
-	file.indexNode = indexNodeFromfd(fd);
+int rd_read(int file_fd, char *address, int num_bytes) {
 
 	// Make sure the file exists
-	if (checkIfFileExists(fd)==-1){
+	if (checkIfFileExists(file_fd)==-1){
 		printf("fd does not exist in the file descriptor table.\n");
 		return -1;
 	}
+
+	struct RAM_accessFile file;
+	file.fd = file_fd;
+	file.address=address;
+	file.numBytes = num_bytes;
+	file.indexNode = indexNodeFromfd(file_fd);
+
 
 #if 1
   	ioctl (fd, RAM_READ, &file);	
@@ -94,18 +99,13 @@ int rd_read(int fd, char *address, int num_bytes) {
 
   	// Update the offset after reading the file
 	FD_entry *entry;
-	entry = getEntryFromFd(fd);
+	entry = getEntryFromFd(file_fd);
 	entry->offset = file.offset;
 
 	return file.ret;
 }
 
-int rd_write(int fd, char *address, int num_bytes) {
-	struct RAM_accessFile file;
-	file.fd = fd;
-	file.address=address;
-	file.numBytes = num_bytes;
-	file.indexNode = indexNodeFromfd(fd);
+int rd_write(int file_fd, char *address, int num_bytes) {
 
 	// Make sure the file exists
 	if (checkIfFileExists(fd)==-1){
@@ -113,22 +113,33 @@ int rd_write(int fd, char *address, int num_bytes) {
 		return -1;
 	}
 
+	//struct RAM_accessFile file;
+	struct RAM_file file;
+	
+	FD_entry *entry;
+	entry = getEntryFromFd(fd);
+
+	// file.fd = fd;
+	// file.address=address;
+	// file.numBytes = num_bytes;
+	file.indexNode = indexNodeFromfd(fd);
+	file.offset = entry->offset;
+
+
 #if 1
   	ioctl (fd, RAM_WRITE, &file);	
 #endif  	
 
   	// Update the offset after reading the file
-	FD_entry *entry;
-	entry = getEntryFromFd(fd);
 	entry->offset = file.offset;
 
 	return file.ret;
 }
 
-int rd_lseek(int fd, int offset) {
+int rd_lseek(int file_fd, int offset) {
 
 	// Make sure the file exists
-	if (checkIfFileExists(fd)==-1){
+	if (checkIfFileExists(file_fd)==-1){
 		printf("fd does not exist in the file descriptor table.\n");
 		return -1;
 	}
@@ -136,7 +147,7 @@ int rd_lseek(int fd, int offset) {
 	// If the offset the user specifies is greater than the file size
 	// move the pointer to end of file
 	struct FD_entry *entry;
-	entry = getEntryFromFd(fd);
+	entry = getEntryFromFd(file_fd);
 	if (offset>entry->fileSize) {
 		entry->offset= entry->fileSize;
 	}
@@ -157,19 +168,19 @@ int rd_unlink(char *pathname) {
 	return rampath.ret;
 }
 
-int rd_readdir(int fd, char *address) {
+int rd_readdir(int file_fd, char *address) {
 	struct RAM_accessFile file;
-	file.fd = fd;
+	file.fd = file_fd;
 	file.address=address;
 
 	struct FD_entry *entry;
-	entry = getEntryFromFd(fd);
+	entry = getEntryFromFd(file_fd);
 
 	file.indexNode = entry->indexNode;
 	file.dirIndex = entry->dirIndex;
 
 	// Make sure the file exists
-	if (checkIfFileExists(fd)==-1){
+	if (checkIfFileExists(file_fd)==-1){
 		printf("fd does not exist in the file descriptor table.\n");
 		return -1;
 	}
@@ -256,18 +267,45 @@ void deleteFileFromFDTable(int fd) {
 int main () {
 
 	fd = open ("/proc/ramdisk", O_RDONLY);
-	printf("Hello world\n");
+	currentFdNum = 0;
+//	printf("Hello world\n");
 
 	FD_entry entry;
 	entry.indexNode = 1;
 	entry.offset = 0;	// Default file pointer to the start of file
 	entry.fileSize=10;	// -1 indicates the file does not have size yet
 	entry.fd = 1;	// Set file descriptor
-	fd_Table.push_back(entry);
+//	fd_Table.push_back(entry);
 
-	printfdTable();
+	int inode, ret;
+	// ret = rd_creat("/mytxt.txt");
+	// printf("New Index Node: %d\n", inode);
 
-	int ret;
-	ret = rd_creat("/mytxt.txt");
-	printf("Index Node: %d\n", ret);
+	// printfdTable();
+
+	// inode =rd_open("/mytxt.txt");	
+
+	// printfdTable();
+
+	// printf("fd: %d\n", inode);
+	// ret =rd_write(inode, "hello world\n", 10);
+	// printf("Write ret: %d\n", ret);
+	char output[10];
+
+	// printfdTable();
+	// ret = rd_read(inode, output, 10);
+	// printf("Read data: %s inode: %d\n", output, inode);
+
+	// printfdTable();
+
+	rd_creat("/mytxt.txt\0");
+	inode = rd_open("/mytxt.txt\0");
+	rd_mkdir("/folder/\0");
+	rd_open("/mytxt.txt\0");
+	rd_write(inode, "hello world\n", 10);
+	rd_read(inode, output, 10);
+	rd_readdir(inode, output);
+	rd_unlink("/mytxt.txt\0");
+
+
 }
