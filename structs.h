@@ -22,7 +22,7 @@ struct RAM_path
 
 struct RAM_file
 {
-	char *name;
+    char *name;
     int indexNode;       /** Index Node */
     int offset;  /** Only used for seek, not for close.  Offset into data requested */
     int ret;      /** Return value */
@@ -44,12 +44,12 @@ struct RAM_accessFile
 
 struct FD_entry
 {
-	int fd;				/* File descriptor */
-	int indexNode;		/* IndexNode ID */
-	int offset;			/* Offset in the file */ 
-	int fileSize;		/* Size of file */
-	int dirIndex;
-	int numOfFiles;
+    int fd;             /* File descriptor */
+    int indexNode;      /* IndexNode ID */
+    int offset;         /* Offset in the file */
+    int fileSize;       /* Size of file */
+    int dirIndex;
+    int numOfFiles;
 };
 
 /***************************KERNEL FS FUNCTION PROTOTYPES********************/
@@ -114,7 +114,7 @@ void kr_readdir(struct RAM_accessFile *input);
 
 /********** Helper Function Declarations **********/
 int fdFromIndexNode(int indexNode);
-struct FD_entry* getEntryFromFd(int fd);
+struct FD_entry *getEntryFromFd(int fd);
 int checkIfFileExists(int fd);
 int indexNodeFromfd(int fd);
 void deleteFileFromFDTable(int fd);
