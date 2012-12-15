@@ -200,11 +200,11 @@ int rd_readdir(int file_fd, char *address) {
 }
 
 /******************* HELPER FUNCTION ********************/
-int checkIfFileExists(int fd) {
+int checkIfFileExists(int file_fd) {
 	vector<FD_entry>::iterator it;
 	for (it = fd_Table.begin() ; it != fd_Table.end() ; it++) 
 	{
-		if (it->fd==fd) 
+		if (it->fd==file_fd) 
 			return 1;
 		
 	}	
