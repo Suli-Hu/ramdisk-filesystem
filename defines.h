@@ -99,6 +99,8 @@
  *
  * @return  blocknumber
  */
+int allocBlockForNode(int indexNode, int currentSize);
+
 int getFreeBlock(void);
 
 void freeBlock(int blockindex);
@@ -116,7 +118,5 @@ int insertFileIntoDirectoryNode(int directoryNodeNum, int fileNodeNum, char *fil
 void printIndexNode(int nodeIndex);
 
 char *getFileNameFromPath(char *pathname);
-
-int allocateNewBlockForIndexNode(int indexNode, int current);
 
 void printSuperblock(void);
