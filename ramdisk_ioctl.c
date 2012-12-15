@@ -2098,7 +2098,6 @@ void kr_open(struct RAM_file *input)
 {
     char *indexNodeStart;
     int indexNodeNum, fileSize;
-    printk("Pathname - %s", input->name);
     indexNodeNum = getIndexNodeNumberFromPathname(input->name, 0);
     indexNodeStart = RAM_memory + INDEX_NODE_ARRAY_OFFSET + indexNodeNum * INDEX_NODE_SIZE;
     fileSize = (int) * (int *) (indexNodeStart + INODE_SIZE);
@@ -2106,6 +2105,7 @@ void kr_open(struct RAM_file *input)
     PRINT("INDEX NODE: %d\n", indexNodeNum);
     input->indexNode = indexNodeNum;
     input->fileSize = fileSize;
+    printIndexNode(0);
 }
 
 void kr_read(struct RAM_accessFile *input)
