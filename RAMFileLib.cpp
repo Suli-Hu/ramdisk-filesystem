@@ -86,20 +86,22 @@ int rd_read(int file_fd, char *address, int num_bytes) {
 		return -1;
 	}
 
+	// Update the offset after reading the file
+	FD_entry *entry;
+	entry = getEntryFromFd(file_fd);
+
 	struct RAM_accessFile file;
 	file.fd = file_fd;
 	file.address=address;
 	file.numBytes = num_bytes;
 	file.indexNode = indexNodeFromfd(file_fd);
-
+	file.offset = entry->offset;
 
 #if 1
   	ioctl (fd, RAM_READ, &file);	
 #endif
 
   	// Update the offset after reading the file
-	FD_entry *entry;
-	entry = getEntryFromFd(file_fd);
 	entry->offset = file.offset;
 
 	return file.ret;
