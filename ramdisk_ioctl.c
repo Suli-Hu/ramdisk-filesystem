@@ -1211,7 +1211,7 @@ int readFromFile(int indexNode, char *data, int size, int offset)
 {
     /* Declare all of the vars */
     char *indexNodePointer;
-    int i, currentBlock, currentPosition;
+    int i, currentBlock, currentPosition, bytesRead, fileSize, absolutePosition;
 
     // Make sure the indexNode is a file
     if (strcmp("dir\0", getIndexNodeType(indexNode)) == 0 || strcmp("error\0", getIndexNodeType(indexNode)) == 0)
@@ -1221,6 +1221,10 @@ int readFromFile(int indexNode, char *data, int size, int offset)
     }
     currentBlock = offset / RAM_BLOCK_SIZE;
     currentPosition = offset % RAM_BLOCK_SIZE;
+    absolutePosition = currentPosition;
+    bytesRead = 0;
+
+    fileSize = (int)*(int*) (RAM_memory + INDEX_NODE_ARRAY_OFFSET + indexNode * INDEX_NODE_SIZE + INODE_SIZE);
 
     // Get allocated blocks for directory node
     getAllocatedBlockNumbers(allocatedBlocks, indexNode);
@@ -1236,7 +1240,14 @@ int readFromFile(int indexNode, char *data, int size, int offset)
         // memcpy(data, &a, sizeof(char));
 
         currentPosition++;
-        // data++;
+        absolutePosition++;
+        bytesRead++;
+
+        // Make sure we dont read more bytes then the file size
+        if (absolutePosition>fileSize) {
+            return bytesRead;
+        }
+
         if (currentPosition == 256)
         {
             currentPosition = 0;
@@ -1858,18 +1869,20 @@ int main()
     RAM_memory = (char *)malloc(FS_SIZE * sizeof(char));
     init_ramdisk();
     /* Uncomment to test maximum files in folder */
-    testDirCreation();
+    // testDirCreation();
 
     /* Uncomment to test max file size and file write */
     // testFileCreation();
 
     /* Uncomment to test read files */
+    
     // testReadFromFile();
+
     /* Now create some more files as a test */
 
     // testFileDeletion();
     //testReadDir();
-    testDirCreation();
+    // testDirCreation();
 
     // printIndexNode(indexNodeNum);
     // deleteFile("/folder\0");
