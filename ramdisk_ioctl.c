@@ -1258,7 +1258,7 @@ int readFromFile(int indexNode, char *data, int size, int offset)
     }
 
     // If we have reached this point, we have read enough bytes, return
-    return 1;
+    return bytesRead;
 }
 
 
@@ -1876,12 +1876,12 @@ int main()
 
     /* Uncomment to test read files */
     
-    // testReadFromFile();
+    testReadFromFile();
 
     /* Now create some more files as a test */
 
     // testFileDeletion();
-    //testReadDir();
+    // testReadDir();
     // testDirCreation();
 
     // printIndexNode(indexNodeNum);
@@ -1933,10 +1933,10 @@ static int __init initialization_routine(void)
 
     // PRINT("MEM BEFORE\n");
     // printBitmap(400);
-    indexNodeNum = createIndexNode("reg\0", "/myfile.txt\0",  0);
-    printIndexNode(indexNodeNum);
-    printIndexNode(0);
-    testFileCreation();
+    // indexNodeNum = createIndexNode("reg\0", "/myfile.txt\0",  0);
+    // printIndexNode(indexNodeNum);
+    // printIndexNode(0);
+    // testFileCreation();
 
     // clearIndexNode(indexNodeNum);
     // PRINT("MEM AFTER\n");
@@ -2008,19 +2008,19 @@ static int ramdisk_ioctl(struct inode *inode, struct file *file,
                        sizeof(struct RAM_accessFile));
         PRINT("SUCCESSFULLY COPIED\n");
         printk("Struct - %d, %i, %lu, %d\n", access.indexNode, access.address, access.numBytes, access.offset);
-        // kr_read(&access);
+        kr_read(&access);
         copy_to_user((struct RAM_accessFile *)arg, &access, sizeof(struct RAM_accessFile));
         PRINT("SUCCESSFULLY RETURN\n");
 
         break;
 
     case RAM_WRITE:
-        PRINT("Writing accessFile...\n");
+        PRINT("Writing file...\n");
 
-        // copy_from_user(&access, (struct RAM_accessFile *)arg,
-        //                sizeof(struct RAM_accessFile));
-        // // kr_write(&access);
-        // copy_to_user((struct RAM_accessFile *)arg, &access, sizeof(struct RAM_accessFile));
+        copy_from_user(&access, (struct RAM_accessFile *)arg,
+                       sizeof(struct RAM_accessFile));
+        kr_write(&access);
+        copy_to_user((struct RAM_accessFile *)arg, &access, sizeof(struct RAM_accessFile));
 
         break;
 
@@ -2049,7 +2049,7 @@ static int ramdisk_ioctl(struct inode *inode, struct file *file,
 
         copy_from_user(&access, (struct RAM_accessFile *)arg,
                        sizeof(struct RAM_accessFile));
-        // kr_readdir(&access);
+        kr_readdir(&access);
         copy_to_user((struct RAM_accessFile *)arg, &access, sizeof(struct RAM_accessFile));
 
         break;

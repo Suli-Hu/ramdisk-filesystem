@@ -51,7 +51,7 @@ int rd_open(char *pathname) {
 
 	// If there is already an index node relating to this file, do not create new entry
   	int fileAlreadyOpen;
-  	fileAlreadyOpen=checkIfFileExists(file.indexNode);
+  	fileAlreadyOpen=checkIfIndexNodeAlreadyExists(file.indexNode);
 	
 	if (fileAlreadyOpen==-1) {
 		entry.indexNode = file.indexNode;
@@ -86,20 +86,22 @@ int rd_read(int file_fd, char *address, int num_bytes) {
 		return -1;
 	}
 
+	FD_entry *entry;
+	entry = getEntryFromFd(file_fd);
+	
 	struct RAM_accessFile file;
 	file.fd = file_fd;
 	file.address=address;
 	file.numBytes = num_bytes;
 	file.indexNode = indexNodeFromfd(file_fd);
-
+	file.offset = entry->offset;
 
 #if 1
   	ioctl (fd, RAM_READ, &file);	
 #endif
 
   	// Update the offset after reading the file
-	FD_entry *entry;
-	entry = getEntryFromFd(file_fd);
+
 	entry->offset = file.offset;
 
 	return file.ret;
@@ -199,10 +201,23 @@ int rd_readdir(int file_fd, char *address) {
 
 /******************* HELPER FUNCTION ********************/
 int checkIfFileExists(int fd) {
+
 	vector<FD_entry>::iterator it;
 	for (it = fd_Table.begin() ; it != fd_Table.end() ; it++) 
 	{
 		if (it->fd==fd) 
+			return 1;
+		
+	}	
+	return -1;
+}
+
+int checkIfIndexNodeAlreadyExists(int inode) {
+
+	vector<FD_entry>::iterator it;
+	for (it = fd_Table.begin() ; it != fd_Table.end() ; it++) 
+	{
+		if (it->indexNode==inode) 
 			return 1;
 		
 	}	
@@ -295,16 +310,21 @@ int main () {
 	// ret = rd_read(inode, output, 10);
 	// printf("Read data: %s inode: %d\n", output, inode);
 
-	// printfdTable();
+
+	int newnode;
 
 	rd_creat("/mytxt.txt\0");
 	inode = rd_open("/mytxt.txt\0");
-	rd_mkdir("/folder/\0");
-	rd_open("/mytxt.txt\0");
-	rd_write(inode, "hello world\n", 10);
-	rd_read(inode, output, 10);
-	rd_readdir(inode, output);
-	rd_unlink("/mytxt.txt\0");
+	newnode = rd_mkdir("/folder/\0");
+	rd_creat("/folder/newtxt.txt\0");
+	rd_open("/folder/\0");
+rd_open("/mytxt.txt\0");
+	rd_write(inode, "hello world\n", 12);
+	rd_read(inode, output, 12);
+	rd_readdir(newnode, output);
 
+	printf("file: %s\n", output);
+	rd_unlink("/mytxt.txt\0");
+	printfdTable();
 
 }
