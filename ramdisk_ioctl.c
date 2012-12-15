@@ -2138,7 +2138,7 @@ void kr_unlink(struct RAM_path *input)
 void kr_readdir(struct RAM_accessFile *input)
 {
     int ret;
-    printk("Reading the dir %d\n", input->indexNode);g
+    printk("Reading the dir %d\n", input->indexNode);
     ret = readFileName(input->indexNode, input->address, input->dirIndex);
     if (ret > -1)
         input->ret = 1;
