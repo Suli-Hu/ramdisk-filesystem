@@ -1876,12 +1876,12 @@ int main()
 
     /* Uncomment to test read files */
     
-    // testReadFromFile();
+    testReadFromFile();
 
     /* Now create some more files as a test */
 
     // testFileDeletion();
-    //testReadDir();
+    // testReadDir();
     // testDirCreation();
 
     // printIndexNode(indexNodeNum);
@@ -1933,10 +1933,10 @@ static int __init initialization_routine(void)
 
     // PRINT("MEM BEFORE\n");
     // printBitmap(400);
-    indexNodeNum = createIndexNode("reg\0", "/myfile.txt\0",  0);
-    printIndexNode(indexNodeNum);
-    printIndexNode(0);
-    testFileCreation();
+    // indexNodeNum = createIndexNode("reg\0", "/myfile.txt\0",  0);
+    // printIndexNode(indexNodeNum);
+    // printIndexNode(0);
+    // testFileCreation();
 
     // clearIndexNode(indexNodeNum);
     // PRINT("MEM AFTER\n");
@@ -2012,7 +2012,7 @@ static int ramdisk_ioctl(struct inode *inode, struct file *file,
         break;
 
     case RAM_WRITE:
-        PRINT("Writing accessFile...\n");
+        PRINT("Writing file...\n");
 
         copy_from_user(&access, (struct RAM_accessFile *)arg,
                        sizeof(struct RAM_accessFile));

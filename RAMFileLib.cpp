@@ -65,29 +65,27 @@ int rd_open(char *pathname)
     // If this file is not currently open, create new entry
     FD_entry entry;
 
-    // If there is already an index node relating to this file, do not create new entry
-    int fileAlreadyOpen;
-    fileAlreadyOpen = checkIfFileExists(file.indexNode);
+	// If there is already an index node relating to this file, do not create new entry
+  	int fileAlreadyOpen;
+  	fileAlreadyOpen=checkIfIndexNodeAlreadyExists(file.indexNode);
+	
+	if (fileAlreadyOpen==-1) {
+		entry.indexNode = file.indexNode;
+		entry.offset = 0;	// Default file pointer to the start of file
+		entry.fd = currentFdNum++;	// Set file descriptor
+		entry.fileSize = file.fileSize;
+		entry.dirIndex = 0;	// Initially the file pointer is 0 (first file in dir)
+		fd_Table.push_back(entry);
 
-    if (fileAlreadyOpen == -1)
-    {
-        entry.indexNode = file.indexNode;
-        entry.offset = 0;   // Default file pointer to the start of file
-        entry.fd = currentFdNum++;  // Set file descriptor
-        entry.fileSize = file.fileSize;
-        entry.dirIndex = 0; // Initially the file pointer is 0 (first file in dir)
-        fd_Table.push_back(entry);
+		printf("Inserting fd entry with fd=%d inode=%d\n", entry.fd, entry.indexNode);
+		return entry.fd;
+	}
+	else {
+  		entry.fd = fdFromIndexNode(file.indexNode);
+		printf("File already open\n");
+	}
 
-        printf("Inserting fd entry with fd=%d inode=%d\n", entry.fd, entry.indexNode);
-        return entry.fd;
-    }
-    else
-    {
-        entry.fd = fdFromIndexNode(file.indexNode);
-        printf("File already open\n");
-    }
-
-    return entry.fd;
+	return entry.fd;
 }
 
 void kr_close(int fd)
@@ -229,40 +227,49 @@ int rd_readdir(int file_fd, char *address)
 }
 
 /******************* HELPER FUNCTION ********************/
-int checkIfFileExists(int file_fd)
-{
-    vector<FD_entry>::iterator it;
-    for (it = fd_Table.begin() ; it != fd_Table.end() ; it++)
-    {
-        if (it->fd == file_fd)
-            return 1;
-
-    }
-    return -1;
+int checkIfFileExists(int file_fd) {
+	vector<FD_entry>::iterator it;
+	for (it = fd_Table.begin() ; it != fd_Table.end() ; it++) 
+	{
+		if (it->fd==file_fd) 
+			return 1;
+		
+	}	
+	return -1;
 }
 
-int fdFromIndexNode(int indexNode)
-{
-    vector<FD_entry>::iterator it;
-    for (it = fd_Table.begin() ; it != fd_Table.end() ; it++)
-    {
-        if (it->indexNode == indexNode)
-            return it->fd;
+int checkIfIndexNodeAlreadyExists(int inode) {
 
-    }
-    return -1;
+	vector<FD_entry>::iterator it;
+	for (it = fd_Table.begin() ; it != fd_Table.end() ; it++) 
+	{
+		if (it->indexNode==inode) 
+			return 1;
+		
+	}	
+	return -1;
 }
 
-int indexNodeFromfd(int fd)
-{
-    vector<FD_entry>::iterator it;
-    for (it = fd_Table.begin() ; it != fd_Table.end() ; it++)
-    {
-        if (it->fd == fd)
-            return it->indexNode;
+int fdFromIndexNode(int indexNode) {
+	vector<FD_entry>::iterator it;
+	for (it = fd_Table.begin() ; it != fd_Table.end() ; it++) 
+	{
+		if (it->indexNode==indexNode) 
+			return it->fd;
+		
+	}	
+	return -1;	
+}
 
-    }
-    return -1;
+int indexNodeFromfd(int fd) {
+	vector<FD_entry>::iterator it;
+	for (it = fd_Table.begin() ; it != fd_Table.end() ; it++) 
+	{
+		if (it->fd==fd) 
+			return it->indexNode;
+		
+	}	
+	return -1;	
 }
 
 FD_entry *getEntryFromFd(int fd)
