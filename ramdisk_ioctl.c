@@ -1203,8 +1203,6 @@ int allocBlockForNode(int indexNode, int currentSize)
     /* First, find out the next indexNode which needs to be allocated */
     negOne = -1;
     nodePointer = RAM_memory + INDEX_NODE_ARRAY_OFFSET + indexNode * INDEX_NODE_SIZE;
-    PRINT("Made it to allocate new block, currentSize = %d, indexNode = %d\n", currentSize, indexNode);
-    return -1;
     numAvailableBlocks = (int) * ( (int *)(RAM_memory + SUPERBLOCK_OFFSET) );
     if (numAvailableBlocks == 0)
     {
@@ -1219,6 +1217,7 @@ int allocBlockForNode(int indexNode, int currentSize)
     if (currentSize < 8)
     {
         PRINT("BLOCK\n");
+        return -1;
         /* Example: 0 allocated, the free inode pointer is DIRECT_1 at offset 0*/
         PRINT("Allocating a new direct block for indexNode %d\n", indexNode);
         if ( ((int) * ((int *)(nodePointer + DIRECT_1 + currentSize * 4))) != -1)
@@ -1283,6 +1282,7 @@ int allocBlockForNode(int indexNode, int currentSize)
     else if (currentSize < 4168)
     {
         PRINT("DOUBLE\n");
+        return -1;
         /* Doubly indirect situation, requires a special case on mod 64, to ensure a new block is allocated */
         inodePointer = currentSize - 72;
         if (currentSize == 72)
