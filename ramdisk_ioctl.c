@@ -603,7 +603,7 @@ int createIndexNode(char *type, char *pathname, int memorysize)
         {
             PRINT("Error in insert\n");
         }
-        // PRINT("***Found direct Num: %d\n", directoryNodeNum);
+        PRINT("***Found direct Num: %d\n", directoryNodeNum);
     }
 
     /* Set the index node values */
@@ -677,8 +677,6 @@ int numberOfFilesInMemoryBlock(int memoryBlock)
     char *memoryblockStart;
     short inodeNum;
     int i, numberOfFiles;
-    PRINT("MADE IT TO NUM FILES IN BLOCK\n");
-    return -1;
     if (memoryBlock == -1)
         return 0;
     numberOfFiles = 0;
@@ -781,7 +779,6 @@ int insertFileIntoDirectoryNode(int directoryNodeNum, int fileNodeNum, char *fil
             }
         }
         numOfFiles = numberOfFilesInMemoryBlock(blocknumber);
-        return -1;
         if (numOfFiles < (RAM_BLOCK_SIZE / FILE_INFO_SIZE))
         {
             freeblock = blocknumber;
@@ -1212,11 +1209,8 @@ int allocBlockForNode(int indexNode, int currentSize)
 
     /* Since currentSize is simply the number of blocks we can use this to figure out where the next free pointer is */
     /* Essentially, loopless block allocation, much quicker than looping through to find the next open slot */
-    PRINT("Made it to allocate new block, currentSize = %d, indexNode = %d\n", currentSize, indexNode);
     if (currentSize < 8)
     {
-        PRINT("BLOCK\n");
-        return -1;
         /* Example: 0 allocated, the free inode pointer is DIRECT_1 at offset 0*/
         PRINT("Allocating a new direct block for indexNode %d\n", indexNode);
         if ( ((int) * ((int *)(nodePointer + DIRECT_1 + currentSize * 4))) != -1)
@@ -1232,8 +1226,6 @@ int allocBlockForNode(int indexNode, int currentSize)
     else if (currentSize < 72)
     {
         /* This is in singly indirect territory */
-        PRINT("SINGLE\n");
-        return -1;
         if (currentSize == 8)
         {
             /** @todo Special Case where we have to allocated an indirect block as well (must num available blocks in order
@@ -1280,8 +1272,6 @@ int allocBlockForNode(int indexNode, int currentSize)
     }
     else if (currentSize < 4168)
     {
-        PRINT("DOUBLE\n");
-        return -1;
         /* Doubly indirect situation, requires a special case on mod 64, to ensure a new block is allocated */
         inodePointer = currentSize - 72;
         if (currentSize == 72)
