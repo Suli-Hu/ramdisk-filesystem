@@ -16,6 +16,16 @@ int fd;
 
 int currentFdNum;
 
+void printfdTable (){
+	vector<FD_entry>::iterator it;
+	printf("---------FD Table---------\n");	
+	for (it = fd_Table.begin() ; it != fd_Table.end() ; it++) 
+	{
+		printf("fd: %d  indexNode: %d  offset: %d  fileSize: %d\n", it->fd, it->indexNode, it->offset, it->fileSize);
+	}
+	printf("---------End of FD Table---------\n");		
+}
+
 int rd_creat(char *pathname) {
 	struct RAM_path rampath;
 	rampath.name = pathname;
@@ -43,6 +53,8 @@ int rd_open(char *pathname) {
 #endif
 
   	// If the file open failed, return an error
+  	printf("Index node - %d\n", file.indexNode);
+  	printfdTable();
   	if (file.ret<0)
   		return file.ret;
 
@@ -86,9 +98,10 @@ int rd_read(int file_fd, char *address, int num_bytes) {
 		return -1;
 	}
 
+	// Update the offset after reading the file
 	FD_entry *entry;
 	entry = getEntryFromFd(file_fd);
-	
+
 	struct RAM_accessFile file;
 	file.fd = file_fd;
 	file.address=address;
@@ -101,7 +114,6 @@ int rd_read(int file_fd, char *address, int num_bytes) {
 #endif
 
   	// Update the offset after reading the file
-
 	entry->offset = file.offset;
 
 	return file.ret;
@@ -200,12 +212,11 @@ int rd_readdir(int file_fd, char *address) {
 }
 
 /******************* HELPER FUNCTION ********************/
-int checkIfFileExists(int fd) {
-
+int checkIfFileExists(int file_fd) {
 	vector<FD_entry>::iterator it;
 	for (it = fd_Table.begin() ; it != fd_Table.end() ; it++) 
 	{
-		if (it->fd==fd) 
+		if (it->fd==file_fd) 
 			return 1;
 		
 	}	
@@ -244,16 +255,6 @@ int indexNodeFromfd(int fd) {
 		
 	}	
 	return -1;	
-}
-
-void printfdTable (){
-	vector<FD_entry>::iterator it;
-	printf("---------FD Table---------\n");	
-	for (it = fd_Table.begin() ; it != fd_Table.end() ; it++) 
-	{
-		printf("fd: %d  indexNode: %d  offset: %d  fileSize: %d\n", it->fd, it->indexNode, it->offset, it->fileSize);
-	}
-	printf("---------End of FD Table---------\n");		
 }
 
 FD_entry* getEntryFromFd(int fd) {
@@ -304,7 +305,7 @@ int main () {
 	// printf("fd: %d\n", inode);
 	// ret =rd_write(inode, "hello world\n", 10);
 	// printf("Write ret: %d\n", ret);
-	char output[10];
+	char output[12];
 
 	// printfdTable();
 	// ret = rd_read(inode, output, 10);

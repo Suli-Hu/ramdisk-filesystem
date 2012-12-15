@@ -2006,11 +2006,8 @@ static int ramdisk_ioctl(struct inode *inode, struct file *file,
         PRINT("Reading file...\n");
         copy_from_user(&access, (struct RAM_accessFile *)arg,
                        sizeof(struct RAM_accessFile));
-        PRINT("SUCCESSFULLY COPIED\n");
-        printk("Struct - %d, %i, %lu, %d\n", access.indexNode, access.address, access.numBytes, access.offset);
         kr_read(&access);
         copy_to_user((struct RAM_accessFile *)arg, &access, sizeof(struct RAM_accessFile));
-        PRINT("SUCCESSFULLY RETURN\n");
 
         break;
 
@@ -2098,6 +2095,7 @@ void kr_open(struct RAM_file *input)
 {
     char *indexNodeStart;
     int indexNodeNum, fileSize;
+    printk("Pathname - %s", input->name);
     indexNodeNum = getIndexNodeNumberFromPathname(input->name, 0);
     indexNodeStart = RAM_memory + INDEX_NODE_ARRAY_OFFSET + indexNodeNum * INDEX_NODE_SIZE;
     fileSize = (int) * (int *) (indexNodeStart + INODE_SIZE);
@@ -2109,6 +2107,7 @@ void kr_open(struct RAM_file *input)
 
 void kr_read(struct RAM_accessFile *input)
 {
+    printk("%d, %ld, %d, %d\n", input->indexNode, input->address, input->numBytes, input->offset);
     readFromFile(input->indexNode, input->address, input->numBytes, input->offset);
 }
 
@@ -2119,8 +2118,10 @@ void kr_read(struct RAM_accessFile *input)
  */
 void kr_write(struct RAM_accessFile *input)
 {
+    printk("%d, %ld, %d, %d\n", input->indexNode, input->address, input->numBytes, input->offset);
+    printIndexNode(input->indexNode);
     writeToFile(input->indexNode, input->address, input->numBytes, input->offset);
-
+    printIndexNode(input->indexNode);
 }
 
 // This function is in user level
@@ -2137,6 +2138,7 @@ void kr_unlink(struct RAM_path *input)
 void kr_readdir(struct RAM_accessFile *input)
 {
     int ret;
+    printk("Reading the dir %d\n", input->indexNode);
     ret = readFileName(input->indexNode, input->address, input->dirIndex);
     if (ret > -1)
         input->ret = 1;
