@@ -162,7 +162,6 @@ void getAllocatedBlockNumbers(int *blockArray, int inodeNum)
         /* Now after value is set, check for -1 ( we need to have at least one -1 as an end condition for the external check) */
         if (value == -1)
         {
-            PRINT("Empty block detected in direct\n");
             return;
         }
 
@@ -187,7 +186,6 @@ void getAllocatedBlockNumbers(int *blockArray, int inodeNum)
         /* Once again, check for termination */
         if (value == -1)
         {
-            PRINT("Empty block detected in single indir\n");
             return;
         }
 
@@ -1070,6 +1068,7 @@ int deleteFile(char *pathname)
         if (offset == -1)
         {
             /* Sanity check, if this happened, some memory got corrupted from before to here */
+            print("%d\n", ii);
             PRINT("Memory corruption detected, failed at deletion\n");
             return -1;
         }
