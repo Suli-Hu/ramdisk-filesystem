@@ -1213,7 +1213,6 @@ int allocBlockForNode(int indexNode, int currentSize)
     /* Since currentSize is simply the number of blocks we can use this to figure out where the next free pointer is */
     /* Essentially, loopless block allocation, much quicker than looping through to find the next open slot */
     PRINT("Made it to allocate new block, currentSize = %d, indexNode = %d\n", currentSize, indexNode);
-    return -1;
     if (currentSize < 8)
     {
         PRINT("BLOCK\n");
