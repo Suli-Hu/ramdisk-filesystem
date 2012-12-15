@@ -1076,7 +1076,6 @@ int deleteFile(char *pathname)
         blockPointer = RAM_memory + DATA_BLOCKS_OFFSET + offset * RAM_BLOCK_SIZE;
         for (jj = 0 ; jj < (RAM_BLOCK_SIZE / FILE_INFO_SIZE) ; jj++)
         {
-            PRINT("%s vs %s\n", filename, blockPointer + FILE_INFO_SIZE * jj);
             if (counter == fileCount)
             {
                 /* This is an error, we couldn't find the file for some reason */
