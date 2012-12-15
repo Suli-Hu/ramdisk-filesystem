@@ -813,18 +813,19 @@ int insertFileIntoDirectoryNode(int directoryNodeNum, int fileNodeNum, char *fil
  * @return    type    description
  * @param[in-out]    name    description
  */
-int readFileName(int indexNodeNum, char* address, int index) {
-    
+int readFileName(int indexNodeNum, char *address, int index)
+{
+
     char *indexNodeStart, *dirlistingstart, *filename;
     int i, j, memoryblock, dirIndex, numOfFiles, k;
-    dirIndex=0;
+    dirIndex = 0;
 
     indexNodeStart = RAM_memory + INDEX_NODE_ARRAY_OFFSET + indexNodeNum * INODE_SIZE;
-    numOfFiles = (int)*(int*)(indexNodeStart +INODE_FILE_COUNT);
-    
+    numOfFiles = (int) * (int *)(indexNodeStart + INODE_FILE_COUNT);
+
     // Make sure the file index is not greater than the number of files
-    if (index>=numOfFiles)
-        index=0;
+    if (index >= numOfFiles)
+        index = 0;
 
     if (strcmp("dir\0",  indexNodeStart + INODE_TYPE) == 0)
     {
@@ -842,9 +843,9 @@ int readFileName(int indexNodeNum, char* address, int index) {
             for (j = 0; j < RAM_BLOCK_SIZE / FILE_INFO_SIZE; j++)
             {
                 indexNodeNum = (short) * (short *)(dirlistingstart + FILE_INFO_SIZE * j + INODE_NUM_OFFSET);
-                
+
                 // If this file is a gap, skip it
-                if (indexNodeNum==-2)
+                if (indexNodeNum == -2)
                     continue;
 
                 if (indexNodeNum > 0 && memoryblock > -1)
@@ -852,15 +853,17 @@ int readFileName(int indexNodeNum, char* address, int index) {
                     // Get file name
                     filename = (dirlistingstart + FILE_INFO_SIZE * j);
                     // Copy the filename into the specified address
-                    if (dirIndex==index) {
-                        k=0;
-                        while (1) {
+                    if (dirIndex == index)
+                    {
+                        k = 0;
+                        while (1)
+                        {
                             memcpy(&(address[k]), &(filename[k]), sizeof(char));
-                            if (filename[k]=='\0')
-                                break;                            
+                            if (filename[k] == '\0')
+                                break;
                             k++;
                         }
-                            // memcpy(&(address[k]), &('\0'), sizeof(char));                        
+                        // memcpy(&(address[k]), &('\0'), sizeof(char));
 
                         return numOfFiles;
                     }
@@ -872,7 +875,8 @@ int readFileName(int indexNodeNum, char* address, int index) {
         }
 
     }
-    else {
+    else
+    {
         PRINT("Error: File is not a directory.\n");
         return -1;
     }
@@ -1746,7 +1750,8 @@ void testFileDeletion(void)
     printIndexNode(indexNodeNum);
 }
 
-void testReadDir(void) {
+void testReadDir(void)
+{
 
     int indexNodeNum;
 
@@ -1756,7 +1761,7 @@ void testReadDir(void) {
 
     printIndexNode(indexNodeNum);
 
-//    ret = readFileName(input->indexNode, input->address, input->dirIndex);
+    //    ret = readFileName(input->indexNode, input->address, input->dirIndex);
 
     char blah[30];
     readFileName(0, blah, 3);
@@ -1797,7 +1802,7 @@ void kr_open(struct RAM_file *input)
     int indexNodeNum, fileSize;
     indexNodeNum = getIndexNodeNumberFromPathname(input->name, 0);
     indexNodeStart = RAM_memory + INDEX_NODE_ARRAY_OFFSET + indexNodeNum * INDEX_NODE_SIZE;
-    fileSize = (int)*(int *) (indexNodeStart + INODE_SIZE);
+    fileSize = (int) * (int *) (indexNodeStart + INODE_SIZE);
 
     input->indexNode = indexNodeNum;
     input->fileSize = fileSize;
@@ -1835,10 +1840,10 @@ void kr_unlink(struct RAM_path *input)
 }
 
 void kr_readdir(struct RAM_accessFile *input)
-{   
+{
     int ret;
     ret = readFileName(input->indexNode, input->address, input->dirIndex);
-    if (ret>-1)
+    if (ret > -1)
         input->ret = 1;
     else
         input->ret = -1;
@@ -1980,26 +1985,26 @@ static int ramdisk_ioctl(struct inode *inode, struct file *file,
         copy_from_user(&ramFile, (struct RAM_file *)arg,
                        sizeof(struct RAM_file));
         kr_open(&ramFile);
-        copy_to_user((struct RAM_file *)arg, &ramFile, sizeof(struct RAM_file));        
+        copy_to_user((struct RAM_file *)arg, &ramFile, sizeof(struct RAM_file));
 
         break;
 
     case RAM_READ:
         PRINT("Reading file...\n");
-        copy_from_user(&access, (struct RAM_accessFile *)arg,
-                       sizeof(struct RAM_accessFile));
-        kr_read(&access);
-        copy_to_user((struct RAM_accessFile *)arg, &access, sizeof(struct RAM_accessFile));        
+        // copy_from_user(&access, (struct RAM_accessFile *)arg,
+        //                sizeof(struct RAM_accessFile));
+        // // kr_read(&access);
+        // copy_to_user((struct RAM_accessFile *)arg, &access, sizeof(struct RAM_accessFile));
 
         break;
 
     case RAM_WRITE:
         PRINT("Writing accessFile...\n");
 
-        copy_from_user(&access, (struct RAM_accessFile *)arg,
-                       sizeof(struct RAM_accessFile));
-        kr_write(&access);
-        copy_to_user((struct RAM_accessFile *)arg, &access, sizeof(struct RAM_accessFile));                
+        // copy_from_user(&access, (struct RAM_accessFile *)arg,
+        //                sizeof(struct RAM_accessFile));
+        // // kr_write(&access);
+        // copy_to_user((struct RAM_accessFile *)arg, &access, sizeof(struct RAM_accessFile));
 
         break;
 
@@ -2009,7 +2014,7 @@ static int ramdisk_ioctl(struct inode *inode, struct file *file,
         copy_from_user(&ramFile, (struct RAM_file *)arg,
                        sizeof(struct RAM_file));
         kr_lseek(&ramFile);
-        copy_to_user((struct RAM_file *)arg, &ramFile, sizeof(struct RAM_file));                
+        copy_to_user((struct RAM_file *)arg, &ramFile, sizeof(struct RAM_file));
 
         break;
 
@@ -2019,22 +2024,22 @@ static int ramdisk_ioctl(struct inode *inode, struct file *file,
         copy_from_user(&path, (struct RAM_path *)arg,
                        sizeof(struct RAM_path));
         kr_unlink(&path);
-        copy_to_user((struct RAM_path *)arg, &path, sizeof(struct RAM_path));        
+        copy_to_user((struct RAM_path *)arg, &path, sizeof(struct RAM_path));
 
         break;
 
     case RAM_READDIR:
         PRINT("Reading file from directory...\n");
 
-        copy_from_user(&access, (struct RAM_accessFile *)arg,
-                       sizeof(struct RAM_accessFile));
-        kr_readdir(&access);
-        copy_to_user((struct RAM_accessFile *)arg, &access, sizeof(struct RAM_accessFile));                        
+        // copy_from_user(&access, (struct RAM_accessFile *)arg,
+        //                sizeof(struct RAM_accessFile));
+        // // kr_readdir(&access);
+        // copy_to_user((struct RAM_accessFile *)arg, &access, sizeof(struct RAM_accessFile));
 
         break;
 
     default:
-    PRINT("--DEFAULT!\n");
+        PRINT("--DEFAULT!\n");
         return -EINVAL;
         break;
     }
@@ -2079,7 +2084,7 @@ void kr_open(struct RAM_file *input)
     int indexNodeNum, fileSize;
     indexNodeNum = getIndexNodeNumberFromPathname(input->name, 0);
     indexNodeStart = RAM_memory + INDEX_NODE_ARRAY_OFFSET + indexNodeNum * INDEX_NODE_SIZE;
-    fileSize = (int)*(int *) (indexNodeStart + INODE_SIZE);
+    fileSize = (int) * (int *) (indexNodeStart + INODE_SIZE);
 
     PRINT("INDEX NODE: %d\n", indexNodeNum);
     input->indexNode = indexNodeNum;
@@ -2114,10 +2119,10 @@ void kr_unlink(struct RAM_path *input)
 }
 
 void kr_readdir(struct RAM_accessFile *input)
-{   
+{
     int ret;
     ret = readFileName(input->indexNode, input->address, input->dirIndex);
-    if (ret>-1)
+    if (ret > -1)
         input->ret = 1;
     else
         input->ret = -1;
