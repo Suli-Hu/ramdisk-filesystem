@@ -291,7 +291,7 @@ int main () {
 	// printf("fd: %d\n", inode);
 	// ret =rd_write(inode, "hello world\n", 10);
 	// printf("Write ret: %d\n", ret);
-	char output[10];
+	char output[12];
 
 	// printfdTable();
 	// ret = rd_read(inode, output, 10);
@@ -302,10 +302,10 @@ int main () {
 	rd_creat("/mytxt.txt\0");
 	inode = rd_open("/mytxt.txt\0");
 	rd_mkdir("/folder/\0");
-	rd_write(inode, "hello world\n", 10);
-	rd_read(inode, output, 10);
+	rd_write(inode, "hello world\n", 12);
+	rd_read(inode, output, 12);
+	printf("The file has - %s\n", output);
 	rd_readdir(inode, output);
 	rd_unlink("/mytxt.txt\0");
-
 
 }
