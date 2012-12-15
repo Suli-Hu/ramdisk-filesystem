@@ -186,7 +186,11 @@ void getAllocatedBlockNumbers(int *blockArray, int inodeNum)
         blockArray[counter] = value;
         /* Once again, check for termination */
         if (value == -1)
+        {
+            PRINT("Empty block detected in single indir\n");
             return;
+        }
+
         counter++;
     }
 
