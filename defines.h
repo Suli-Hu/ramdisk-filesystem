@@ -1,4 +1,4 @@
-//#define DEBUG  /* For now, while developing on mac */
+#define DEBUG  /* For now, while developing on mac */
 #ifdef DEBUG
 
 	#include <stdio.h>
