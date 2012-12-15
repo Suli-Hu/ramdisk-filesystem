@@ -1803,9 +1803,9 @@ void kr_open(struct RAM_file *input)
     input->fileSize = fileSize;
 }
 
-void kr_read(struct RAM_accessFile input)
+void kr_read(struct RAM_accessFile *input)
 {
-    readFromFile(input.indexNode, input.address, input.numBytes, input.offset);
+    readFromFile(input->indexNode, input->address, input->numBytes, input->offset);
 }
 
 /**
@@ -1813,9 +1813,9 @@ void kr_read(struct RAM_accessFile input)
  *
  * @param[in]   input   The accessfile struct.  Input for writing is in this struct
  */
-void kr_write(struct RAM_accessFile input)
+void kr_write(struct RAM_accessFile *input)
 {
-    writeToFile(input.indexNode, input.address, input.numBytes, input.offset);
+    writeToFile(input->indexNode, input->address, input->numBytes, input->offset);
 }
 
 // This function is in user level
