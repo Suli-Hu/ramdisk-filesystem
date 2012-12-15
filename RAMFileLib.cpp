@@ -401,6 +401,7 @@ int main ()
         sprintf (pathname, "/file%d", i);
 
         retval = rd_unlink (pathname);
+        printf("Unlink %d\n");
 
         if (retval < 0)
         {
