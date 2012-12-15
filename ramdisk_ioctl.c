@@ -1068,8 +1068,6 @@ int deleteFile(char *pathname)
         if (offset == -1)
         {
             /* Sanity check, if this happened, some memory got corrupted from before to here */
-            PRINT("offset %d\n", offset);
-            PRINT("%d\n", ii);
             PRINT("Memory corruption detected, failed at deletion\n");
             return -1;
         }
@@ -1077,6 +1075,7 @@ int deleteFile(char *pathname)
         blockPointer = RAM_memory + DATA_BLOCKS_OFFSET + offset * RAM_BLOCK_SIZE;
         for (jj = 0 ; jj < (RAM_BLOCK_SIZE / FILE_INFO_SIZE) ; jj++)
         {
+            print ("%s vs %s\n", filename, blockPointer + FILE_INFO_SIZE * jj);
             if (ii == fileCount)
             {
                 /* This is an error, we couldn't find the file for some reason */
