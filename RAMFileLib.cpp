@@ -10,38 +10,37 @@ using namespace std;
 vector<FD_entry> fd_Table;
 
 
-#ifdef KERNERLREADY
+#if 1
 int fd;
-fd = open ("/proc/ramdisk_ioctl", O_RDONLY);
 #endif
 static int currentFdNum = 0;
 // currentFdNum=0;
 
 int rd_creat(char *pathname) {
-	RAM_path rampath;
+	struct RAM_path rampath;
 	rampath.name = pathname;
-#ifdef KERNERLREADY
-  	ioctl (fd, RAM_CREATE, &rampath);	
+#if 1
+	printf("IM HERE\n");
+  	ioctl (fd, RAM_CREATE, &rampath);
+	printf("IM HERE\n");	
 #endif  	
-
-  	// kr_creat(rampath);
 
 	return rampath.ret;
 }
 
 int rd_mkdir(char *pathname) {
-	RAM_path rampath;
+	struct RAM_path rampath;
 	rampath.name = pathname;
-#ifdef KERNERLREADY
-  	ioctl (fd, RAM_MKDIR, &rampath);	
+#if 1
+  	ioctl (fd, RAM_MKDIR, &rampath);
 #endif  	
 	return rampath.ret;
 }
 
 int rd_open(char *pathname) {
-	RAM_file file;
+	struct RAM_file file;
 	file.name = pathname;
-#ifdef KERNERLREADY
+#if 1
   	ioctl (fd, RAM_OPEN, &file);	
 #endif
 
@@ -77,7 +76,7 @@ void kr_close(int fd) {
 }
 
 int rd_read(int fd, char *address, int num_bytes) {
-	RAM_accessFile file;
+	struct RAM_accessFile file;
 	file.fd = fd;
 	file.address=address;
 	file.numBytes = num_bytes;
@@ -89,7 +88,7 @@ int rd_read(int fd, char *address, int num_bytes) {
 		return -1;
 	}
 
-#ifdef KERNERLREADY
+#if 1
   	ioctl (fd, RAM_READ, &file);	
 #endif
 
@@ -102,7 +101,7 @@ int rd_read(int fd, char *address, int num_bytes) {
 }
 
 int rd_write(int fd, char *address, int num_bytes) {
-	RAM_accessFile file;
+	struct RAM_accessFile file;
 	file.fd = fd;
 	file.address=address;
 	file.numBytes = num_bytes;
@@ -114,7 +113,7 @@ int rd_write(int fd, char *address, int num_bytes) {
 		return -1;
 	}
 
-#ifdef KERNERLREADY
+#if 1
   	ioctl (fd, RAM_WRITE, &file);	
 #endif  	
 
@@ -136,7 +135,7 @@ int rd_lseek(int fd, int offset) {
 
 	// If the offset the user specifies is greater than the file size
 	// move the pointer to end of file
-	FD_entry *entry;
+	struct FD_entry *entry;
 	entry = getEntryFromFd(fd);
 	if (offset>entry->fileSize) {
 		entry->offset= entry->fileSize;
@@ -150,20 +149,20 @@ int rd_lseek(int fd, int offset) {
 }
 
 int rd_unlink(char *pathname) {
-	RAM_path rampath;
+	struct RAM_path rampath;
 	rampath.name = pathname;
-#ifdef KERNERLREADY
+#if 1
   	ioctl (fd, RAM_UNLINK, &rampath);	
 #endif  	
 	return rampath.ret;
 }
 
 int rd_readdir(int fd, char *address) {
-	RAM_accessFile file;
+	struct RAM_accessFile file;
 	file.fd = fd;
 	file.address=address;
 
-	FD_entry *entry;
+	struct FD_entry *entry;
 	entry = getEntryFromFd(fd);
 
 	file.indexNode = entry->indexNode;
@@ -175,7 +174,7 @@ int rd_readdir(int fd, char *address) {
 		return -1;
 	}
 
-#ifdef KERNERLREADY
+#if 1
   	ioctl (fd, RAM_READDIR, &file);	
 #endif
 
@@ -255,6 +254,8 @@ void deleteFileFromFDTable(int fd) {
 }
 
 int main () {
+
+	fd = open ("/proc/ramdisk", O_RDONLY);
 	printf("Hello world\n");
 
 	FD_entry entry;
@@ -264,6 +265,9 @@ int main () {
 	entry.fd = 1;	// Set file descriptor
 	fd_Table.push_back(entry);
 
-
 	printfdTable();
+
+	int ret;
+	ret = rd_creat("/mytxt.txt");
+	printf("Index Node: %d\n", ret);
 }

@@ -1,4 +1,4 @@
-#define DEBUG  /* For now, while developing on mac */
+//#define DEBUG  /* For now, while developing on mac */
 #ifdef DEBUG
 
 	#include <stdio.h>
@@ -25,16 +25,7 @@
 
 #include "structs.h"
 
-/****************************IOCTL DECLARATIONS*******************************/
 
-#define RAM_CREATE _IOWR(0, 6, struct path)
-#define RAM_MKDIR _IOWR(1, 7, struct path)
-#define RAM_OPEN _IOWR(1, 8, struct path)
-#define RAM_READ _IOWR(1, 10, struct RAM_accessFile)
-#define RAM_WRITE _IOWR(1, 11, struct RAM_accessFile)
-#define RAM_LSEEK _IOWR(1, 12, struct file)
-#define RAM_UNLINK _IOWR(1, 13, struct path)
-#define RAM_READDIR _IOWR(1, 14, struct RAM_accessFile)
 
 /*********************FILE SYSTEM STRUCTURE************************/
 #define FS_SIZE 2097152 // Exactly 2 MB

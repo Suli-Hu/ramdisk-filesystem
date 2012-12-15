@@ -1,3 +1,7 @@
+#include <sys/ioctl.h>
+#include <stdio.h>
+#include <fcntl.h>
+
 /**
 *  RAM Filesystem Library for the ramdisk kernel module
 *

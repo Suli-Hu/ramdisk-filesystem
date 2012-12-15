@@ -1731,7 +1731,7 @@ void testReadFromFile(void)
 
 }
 
-void testFileDeletion()
+void testFileDeletion(void)
 {
     int indexNodeNum;
 
@@ -1746,7 +1746,7 @@ void testFileDeletion()
     printIndexNode(indexNodeNum);
 }
 
-void testReadDir() {
+void testReadDir(void) {
 
     int indexNodeNum;
 
@@ -1760,7 +1760,7 @@ void testReadDir() {
 
     char blah[30];
     readFileName(0, blah, 3);
-    printf("Result: %s\n", blah);
+    PRINT("Result: %s\n", blah);
 
 }
 
@@ -1944,6 +1944,8 @@ static int ramdisk_ioctl(struct inode *inode, struct file *file,
     struct RAM_path path;
     struct RAM_file ramFile;
     struct RAM_accessFile access;
+
+    PRINT("GETTING IOCTL MESSAGE\n");
     switch (cmd)
     {
 
@@ -2044,8 +2046,8 @@ static int ramdisk_ioctl(struct inode *inode, struct file *file,
 void kr_creat(struct RAM_path *input)
 {
     int indexNodeNum;
-    indexNodeNum = createIndexNode("reg\0", input.name, 0);
-
+    indexNodeNum = createIndexNode("reg\0", input->name, 0);
+    input->ret = indexNodeNum;
 }
 
 /**
@@ -2055,7 +2057,9 @@ void kr_creat(struct RAM_path *input)
  */
 void kr_mkdir(struct RAM_path *input)
 {
-
+    int indexNodeNum;
+    indexNodeNum = createIndexNode("dir\0", input->name, 0);
+    input->ret = indexNodeNum;
 }
 
 /**
@@ -2065,17 +2069,19 @@ void kr_mkdir(struct RAM_path *input)
  */
 void kr_open(struct RAM_file *input)
 {
+    char *indexNodeStart;
+    int indexNodeNum, fileSize;
+    indexNodeNum = getIndexNodeNumberFromPathname(input->name, 0);
+    indexNodeStart = RAM_memory + INDEX_NODE_ARRAY_OFFSET + indexNodeNum * INDEX_NODE_SIZE;
+    fileSize = (int)*(int *) (indexNodeStart + INODE_SIZE);
 
+    input->indexNode = indexNodeNum;
+    input->fileSize = fileSize;
 }
 
-/**
- * Kernel pair for reading a file
- *
- * @param[in]   input   The accessfile struct.  Output read is placed into this struct
- */
 void kr_read(struct RAM_accessFile *input)
 {
-
+    readFromFile(input->indexNode, input->address, input->numBytes, input->offset);
 }
 
 /**
@@ -2085,32 +2091,29 @@ void kr_read(struct RAM_accessFile *input)
  */
 void kr_write(struct RAM_accessFile *input)
 {
-
+    writeToFile(input->indexNode, input->address, input->numBytes, input->offset);
 }
 
-/**
- * Kernel pair for the seeking function
- *
- * @param[in]   input   input, use offset in here to index into file
- */
+// This function is in user level
 void kr_lseek(struct RAM_file *input)
-{
+{}
 
-}
-
-/**
- * Kernel pair for unlinking a file from the filesystem
- *
- * @param[in]   input   Path struct.  Will delete file at the desired RAM_path
- */
 void kr_unlink(struct RAM_path *input)
 {
-
+    int ret;
+    ret = deleteFile(input->name);
+    input->ret = ret;
 }
 
 void kr_readdir(struct RAM_accessFile *input)
-{
-
+{   
+    int ret;
+    ret = readFileName(input->indexNode, input->address, input->dirIndex);
+    if (ret>-1)
+        input->ret = 1;
+    else
+        input->ret = -1;
+    input->numOfFiles = ret;
 }
 
 /************************ End of Kernel Implementations *****************************/
