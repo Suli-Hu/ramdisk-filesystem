@@ -376,7 +376,7 @@ int main ()
        that is neither created nor deleted in this test sequence */
 
     /* Generate MAXIMUM regular files */
-    for (i = 0; i < MAX_FILES + 1; i++)   // go beyond the limit
+    for (i = 0; i < MAX_FILES/10 + 1; i++)   // go beyond the limit
     {
         sprintf (pathname, "/file%d", i);
 
