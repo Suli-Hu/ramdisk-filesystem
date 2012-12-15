@@ -297,12 +297,11 @@ int main () {
 	// ret = rd_read(inode, output, 10);
 	// printf("Read data: %s inode: %d\n", output, inode);
 
-	// printfdTable();
-
 	rd_creat("/mytxt.txt\0");
 	inode = rd_open("/mytxt.txt\0");
 	int dir = rd_open("/\0");
 	rd_mkdir("/folder/\0");
+	printfdTable();
 	rd_write(inode, "hello world\n", 12);
 	rd_read(inode, output, 12);
 	printf("The file has - %s\n", output);
