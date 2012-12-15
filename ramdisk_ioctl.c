@@ -1994,7 +1994,7 @@ static int ramdisk_ioctl(struct inode *inode, struct file *file,
         copy_from_user(&access, (struct RAM_accessFile *)arg,
                        sizeof(struct RAM_accessFile));
         PRINT("SUCCESSFULLY COPIED\n");
-        printk("Struct - %d, %i, %ld, %d\n", access.indexNode, access.address, access.numBytes, access.offset);
+        printk("Struct - %d, %i, %lu, %d\n", access.indexNode, access.address, access.numBytes, access.offset);
         // kr_read(&access);
         copy_to_user((struct RAM_accessFile *)arg, &access, sizeof(struct RAM_accessFile));
         PRINT("SUCCESSFULLY RETURN\n");
