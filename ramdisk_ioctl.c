@@ -1974,7 +1974,6 @@ static int ramdisk_ioctl(struct inode *inode, struct file *file,
     struct RAM_path path;
     struct RAM_file ramFile;
     struct RAM_accessFile access;
-    PRINT("--GETTING IOCTL !\n");
 
     switch (cmd)
     {
