@@ -161,7 +161,10 @@ void getAllocatedBlockNumbers(int *blockArray, int inodeNum)
         blockArray[counter] = value;
         /* Now after value is set, check for -1 ( we need to have at least one -1 as an end condition for the external check) */
         if (value == -1)
+        {
+            PRINT("Empty block detected in direct\n");
             return;
+        }
 
         counter++;
     }
