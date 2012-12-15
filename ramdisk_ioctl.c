@@ -1258,7 +1258,7 @@ int readFromFile(int indexNode, char *data, int size, int offset)
     }
 
     // If we have reached this point, we have read enough bytes, return
-    return 1;
+    return bytesRead;
 }
 
 
@@ -2017,10 +2017,10 @@ static int ramdisk_ioctl(struct inode *inode, struct file *file,
     case RAM_WRITE:
         PRINT("Writing accessFile...\n");
 
-        // copy_from_user(&access, (struct RAM_accessFile *)arg,
-        //                sizeof(struct RAM_accessFile));
-        // // kr_write(&access);
-        // copy_to_user((struct RAM_accessFile *)arg, &access, sizeof(struct RAM_accessFile));
+        copy_from_user(&access, (struct RAM_accessFile *)arg,
+                       sizeof(struct RAM_accessFile));
+        kr_write(&access);
+        copy_to_user((struct RAM_accessFile *)arg, &access, sizeof(struct RAM_accessFile));
 
         break;
 
@@ -2049,7 +2049,7 @@ static int ramdisk_ioctl(struct inode *inode, struct file *file,
 
         copy_from_user(&access, (struct RAM_accessFile *)arg,
                        sizeof(struct RAM_accessFile));
-        // kr_readdir(&access);
+        kr_readdir(&access);
         copy_to_user((struct RAM_accessFile *)arg, &access, sizeof(struct RAM_accessFile));
 
         break;
