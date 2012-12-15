@@ -1004,7 +1004,7 @@ int deleteFile(char *pathname)
     int parentIndexNode;
     short fileCount;
     int offset;
-    int ii, jj, fileDeleted;
+    int ii, jj, fileDeleted, counter;
     char *type;
     char *filePointer;
     char *parentPointer;
@@ -1060,6 +1060,7 @@ int deleteFile(char *pathname)
     fileCount = (short) * ( (short *) (parentPointer + INODE_FILE_COUNT) );
     filename = getFileNameFromPath(pathname);
     ii = 0;
+    counter = 0;
     fileDeleted = 0;
     while (!fileDeleted)
     {
@@ -1076,7 +1077,7 @@ int deleteFile(char *pathname)
         for (jj = 0 ; jj < (RAM_BLOCK_SIZE / FILE_INFO_SIZE) ; jj++)
         {
             PRINT("%s vs %s\n", filename, blockPointer + FILE_INFO_SIZE * jj);
-            if (ii == fileCount)
+            if (counter == fileCount)
             {
                 /* This is an error, we couldn't find the file for some reason */
                 PRINT("File was not found after detection, breaking out and failing\n");
@@ -1089,8 +1090,9 @@ int deleteFile(char *pathname)
                 fileDeleted = 1;
                 return 0;
             }
-            ii++; /* Sanity count */
+            counter++;
         }
+        ii++;
     }
 
     /* The file has been successfully deleted, decrement the fileCount of the parent */
