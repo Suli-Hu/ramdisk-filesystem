@@ -340,7 +340,6 @@ int getIndexNodeNumberFromPathname(char *pathname, int dirFlag)
     /* We now know how many dirs we are dealing with, and the pathsize, so we can extrac the names of all directories and put them in an array */
     currentIndexNode = 0; /* Root always at 0 */
     counter = 1; /* Used to keep track of the pathname index, starts at 1 to ignore root */
-    PRINT("NumDirs is %d\n", numDirs);
     if (dirFlag)
     {
         numDirs--;  /* Loop through one less directory to return the directory inode, now the file inode */
@@ -728,6 +727,7 @@ int insertFileIntoDirectoryNode(int directoryNodeNum, int fileNodeNum, char *fil
     if (!( (int) * ((int *) (RAM_memory + SUPERBLOCK_OFFSET + INODE_COUNT_OFFSET) ) ) )
     {
         /* There are no more inodes left, return */
+        PRINT("Out of inodes\n");
         return -1;
     }
 
