@@ -1991,8 +1991,8 @@ static int ramdisk_ioctl(struct inode *inode, struct file *file,
 
     case RAM_READ:
         PRINT("Reading file...\n");
-        // copy_from_user(&access, (struct RAM_accessFile *)arg,
-        //                sizeof(struct RAM_accessFile));
+        copy_from_user(&access, (struct RAM_accessFile *)arg,
+                       sizeof(struct RAM_accessFile));
         // // kr_read(&access);
         // copy_to_user((struct RAM_accessFile *)arg, &access, sizeof(struct RAM_accessFile));
 
