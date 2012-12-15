@@ -1572,11 +1572,11 @@ void testFileCreation(void)
     char file[] = "/bigfile";
     char *uselessData;
     /* Initialize some useless data to 0 so we can verify 0 data is being written later */
-    dataSize = 400;
+    dataSize = 2000000;
 #ifdef DEBUG
     uselessData = calloc(dataSize, sizeof(char));
 #else
-    uselessData = kmalloc(dataSize * sizeof(char), GFP_ATOMIC);
+    uselessData = vmalloc(dataSize);
     if (!uselessData)
     {
         PRINT("ALLOCATION FAILED\n");
@@ -1591,6 +1591,11 @@ void testFileCreation(void)
     sizeWritten = writeToFile(indexNodeNum, uselessData, dataSize, 0);
     PRINT("Actual size written to index node %d is %d\n", indexNodeNum, sizeWritten);
     printIndexNode(indexNodeNum); /* Verify size was written */
+#ifdef DEBUG
+    free(uselessData);
+#else
+    vfree(uselessData);
+#endif
 }
 
 void testReadFromFile(void)
@@ -1791,6 +1796,7 @@ static int __init initialization_routine(void)
     indexNodeNum = createIndexNode("reg\0", "/myfile.txt\0",  0);
     printIndexNode(indexNodeNum);
     printIndexNode(0);
+    testFileCreation();
 
     // clearIndexNode(indexNodeNum);
     // PRINT("MEM AFTER\n");
