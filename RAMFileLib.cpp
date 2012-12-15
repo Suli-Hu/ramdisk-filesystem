@@ -302,7 +302,6 @@ int main () {
 	rd_creat("/mytxt.txt\0");
 	inode = rd_open("/mytxt.txt\0");
 	rd_mkdir("/folder/\0");
-	rd_open("/mytxt.txt\0");
 	rd_write(inode, "hello world\n", 10);
 	rd_read(inode, output, 10);
 	rd_readdir(inode, output);

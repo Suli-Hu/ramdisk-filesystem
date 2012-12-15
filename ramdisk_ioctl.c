@@ -2106,6 +2106,7 @@ void kr_open(struct RAM_file *input)
 
 void kr_read(struct RAM_accessFile *input)
 {
+    printk("%d, %ld, %d, %d\n", input->indexNode, input->address, input->numBytes, input->offset);
     readFromFile(input->indexNode, input->address, input->numBytes, input->offset);
 }
 
@@ -2116,8 +2117,10 @@ void kr_read(struct RAM_accessFile *input)
  */
 void kr_write(struct RAM_accessFile *input)
 {
+    printk("%d, %ld, %d, %d\n", input->indexNode, input->address, input->numBytes, input->offset);
+    printIndexNode(input->indexNode);
     writeToFile(input->indexNode, input->address, input->numBytes, input->offset);
-
+    printIndexNode(input->indexNode);
 }
 
 // This function is in user level
