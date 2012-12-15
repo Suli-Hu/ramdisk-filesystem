@@ -108,21 +108,20 @@ int rd_read(int file_fd, char *address, int num_bytes) {
 int rd_write(int file_fd, char *address, int num_bytes) {
 
 	// Make sure the file exists
-	if (checkIfFileExists(fd)==-1){
+	if (checkIfFileExists(file_fd)==-1){
 		printf("fd does not exist in the file descriptor table.\n");
 		return -1;
 	}
 
-	//struct RAM_accessFile file;
-	struct RAM_file file;
+	struct RAM_accessFile file;
 	
 	FD_entry *entry;
-	entry = getEntryFromFd(fd);
+	entry = getEntryFromFd(file_fd);
 
-	// file.fd = fd;
-	// file.address=address;
-	// file.numBytes = num_bytes;
-	file.indexNode = indexNodeFromfd(fd);
+	file.fd = file_fd;
+	file.address=address;
+	file.numBytes = num_bytes;
+	file.indexNode = indexNodeFromfd(file_fd);
 	file.offset = entry->offset;
 
 
