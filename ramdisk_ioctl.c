@@ -1051,7 +1051,6 @@ int deleteFile(char *pathname)
     }
 
     parentIndexNode = getIndexNodeNumberFromPathname(pathname, 1);
-    PRINT("Deleting from %d\n", parentIndexNode);
 
     if (parentIndexNode == -1)
     {
@@ -1060,8 +1059,7 @@ int deleteFile(char *pathname)
     }
 
     indexNode = getIndexNodeNumberFromPathname(pathname, 0);
-    PRINT("Delete %d\n", indexNode);
-    return -1;
+
 
 
     if (indexNode == -1)
@@ -1069,6 +1067,8 @@ int deleteFile(char *pathname)
         PRINT("File does not exist\n");
         return -1; /* File does not exist */
     }
+    printIndexNode(1);
+    return -1;
 
     /* Now, check if the file is a dir itself */
     filePointer = RAM_memory + INDEX_NODE_ARRAY_OFFSET + indexNode * INDEX_NODE_SIZE;
