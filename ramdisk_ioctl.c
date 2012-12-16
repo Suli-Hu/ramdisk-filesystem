@@ -1986,7 +1986,6 @@ static int __init initialization_routine(void)
 */
 static void __exit cleanup_routine(void)
 {
-    printIndexNode(0);
     PRINT("<1> Dumping RAMDISK module\n");
     remove_proc_entry("ramdisk", NULL);
 
@@ -2002,10 +2001,8 @@ static int ramdisk_ioctl(struct inode *inode, struct file *file,
     struct RAM_file ramFile;
     struct RAM_accessFile access;
 
-    while (down_interruptible(&FS_mutex))
-    {
-        PRINT("INTERRUPTED\n");
-    }
+    while (down_interruptible(&FS_mutex));
+    PRINT("PAST MUTEX");
 
     switch (cmd)
     {
