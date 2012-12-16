@@ -1666,76 +1666,76 @@ void testDirCreation(void)
 
 void testFileCreation(void)
 {
-//     /* Add 2000000 bytes (~2 MB) to a file, this should limit the file size to the max allocatable size */
-//     int indexNodeNum, dataSize, sizeWritten, ii;
-//     char file[] = "/bigfile";
-//     char *uselessData;
-//     /* Initialize some useless data to 0 so we can verify 0 data is being written later */
-//     dataSize = 2000000;
-// #ifdef DEBUG
-//     uselessData = calloc(dataSize, sizeof(char));
-// #else
-//     uselessData = vmalloc(dataSize);
-//     if (!uselessData)
-//     {
-//         PRINT("ALLOCATION FAILED\n");
-//         return;
-//     }
-// #endif
-//     for (ii = 0 ; ii < dataSize ; ii++)
-//         uselessData[ii] = 2;
-
-//     indexNodeNum = createIndexNode("reg\0", file, 0);
-//     printIndexNode(0); /* Veryify file was created */
-//     sizeWritten = writeToFile(indexNodeNum, uselessData, dataSize, 0);
-//     PRINT("Actual size written to index node %d is %d\n", indexNodeNum, sizeWritten);
-//     printIndexNode(indexNodeNum); /* Verify size was written */
-// #ifdef DEBUG
-//     free(uselessData);
-// #else
-//     vfree(uselessData);
-// #endif
-    int i, retval;
-    char pathname[80];
-    for (i = 0; i < 1024; i++)   // go beyond the limit
+    /* Add 2000000 bytes (~2 MB) to a file, this should limit the file size to the max allocatable size */
+    int indexNodeNum, dataSize, sizeWritten, ii;
+    char file[] = "/bigfile";
+    char *uselessData;
+    /* Initialize some useless data to 0 so we can verify 0 data is being written later */
+    dataSize = 2000000;
+#ifdef DEBUG
+    uselessData = calloc(dataSize, sizeof(char));
+#else
+    uselessData = vmalloc(dataSize);
+    if (!uselessData)
     {
-        sprintf (pathname, "/file%d", i);
-
-        retval = createIndexNode("reg\0", pathname, 0);
-
-        if (retval < 0)
-        {
-            fprintf (stderr, "rd_create: File creation error! status: %d\n",
-                     retval);
-
-            if (i != 1023)
-                exit (1);
-        }
-
-        memset (pathname, 0, 80);
+        PRINT("ALLOCATION FAILED\n");
+        return;
     }
-    printIndexNode(0);
+#endif
+    for (ii = 0 ; ii < dataSize ; ii++)
+        uselessData[ii] = 2;
 
-    for (i = 0; i < 1023; i++)
-    {
-        sprintf (pathname, "/file%d", i);
-        if (i == 1023)
-        	printf("deleting\n");
+    indexNodeNum = createIndexNode("reg\0", file, 0);
+    printIndexNode(0); /* Veryify file was created */
+    sizeWritten = writeToFile(indexNodeNum, uselessData, dataSize, 0);
+    PRINT("Actual size written to index node %d is %d\n", indexNodeNum, sizeWritten);
+    printIndexNode(indexNodeNum); /* Verify size was written */
+#ifdef DEBUG
+    free(uselessData);
+#else
+    vfree(uselessData);
+#endif
+    // int i, retval;
+    // char pathname[80];
+    // for (i = 0; i < 1024; i++)   // go beyond the limit
+    // {
+    //     sprintf (pathname, "/file%d", i);
 
-        retval = deleteFile(pathname);
-        printf("Unlink %d\n", i);
+    //     retval = createIndexNode("reg\0", pathname, 0);
 
-        if (retval < 0)
-        {
-            fprintf (stderr, "rd_unlink: File deletion error! status: %d\n",
-                     retval);
+    //     if (retval < 0)
+    //     {
+    //         fprintf (stderr, "rd_create: File creation error! status: %d\n",
+    //                  retval);
 
-            exit (1);
-        }
+    //         if (i != 1023)
+    //             exit (1);
+    //     }
 
-        memset (pathname, 0, 80);
-    }
-    printIndexNode(0);
+    //     memset (pathname, 0, 80);
+    // }
+    // printIndexNode(0);
+
+    // for (i = 0; i < 1023; i++)
+    // {
+    //     sprintf (pathname, "/file%d", i);
+    //     if (i == 1023)
+    //     	printf("deleting\n");
+
+    //     retval = deleteFile(pathname);
+    //     printf("Unlink %d\n", i);
+
+    //     if (retval < 0)
+    //     {
+    //         fprintf (stderr, "rd_unlink: File deletion error! status: %d\n",
+    //                  retval);
+
+    //         exit (1);
+    //     }
+
+    //     memset (pathname, 0, 80);
+    // }
+    // printIndexNode(0);
 }
 
 void testReadFromFile(void)
