@@ -1071,6 +1071,7 @@ int deleteFile(char *pathname)
         {
             /* Sanity check, if this happened, some memory got corrupted from before to here */
             PRINT("Memory corruption detected, failed at deletion\n");
+            printIndexNode(0);
             return -1;
         }
 
@@ -1275,7 +1276,13 @@ int readFromFile(int indexNode, char *data, int size, int offset)
     return bytesRead;
 }
 
-
+int getFileSize(int indexNode) {
+    char *indexNodeStart;
+    int fileSize;
+    indexNodeStart = RAM_memory + INDEX_NODE_ARRAY_OFFSET + indexNode * INDEX_NODE_SIZE;
+    fileSize = (int)*(int*)(indexNodeStart+INODE_SIZE);
+    return fileSize;
+}
 
 /************************ MEMORY MANAGEMENT *****************************/
 
@@ -1676,7 +1683,7 @@ void testFileCreation(void)
     char file[] = "/bigfile";
     char *uselessData;
     /* Initialize some useless data to 0 so we can verify 0 data is being written later */
-    dataSize = 2000000;
+    dataSize = 20000;
 #ifdef DEBUG
     uselessData = calloc(dataSize, sizeof(char));
 #else
@@ -1688,7 +1695,7 @@ void testFileCreation(void)
     }
 #endif
     for (ii = 0 ; ii < dataSize ; ii++)
-        uselessData[ii] = 2;
+        uselessData[ii] = 'a';
 
     indexNodeNum = createIndexNode("reg\0", file, 0);
     printIndexNode(0); /* Veryify file was created */
@@ -1700,47 +1707,17 @@ void testFileCreation(void)
 #else
     vfree(uselessData);
 #endif
-    // int i, retval;
-    // char pathname[80];
-    // for (i = 0; i < 1024; i++)   // go beyond the limit
-    // {
-    //     sprintf (pathname, "/file%d", i);
 
-    //     retval = createIndexNode("reg\0", pathname, 0);
-
-    //     if (retval < 0)
-    //     {
-    //         fprintf (stderr, "rd_create: File creation error! status: %d\n",
-    //                  retval);
-
-    //         if (i != 1023)
-    //             exit (1);
-    //     }
-
-    //     memset (pathname, 0, 80);
+    // Reading bytes from a high offset
+    // int bytes = 1000;
+    // char newdata[bytes];
+    // readFromFile(indexNodeNum, newdata, bytes, 19500);
+    // int j;
+    // for (j=0 ; j<bytes;j++) {
+    //     PRINT("%c", newdata[j]);
     // }
-    // printIndexNode(0);
+    // PRINT("\n");
 
-    // for (i = 0; i < 1023; i++)
-    // {
-    //     sprintf (pathname, "/file%d", i);
-    //     if (i == 1023)
-    //     	printf("deleting\n");
-
-    //     retval = deleteFile(pathname);
-    //     printf("Unlink %d\n", i);
-
-    //     if (retval < 0)
-    //     {
-    //         fprintf (stderr, "rd_unlink: File deletion error! status: %d\n",
-    //                  retval);
-
-    //         exit (1);
-    //     }
-
-    //     memset (pathname, 0, 80);
-    // }
-    // printIndexNode(0);
 }
 
 void testReadFromFile(void)
@@ -1937,14 +1914,14 @@ int main()
 
     // testFileDeletion();
     // testReadDir();
-    // testDirCreation();
 
     // printIndexNode(indexNodeNum);
     // deleteFile("/folder\0");
     // printIndexNode(indexNodeNum);
     // printIndexNode(indexNodeNum);
     // printSuperblock();
-    // createIndexNode("reg\0", "/otherfile.txt\0",  0);
+    indexNodeNum =  createIndexNode("reg\0", "/otherfile.txt\0",  200);
+
     // createIndexNode("dir\0", "/myfolder/\0",  0);
     // indexNodeNum = createIndexNode("reg\0", "/myfolder/hello.txt\0",  0);
     // printIndexNode(indexNodeNum);
@@ -2148,22 +2125,22 @@ void kr_mkdir(struct RAM_path *input)
 void kr_open(struct RAM_file *input)
 {
     char *indexNodeStart;
-    int indexNodeNum, fileSize;
+    int indexNodeNum;
     indexNodeNum = getIndexNodeNumberFromPathname(input->name, 0);
-    indexNodeStart = RAM_memory + INDEX_NODE_ARRAY_OFFSET + indexNodeNum * INDEX_NODE_SIZE;
-    fileSize = (int) * (int *) (indexNodeStart + INODE_SIZE);
 
     PRINT("INDEX NODE: %d\n", indexNodeNum);
     input->indexNode = indexNodeNum;
-    input->fileSize = fileSize;
+    input->fileSize = getFileSize(indexNodeNum);
     printIndexNode(0);
     printSuperblock();
 }
 
 void kr_read(struct RAM_accessFile *input)
 {
+    int ret;
     printk("%d, %ld, %d, %d\n", input->indexNode, input->address, input->numBytes, input->offset);
-    readFromFile(input->indexNode, input->address, input->numBytes, input->offset);
+    ret = readFromFile(input->indexNode, input->address, input->numBytes, input->offset);
+    input->ret = ret;
 }
 
 /**
@@ -2173,9 +2150,13 @@ void kr_read(struct RAM_accessFile *input)
  */
 void kr_write(struct RAM_accessFile *input)
 {
+    int ret;
     printk("%d, %ld, %d, %d\n", input->indexNode, input->address, input->numBytes, input->offset);
-    printIndexNode(input->indexNode);
-    writeToFile(input->indexNode, input->address, input->numBytes, input->offset);
+    // printIndexNode(input->indexNode);
+    ret = writeToFile(input->indexNode, input->address, input->numBytes, input->offset);
+    input->ret = ret;
+    input->fileSize = getFileSize(input->indexNode);
+    PRINT("Bytes written: %d\n", ret);
     printIndexNode(input->indexNode);
 }
 
@@ -2201,6 +2182,7 @@ void kr_readdir(struct RAM_accessFile *input)
         input->ret = -1;
     input->numOfFiles = ret;
 }
+
 
 /************************ End of Kernel Implementations *****************************/
 

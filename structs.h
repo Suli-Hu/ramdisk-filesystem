@@ -38,6 +38,7 @@ struct RAM_accessFile
     int offset;
     int dirIndex;
     int numOfFiles;
+    int fileSize;
     char *address;  /** User space address to which to send data */
 };
 
@@ -50,6 +51,7 @@ struct FD_entry
     int fileSize;       /* Size of file */
     int dirIndex;
     int numOfFiles;
+    char *pathname;
 };
 
 /***************************KERNEL FS FUNCTION PROTOTYPES********************/
