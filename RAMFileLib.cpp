@@ -261,7 +261,7 @@ int rd_readdir(int file_fd, char *address)
     // If the number of files pointer have exceeded total num of files, reset it
     entry->numOfFiles = file.numOfFiles;
     entry->dirIndex = entry->dirIndex + 1;
-    if (entry->dirIndex == (entry->numOfFiles + 1)) {
+    if (entry->dirIndex == (entry->numOfFiles +1)) {
         entry->dirIndex = 0;
         return 0;
     }
