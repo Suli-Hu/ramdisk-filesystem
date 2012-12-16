@@ -51,6 +51,11 @@ int rd_creat(char *pathname)
 int rd_mkdir(char *pathname)
 {
     struct RAM_path rampath;
+
+    // Concat / to end of pathname
+    pathname = concatDirToPath(pathname);
+    printf("new path name: %s\n",pathname);
+
     rampath.name = pathname;
     char *filename;
     filename = getFileNameFromPath(pathname);
@@ -349,7 +354,7 @@ char *getFileNameFromPath(char *pathname)
 char* concatDirToPath(char *path) {
     int length;
     length = strlen(path);
-    char *newpath = malloc(sizeof(char)*(length+1));
+    char *newpath = (char*)malloc(sizeof(char)*(length+1));
     strcpy(newpath, path);
     newpath[length] = '/';
     newpath[length+1] = '\0';
@@ -430,38 +435,24 @@ int main ()
 
 /////////////////
   
-  /* ****TEST 4: Make directory and read directory entries**** */
-  retval = rd_mkdir ("/dir1");
-    
+
+  /* ****TEST 2: LARGEST file size**** */
+
+  
+  /* Generate one LARGEST file */
+  retval = rd_creat ("/bigfile");
+
   if (retval < 0) {
-    fprintf (stderr, "rd_mkdir: Directory 1 creation error! status: %d\n", 
+    fprintf (stderr, "rd_creat: File creation error! status: %d\n", 
 	     retval);
 
     exit (1);
   }
 
-  retval = rd_mkdir ("/dir1/dir2");
-    
-  if (retval < 0) {
-    fprintf (stderr, "rd_mkdir: Directory 2 creation error! status: %d\n", 
-	     retval);
-
-    exit (1);
-  }
-
-  retval = rd_mkdir ("/dir1/dir3");
-    
-  if (retval < 0) {
-    fprintf (stderr, "rd_mkdir: Directory 3 creation error! status: %d\n", 
-	     retval);
-
-    exit (1);
-  }
-
-  retval =  rd_open ("/dir1"); /* Open directory file to read its entries */
+  retval =  rd_open ("/bigfile"); /* Open file to write to it */
   
   if (retval < 0) {
-    fprintf (stderr, "rd_open: Directory open error! status: %d\n", 
+    fprintf (stderr, "rd_open: File open error! status: %d\n", 
 	     retval);
 
     exit (1);
@@ -469,20 +460,41 @@ int main ()
 
   fd = retval;			/* Assign valid fd */
 
-  memset (addr, 0, sizeof(addr)); /* Clear scratchpad memory */
+  /* Try writing to all direct data blocks */
+  retval = rd_write (fd, data1, sizeof(data1));
+  
+  if (retval < 0) {
+    fprintf (stderr, "rd_write: File write STAGE1 error! status: %d\n", 
+	     retval);
 
-  while ((retval = rd_readdir (fd, addr))) { /* 0 indicates end-of-file */
-
-    if (retval < 0) {
-      fprintf (stderr, "rd_readdir: Directory read error! status: %d\n", 
-	       retval);
-      
-      exit (1);
-    }
-
-    index_node_number = atoi(&addr[14]);
-    printf ("Contents at addr: [%s,%d]\n", addr, index_node_number);
+    exit (1);
   }
+
+#ifdef TEST_SINGLE_INDIRECT
+  
+  /* Try writing to all single-indirect data blocks */
+  retval = rd_write (fd, data2, sizeof(data2));
+  
+  if (retval < 0) {
+    fprintf (stderr, "rd_write: File write STAGE2 error! status: %d\n", 
+	     retval);
+
+    exit (1);
+  }
+
+#ifdef TEST_DOUBLE_INDIRECT
+
+  /* Try writing to all double-indirect data blocks */
+  retval = rd_write (fd, data3, sizeof(data3));
+  
+  if (retval < 0) {
+    fprintf (stderr, "rd_write: File write STAGE3 error! status: %d\n", 
+	     retval);
+
+    exit (1);
+  }
+
+
 
 
   ///////////////////
