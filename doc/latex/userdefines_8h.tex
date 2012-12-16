@@ -1,0 +1,179 @@
+\hypertarget{userdefines_8h}{\section{userdefines.\-h File Reference}
+\label{userdefines_8h}\index{userdefines.\-h@{userdefines.\-h}}
+}
+\subsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{struct_r_a_m__path}{R\-A\-M\-\_\-path}
+\item 
+struct \hyperlink{struct_r_a_m__file}{R\-A\-M\-\_\-file}
+\item 
+struct \hyperlink{struct_r_a_m__access_file}{R\-A\-M\-\_\-access\-File}
+\end{DoxyCompactItemize}
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \hyperlink{userdefines_8h_ad08286e477b9d09647af8752b1edeee2}{K\-E\-R\-N\-E\-L\-R\-E\-A\-D\-Y}~0
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+int \hyperlink{userdefines_8h_a8f14d5e2827576075c23a7636109b5b9}{kr\-\_\-creat} (struct \hyperlink{struct_r_a_m__path}{R\-A\-M\-\_\-path} input)
+\item 
+int \hyperlink{userdefines_8h_a252c8dd4998201bd12a5a7d703d3a8fb}{kr\-\_\-mkdir} (struct \hyperlink{struct_r_a_m__path}{R\-A\-M\-\_\-path} input)
+\item 
+int \hyperlink{userdefines_8h_a744b360068e1d065934776aa660eef2d}{kr\-\_\-open} (struct \hyperlink{struct_r_a_m__path}{R\-A\-M\-\_\-path} input)
+\item 
+int \hyperlink{userdefines_8h_a824123490ad1617b58169fbc707e0653}{kr\-\_\-close} (int fd)
+\item 
+int \hyperlink{userdefines_8h_a5ee29aca304aed7f02f028bd90c826cc}{kr\-\_\-read} (struct \hyperlink{struct_r_a_m__access_file}{R\-A\-M\-\_\-access\-File} input)
+\item 
+int \hyperlink{userdefines_8h_ac370cd6c3003e84cfa4f7203d8e0bdb3}{kr\-\_\-write} (struct \hyperlink{struct_r_a_m__access_file}{R\-A\-M\-\_\-access\-File} input)
+\item 
+int \hyperlink{userdefines_8h_a344f32ea385d4b5bf815c0e819fe21d4}{kr\-\_\-lseek} (struct \hyperlink{struct_r_a_m__file}{R\-A\-M\-\_\-file} input)
+\item 
+int \hyperlink{userdefines_8h_a9bbb1c9d1ee9618d3fea85264e416dd1}{kr\-\_\-unlink} (struct \hyperlink{struct_r_a_m__path}{R\-A\-M\-\_\-path} input)
+\item 
+int \hyperlink{userdefines_8h_a6aac08740ac01ddef2c7ff9eba1605c9}{kr\-\_\-readdir} (struct \hyperlink{struct_r_a_m__access_file}{R\-A\-M\-\_\-access\-File} input)
+\end{DoxyCompactItemize}
+
+
+\subsection{Macro Definition Documentation}
+\hypertarget{userdefines_8h_ad08286e477b9d09647af8752b1edeee2}{\index{userdefines.\-h@{userdefines.\-h}!K\-E\-R\-N\-E\-L\-R\-E\-A\-D\-Y@{K\-E\-R\-N\-E\-L\-R\-E\-A\-D\-Y}}
+\index{K\-E\-R\-N\-E\-L\-R\-E\-A\-D\-Y@{K\-E\-R\-N\-E\-L\-R\-E\-A\-D\-Y}!userdefines.h@{userdefines.\-h}}
+\subsubsection[{K\-E\-R\-N\-E\-L\-R\-E\-A\-D\-Y}]{\setlength{\rightskip}{0pt plus 5cm}\#define K\-E\-R\-N\-E\-L\-R\-E\-A\-D\-Y~0}}\label{userdefines_8h_ad08286e477b9d09647af8752b1edeee2}
+
+
+Definition at line 1 of file userdefines.\-h.
+
+
+
+\subsection{Function Documentation}
+\hypertarget{userdefines_8h_a824123490ad1617b58169fbc707e0653}{\index{userdefines.\-h@{userdefines.\-h}!kr\-\_\-close@{kr\-\_\-close}}
+\index{kr\-\_\-close@{kr\-\_\-close}!userdefines.h@{userdefines.\-h}}
+\subsubsection[{kr\-\_\-close}]{\setlength{\rightskip}{0pt plus 5cm}int kr\-\_\-close (
+\begin{DoxyParamCaption}
+\item[{int}]{fd}
+\end{DoxyParamCaption}
+)}}\label{userdefines_8h_a824123490ad1617b58169fbc707e0653}
+Kernel pair for closing a file \begin{DoxyRefDesc}{Todo}
+\item[\hyperlink{todo__todo000002}{Todo}]may not be necessary, not sure yet\end{DoxyRefDesc}
+
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em input} & The file struct for closing the file \\
+\hline
+\end{DoxyParams}
+\hypertarget{userdefines_8h_a8f14d5e2827576075c23a7636109b5b9}{\index{userdefines.\-h@{userdefines.\-h}!kr\-\_\-creat@{kr\-\_\-creat}}
+\index{kr\-\_\-creat@{kr\-\_\-creat}!userdefines.h@{userdefines.\-h}}
+\subsubsection[{kr\-\_\-creat}]{\setlength{\rightskip}{0pt plus 5cm}int kr\-\_\-creat (
+\begin{DoxyParamCaption}
+\item[{struct {\bf R\-A\-M\-\_\-path}}]{input}
+\end{DoxyParamCaption}
+)}}\label{userdefines_8h_a8f14d5e2827576075c23a7636109b5b9}
+Kernel pair for the create function
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em input} & The \hyperlink{struct_r_a_m__path}{R\-A\-M\-\_\-path} struct for creating the file \\
+\hline
+\end{DoxyParams}
+\hypertarget{userdefines_8h_a344f32ea385d4b5bf815c0e819fe21d4}{\index{userdefines.\-h@{userdefines.\-h}!kr\-\_\-lseek@{kr\-\_\-lseek}}
+\index{kr\-\_\-lseek@{kr\-\_\-lseek}!userdefines.h@{userdefines.\-h}}
+\subsubsection[{kr\-\_\-lseek}]{\setlength{\rightskip}{0pt plus 5cm}int kr\-\_\-lseek (
+\begin{DoxyParamCaption}
+\item[{struct {\bf R\-A\-M\-\_\-file}}]{input}
+\end{DoxyParamCaption}
+)}}\label{userdefines_8h_a344f32ea385d4b5bf815c0e819fe21d4}
+Kernel pair for the seeking function
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em input} & input, use offset in here to index into file \\
+\hline
+\end{DoxyParams}
+\hypertarget{userdefines_8h_a252c8dd4998201bd12a5a7d703d3a8fb}{\index{userdefines.\-h@{userdefines.\-h}!kr\-\_\-mkdir@{kr\-\_\-mkdir}}
+\index{kr\-\_\-mkdir@{kr\-\_\-mkdir}!userdefines.h@{userdefines.\-h}}
+\subsubsection[{kr\-\_\-mkdir}]{\setlength{\rightskip}{0pt plus 5cm}int kr\-\_\-mkdir (
+\begin{DoxyParamCaption}
+\item[{struct {\bf R\-A\-M\-\_\-path}}]{input}
+\end{DoxyParamCaption}
+)}}\label{userdefines_8h_a252c8dd4998201bd12a5a7d703d3a8fb}
+Kernel pair for making a new directory
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em input} & The \hyperlink{struct_r_a_m__path}{R\-A\-M\-\_\-path} struct for creating the file \\
+\hline
+\end{DoxyParams}
+\hypertarget{userdefines_8h_a744b360068e1d065934776aa660eef2d}{\index{userdefines.\-h@{userdefines.\-h}!kr\-\_\-open@{kr\-\_\-open}}
+\index{kr\-\_\-open@{kr\-\_\-open}!userdefines.h@{userdefines.\-h}}
+\subsubsection[{kr\-\_\-open}]{\setlength{\rightskip}{0pt plus 5cm}int kr\-\_\-open (
+\begin{DoxyParamCaption}
+\item[{struct {\bf R\-A\-M\-\_\-path}}]{input}
+\end{DoxyParamCaption}
+)}}\label{userdefines_8h_a744b360068e1d065934776aa660eef2d}
+Kernel pair for opening a file
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em input} & The \hyperlink{struct_r_a_m__path}{R\-A\-M\-\_\-path} struct for opening the file \\
+\hline
+\end{DoxyParams}
+\hypertarget{userdefines_8h_a5ee29aca304aed7f02f028bd90c826cc}{\index{userdefines.\-h@{userdefines.\-h}!kr\-\_\-read@{kr\-\_\-read}}
+\index{kr\-\_\-read@{kr\-\_\-read}!userdefines.h@{userdefines.\-h}}
+\subsubsection[{kr\-\_\-read}]{\setlength{\rightskip}{0pt plus 5cm}int kr\-\_\-read (
+\begin{DoxyParamCaption}
+\item[{struct {\bf R\-A\-M\-\_\-access\-File}}]{input}
+\end{DoxyParamCaption}
+)}}\label{userdefines_8h_a5ee29aca304aed7f02f028bd90c826cc}
+Kernel pair for reading a file
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em input} & The accessfile struct. Output read is placed into this struct \\
+\hline
+\end{DoxyParams}
+\hypertarget{userdefines_8h_a6aac08740ac01ddef2c7ff9eba1605c9}{\index{userdefines.\-h@{userdefines.\-h}!kr\-\_\-readdir@{kr\-\_\-readdir}}
+\index{kr\-\_\-readdir@{kr\-\_\-readdir}!userdefines.h@{userdefines.\-h}}
+\subsubsection[{kr\-\_\-readdir}]{\setlength{\rightskip}{0pt plus 5cm}int kr\-\_\-readdir (
+\begin{DoxyParamCaption}
+\item[{struct {\bf R\-A\-M\-\_\-access\-File}}]{input}
+\end{DoxyParamCaption}
+)}}\label{userdefines_8h_a6aac08740ac01ddef2c7ff9eba1605c9}
+Kernel pair for the readdir function
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em input} & Accessfile struct. Used to read the relevant directory \\
+\hline
+\end{DoxyParams}
+\hypertarget{userdefines_8h_a9bbb1c9d1ee9618d3fea85264e416dd1}{\index{userdefines.\-h@{userdefines.\-h}!kr\-\_\-unlink@{kr\-\_\-unlink}}
+\index{kr\-\_\-unlink@{kr\-\_\-unlink}!userdefines.h@{userdefines.\-h}}
+\subsubsection[{kr\-\_\-unlink}]{\setlength{\rightskip}{0pt plus 5cm}int kr\-\_\-unlink (
+\begin{DoxyParamCaption}
+\item[{struct {\bf R\-A\-M\-\_\-path}}]{input}
+\end{DoxyParamCaption}
+)}}\label{userdefines_8h_a9bbb1c9d1ee9618d3fea85264e416dd1}
+Kernel pair for unlinking a file from the filesystem
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em input} & Path struct. Will delete file at the desired \hyperlink{struct_r_a_m__path}{R\-A\-M\-\_\-path} \\
+\hline
+\end{DoxyParams}
+\hypertarget{userdefines_8h_ac370cd6c3003e84cfa4f7203d8e0bdb3}{\index{userdefines.\-h@{userdefines.\-h}!kr\-\_\-write@{kr\-\_\-write}}
+\index{kr\-\_\-write@{kr\-\_\-write}!userdefines.h@{userdefines.\-h}}
+\subsubsection[{kr\-\_\-write}]{\setlength{\rightskip}{0pt plus 5cm}int kr\-\_\-write (
+\begin{DoxyParamCaption}
+\item[{struct {\bf R\-A\-M\-\_\-access\-File}}]{input}
+\end{DoxyParamCaption}
+)}}\label{userdefines_8h_ac370cd6c3003e84cfa4f7203d8e0bdb3}
+Kernel pair for the write function
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em input} & The accessfile struct. Input for writing is in this struct \\
+\hline
+\end{DoxyParams}

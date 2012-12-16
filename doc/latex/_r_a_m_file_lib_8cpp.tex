@@ -1,0 +1,404 @@
+\hypertarget{_r_a_m_file_lib_8cpp}{\section{R\-A\-M\-File\-Lib.\-cpp File Reference}
+\label{_r_a_m_file_lib_8cpp}\index{R\-A\-M\-File\-Lib.\-cpp@{R\-A\-M\-File\-Lib.\-cpp}}
+}
+{\ttfamily \#include \char`\"{}R\-A\-M\-File\-Lib.\-h\char`\"{}}\\*
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \hyperlink{_r_a_m_file_lib_8cpp_adca42aac4f758acd0289c836ee137592}{printfd\-Table} ()
+\item 
+int \hyperlink{_r_a_m_file_lib_8cpp_ac8cd9a3d1c4fab64e86551fa48117d06}{rd\-\_\-creat} (char $\ast$pathname)
+\item 
+int \hyperlink{_r_a_m_file_lib_8cpp_a2f8c14cce1d9a12e84394f5d0a7e90d9}{rd\-\_\-mkdir} (char $\ast$pathname)
+\item 
+int \hyperlink{_r_a_m_file_lib_8cpp_acae117c51314a3d124c2e080b1202c33}{rd\-\_\-open} (char $\ast$pathname)
+\item 
+int \hyperlink{_r_a_m_file_lib_8cpp_a66fefb5d0f64c8373ed98fe3517c91e4}{rd\-\_\-close} (int fd)
+\item 
+int \hyperlink{_r_a_m_file_lib_8cpp_a1cdfae6a61eca2b63cd5f75f66bc576b}{rd\-\_\-read} (int file\-\_\-fd, char $\ast$address, int num\-\_\-bytes)
+\item 
+int \hyperlink{_r_a_m_file_lib_8cpp_ab63f9f2f683b02fe582bfa34f7b00e32}{rd\-\_\-write} (int file\-\_\-fd, char $\ast$address, int num\-\_\-bytes)
+\item 
+int \hyperlink{_r_a_m_file_lib_8cpp_aef53e37ebcce6586c36ac11447b7fd6c}{rd\-\_\-lseek} (int file\-\_\-fd, int offset)
+\item 
+int \hyperlink{_r_a_m_file_lib_8cpp_af4213a21e51f92e48a75e743740a9b46}{rd\-\_\-unlink} (char $\ast$pathname)
+\item 
+int \hyperlink{_r_a_m_file_lib_8cpp_af02b8be74cc62678c064cfc9e49bb432}{rd\-\_\-readdir} (int file\-\_\-fd, char $\ast$address)
+\item 
+int \hyperlink{_r_a_m_file_lib_8cpp_a0d43d7b56cddc853f20c40e615d84b6c}{check\-If\-File\-Exists} (int file\-\_\-fd)
+\item 
+int \hyperlink{_r_a_m_file_lib_8cpp_a36015fe10c54ca54f1f4dd489d3cff80}{check\-If\-Index\-Node\-Already\-Exists} (int inode)
+\item 
+int \hyperlink{_r_a_m_file_lib_8cpp_ad8e5c137c4b9dccc4cbb6f47997473ec}{fd\-From\-Index\-Node} (int index\-Node)
+\item 
+int \hyperlink{_r_a_m_file_lib_8cpp_af760a44d03ad9f85bfce33c087cd5a9c}{index\-Node\-Fromfd} (int fd)
+\item 
+\hyperlink{struct_f_d__entry}{F\-D\-\_\-entry} $\ast$ \hyperlink{_r_a_m_file_lib_8cpp_a0f60b83ed50bc1b11178200e368b91d9}{get\-Entry\-From\-Fd} (int fd\-\_\-file)
+\item 
+int \hyperlink{_r_a_m_file_lib_8cpp_ab0dc21541784903cda618f09ea3a1098}{delete\-File\-From\-F\-D\-Table} (int fd)
+\item 
+char $\ast$ \hyperlink{_r_a_m_file_lib_8cpp_acd7641577f5df3e67204cb88e963a3a5}{get\-File\-Name\-From\-Path} (char $\ast$pathname)
+\item 
+char $\ast$ \hyperlink{_r_a_m_file_lib_8cpp_aaa05b4b0468e7e5bf596cf8232dd13f8}{concat\-Dir\-To\-Path} (char $\ast$path)
+\end{DoxyCompactItemize}
+\subsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+vector$<$ \hyperlink{struct_f_d__entry}{F\-D\-\_\-entry} $>$ \hyperlink{_r_a_m_file_lib_8cpp_ab392c325603acad969546cf906c807ad}{fd\-\_\-\-Table}
+\item 
+int \hyperlink{_r_a_m_file_lib_8cpp_a7e9d757c9982bd721d598bad366fbe62}{proc}
+\item 
+int \hyperlink{_r_a_m_file_lib_8cpp_ad29d6c77271d1aded009ab5bd7117777}{current\-Fd\-Num}
+\end{DoxyCompactItemize}
+
+
+\subsection{Function Documentation}
+\hypertarget{_r_a_m_file_lib_8cpp_a0d43d7b56cddc853f20c40e615d84b6c}{\index{R\-A\-M\-File\-Lib.\-cpp@{R\-A\-M\-File\-Lib.\-cpp}!check\-If\-File\-Exists@{check\-If\-File\-Exists}}
+\index{check\-If\-File\-Exists@{check\-If\-File\-Exists}!RAMFileLib.cpp@{R\-A\-M\-File\-Lib.\-cpp}}
+\subsubsection[{check\-If\-File\-Exists}]{\setlength{\rightskip}{0pt plus 5cm}int check\-If\-File\-Exists (
+\begin{DoxyParamCaption}
+\item[{int}]{file\-\_\-fd}
+\end{DoxyParamCaption}
+)}}\label{_r_a_m_file_lib_8cpp_a0d43d7b56cddc853f20c40e615d84b6c}
+
+
+Definition at line 273 of file R\-A\-M\-File\-Lib.\-cpp.
+
+\hypertarget{_r_a_m_file_lib_8cpp_a36015fe10c54ca54f1f4dd489d3cff80}{\index{R\-A\-M\-File\-Lib.\-cpp@{R\-A\-M\-File\-Lib.\-cpp}!check\-If\-Index\-Node\-Already\-Exists@{check\-If\-Index\-Node\-Already\-Exists}}
+\index{check\-If\-Index\-Node\-Already\-Exists@{check\-If\-Index\-Node\-Already\-Exists}!RAMFileLib.cpp@{R\-A\-M\-File\-Lib.\-cpp}}
+\subsubsection[{check\-If\-Index\-Node\-Already\-Exists}]{\setlength{\rightskip}{0pt plus 5cm}int check\-If\-Index\-Node\-Already\-Exists (
+\begin{DoxyParamCaption}
+\item[{int}]{inode}
+\end{DoxyParamCaption}
+)}}\label{_r_a_m_file_lib_8cpp_a36015fe10c54ca54f1f4dd489d3cff80}
+
+
+Definition at line 284 of file R\-A\-M\-File\-Lib.\-cpp.
+
+\hypertarget{_r_a_m_file_lib_8cpp_aaa05b4b0468e7e5bf596cf8232dd13f8}{\index{R\-A\-M\-File\-Lib.\-cpp@{R\-A\-M\-File\-Lib.\-cpp}!concat\-Dir\-To\-Path@{concat\-Dir\-To\-Path}}
+\index{concat\-Dir\-To\-Path@{concat\-Dir\-To\-Path}!RAMFileLib.cpp@{R\-A\-M\-File\-Lib.\-cpp}}
+\subsubsection[{concat\-Dir\-To\-Path}]{\setlength{\rightskip}{0pt plus 5cm}char$\ast$ concat\-Dir\-To\-Path (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{path}
+\end{DoxyParamCaption}
+)}}\label{_r_a_m_file_lib_8cpp_aaa05b4b0468e7e5bf596cf8232dd13f8}
+
+
+Definition at line 369 of file R\-A\-M\-File\-Lib.\-cpp.
+
+\hypertarget{_r_a_m_file_lib_8cpp_ab0dc21541784903cda618f09ea3a1098}{\index{R\-A\-M\-File\-Lib.\-cpp@{R\-A\-M\-File\-Lib.\-cpp}!delete\-File\-From\-F\-D\-Table@{delete\-File\-From\-F\-D\-Table}}
+\index{delete\-File\-From\-F\-D\-Table@{delete\-File\-From\-F\-D\-Table}!RAMFileLib.cpp@{R\-A\-M\-File\-Lib.\-cpp}}
+\subsubsection[{delete\-File\-From\-F\-D\-Table}]{\setlength{\rightskip}{0pt plus 5cm}int delete\-File\-From\-F\-D\-Table (
+\begin{DoxyParamCaption}
+\item[{int}]{fd}
+\end{DoxyParamCaption}
+)}}\label{_r_a_m_file_lib_8cpp_ab0dc21541784903cda618f09ea3a1098}
+
+
+Definition at line 333 of file R\-A\-M\-File\-Lib.\-cpp.
+
+\hypertarget{_r_a_m_file_lib_8cpp_ad8e5c137c4b9dccc4cbb6f47997473ec}{\index{R\-A\-M\-File\-Lib.\-cpp@{R\-A\-M\-File\-Lib.\-cpp}!fd\-From\-Index\-Node@{fd\-From\-Index\-Node}}
+\index{fd\-From\-Index\-Node@{fd\-From\-Index\-Node}!RAMFileLib.cpp@{R\-A\-M\-File\-Lib.\-cpp}}
+\subsubsection[{fd\-From\-Index\-Node}]{\setlength{\rightskip}{0pt plus 5cm}int fd\-From\-Index\-Node (
+\begin{DoxyParamCaption}
+\item[{int}]{index\-Node}
+\end{DoxyParamCaption}
+)}}\label{_r_a_m_file_lib_8cpp_ad8e5c137c4b9dccc4cbb6f47997473ec}
+
+
+Definition at line 296 of file R\-A\-M\-File\-Lib.\-cpp.
+
+\hypertarget{_r_a_m_file_lib_8cpp_a0f60b83ed50bc1b11178200e368b91d9}{\index{R\-A\-M\-File\-Lib.\-cpp@{R\-A\-M\-File\-Lib.\-cpp}!get\-Entry\-From\-Fd@{get\-Entry\-From\-Fd}}
+\index{get\-Entry\-From\-Fd@{get\-Entry\-From\-Fd}!RAMFileLib.cpp@{R\-A\-M\-File\-Lib.\-cpp}}
+\subsubsection[{get\-Entry\-From\-Fd}]{\setlength{\rightskip}{0pt plus 5cm}{\bf F\-D\-\_\-entry}$\ast$ get\-Entry\-From\-Fd (
+\begin{DoxyParamCaption}
+\item[{int}]{fd\-\_\-file}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [read]}}}\label{_r_a_m_file_lib_8cpp_a0f60b83ed50bc1b11178200e368b91d9}
+
+
+Definition at line 318 of file R\-A\-M\-File\-Lib.\-cpp.
+
+\hypertarget{_r_a_m_file_lib_8cpp_acd7641577f5df3e67204cb88e963a3a5}{\index{R\-A\-M\-File\-Lib.\-cpp@{R\-A\-M\-File\-Lib.\-cpp}!get\-File\-Name\-From\-Path@{get\-File\-Name\-From\-Path}}
+\index{get\-File\-Name\-From\-Path@{get\-File\-Name\-From\-Path}!RAMFileLib.cpp@{R\-A\-M\-File\-Lib.\-cpp}}
+\subsubsection[{get\-File\-Name\-From\-Path}]{\setlength{\rightskip}{0pt plus 5cm}char$\ast$ get\-File\-Name\-From\-Path (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{pathname}
+\end{DoxyParamCaption}
+)}}\label{_r_a_m_file_lib_8cpp_acd7641577f5df3e67204cb88e963a3a5}
+
+
+Definition at line 345 of file R\-A\-M\-File\-Lib.\-cpp.
+
+\hypertarget{_r_a_m_file_lib_8cpp_af760a44d03ad9f85bfce33c087cd5a9c}{\index{R\-A\-M\-File\-Lib.\-cpp@{R\-A\-M\-File\-Lib.\-cpp}!index\-Node\-Fromfd@{index\-Node\-Fromfd}}
+\index{index\-Node\-Fromfd@{index\-Node\-Fromfd}!RAMFileLib.cpp@{R\-A\-M\-File\-Lib.\-cpp}}
+\subsubsection[{index\-Node\-Fromfd}]{\setlength{\rightskip}{0pt plus 5cm}int index\-Node\-Fromfd (
+\begin{DoxyParamCaption}
+\item[{int}]{fd}
+\end{DoxyParamCaption}
+)}}\label{_r_a_m_file_lib_8cpp_af760a44d03ad9f85bfce33c087cd5a9c}
+
+
+Definition at line 307 of file R\-A\-M\-File\-Lib.\-cpp.
+
+\hypertarget{_r_a_m_file_lib_8cpp_adca42aac4f758acd0289c836ee137592}{\index{R\-A\-M\-File\-Lib.\-cpp@{R\-A\-M\-File\-Lib.\-cpp}!printfd\-Table@{printfd\-Table}}
+\index{printfd\-Table@{printfd\-Table}!RAMFileLib.cpp@{R\-A\-M\-File\-Lib.\-cpp}}
+\subsubsection[{printfd\-Table}]{\setlength{\rightskip}{0pt plus 5cm}void printfd\-Table (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{_r_a_m_file_lib_8cpp_adca42aac4f758acd0289c836ee137592}
+
+
+Definition at line 16 of file R\-A\-M\-File\-Lib.\-cpp.
+
+\hypertarget{_r_a_m_file_lib_8cpp_a66fefb5d0f64c8373ed98fe3517c91e4}{\index{R\-A\-M\-File\-Lib.\-cpp@{R\-A\-M\-File\-Lib.\-cpp}!rd\-\_\-close@{rd\-\_\-close}}
+\index{rd\-\_\-close@{rd\-\_\-close}!RAMFileLib.cpp@{R\-A\-M\-File\-Lib.\-cpp}}
+\subsubsection[{rd\-\_\-close}]{\setlength{\rightskip}{0pt plus 5cm}int rd\-\_\-close (
+\begin{DoxyParamCaption}
+\item[{int}]{fd}
+\end{DoxyParamCaption}
+)}}\label{_r_a_m_file_lib_8cpp_a66fefb5d0f64c8373ed98fe3517c91e4}
+
+
+Definition at line 112 of file R\-A\-M\-File\-Lib.\-cpp.
+
+\hypertarget{_r_a_m_file_lib_8cpp_ac8cd9a3d1c4fab64e86551fa48117d06}{\index{R\-A\-M\-File\-Lib.\-cpp@{R\-A\-M\-File\-Lib.\-cpp}!rd\-\_\-creat@{rd\-\_\-creat}}
+\index{rd\-\_\-creat@{rd\-\_\-creat}!RAMFileLib.cpp@{R\-A\-M\-File\-Lib.\-cpp}}
+\subsubsection[{rd\-\_\-creat}]{\setlength{\rightskip}{0pt plus 5cm}int rd\-\_\-creat (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{pathname}
+\end{DoxyParamCaption}
+)}}\label{_r_a_m_file_lib_8cpp_ac8cd9a3d1c4fab64e86551fa48117d06}
+R\-A\-M Filesystem Library for the ramdisk kernel module
+
+\begin{DoxyAuthor}{Author}
+Raphael Landaverde
+\end{DoxyAuthor}
+This is for use in userspace, not kernel space Creates a new full file at pathname
+
+\begin{DoxyReturn}{Returns}
+int 0 on success, -\/1 on error 
+\end{DoxyReturn}
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em pathname} & the absolute path of the file to create \\
+\hline
+\end{DoxyParams}
+\begin{DoxyRemark}{Remarks}
+Fails if directory for new file does not exist 
+\end{DoxyRemark}
+
+
+Definition at line 27 of file R\-A\-M\-File\-Lib.\-cpp.
+
+\hypertarget{_r_a_m_file_lib_8cpp_aef53e37ebcce6586c36ac11447b7fd6c}{\index{R\-A\-M\-File\-Lib.\-cpp@{R\-A\-M\-File\-Lib.\-cpp}!rd\-\_\-lseek@{rd\-\_\-lseek}}
+\index{rd\-\_\-lseek@{rd\-\_\-lseek}!RAMFileLib.cpp@{R\-A\-M\-File\-Lib.\-cpp}}
+\subsubsection[{rd\-\_\-lseek}]{\setlength{\rightskip}{0pt plus 5cm}int rd\-\_\-lseek (
+\begin{DoxyParamCaption}
+\item[{int}]{fd, }
+\item[{int}]{offset}
+\end{DoxyParamCaption}
+)}}\label{_r_a_m_file_lib_8cpp_aef53e37ebcce6586c36ac11447b7fd6c}
+Seeks into a currently opened file
+
+\begin{DoxyReturn}{Returns}
+int 0 on success, -\/1 on failure 
+\end{DoxyReturn}
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em fd} & file descriptor of the file to seek into \\
+\hline
+\mbox{\tt in}  & {\em offset} & offset into file desired \\
+\hline
+\end{DoxyParams}
+\begin{DoxyRemark}{Remarks}
+sets file position to E\-O\-F if offset larger than remaining size 
+\end{DoxyRemark}
+
+
+Definition at line 183 of file R\-A\-M\-File\-Lib.\-cpp.
+
+\hypertarget{_r_a_m_file_lib_8cpp_a2f8c14cce1d9a12e84394f5d0a7e90d9}{\index{R\-A\-M\-File\-Lib.\-cpp@{R\-A\-M\-File\-Lib.\-cpp}!rd\-\_\-mkdir@{rd\-\_\-mkdir}}
+\index{rd\-\_\-mkdir@{rd\-\_\-mkdir}!RAMFileLib.cpp@{R\-A\-M\-File\-Lib.\-cpp}}
+\subsubsection[{rd\-\_\-mkdir}]{\setlength{\rightskip}{0pt plus 5cm}int rd\-\_\-mkdir (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{pathname}
+\end{DoxyParamCaption}
+)}}\label{_r_a_m_file_lib_8cpp_a2f8c14cce1d9a12e84394f5d0a7e90d9}
+Creates a new directory at pathname
+
+\begin{DoxyReturn}{Returns}
+int 0 on success, -\/1 on fail 
+\end{DoxyReturn}
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em pathname} & the absolute path of the directory \\
+\hline
+\end{DoxyParams}
+\begin{DoxyRemark}{Remarks}
+Fails if directory for new directory does not exist 
+\end{DoxyRemark}
+
+
+Definition at line 46 of file R\-A\-M\-File\-Lib.\-cpp.
+
+\hypertarget{_r_a_m_file_lib_8cpp_acae117c51314a3d124c2e080b1202c33}{\index{R\-A\-M\-File\-Lib.\-cpp@{R\-A\-M\-File\-Lib.\-cpp}!rd\-\_\-open@{rd\-\_\-open}}
+\index{rd\-\_\-open@{rd\-\_\-open}!RAMFileLib.cpp@{R\-A\-M\-File\-Lib.\-cpp}}
+\subsubsection[{rd\-\_\-open}]{\setlength{\rightskip}{0pt plus 5cm}int rd\-\_\-open (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{pathname}
+\end{DoxyParamCaption}
+)}}\label{_r_a_m_file_lib_8cpp_acae117c51314a3d124c2e080b1202c33}
+Opens a file for reading
+
+\begin{DoxyReturn}{Returns}
+int the file descriptor handle for the file or -\/1 on fail 
+\end{DoxyReturn}
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em pathname} & the absolute path of the file \\
+\hline
+\end{DoxyParams}
+\begin{DoxyRemark}{Remarks}
+Fails if file does not exist 
+\end{DoxyRemark}
+
+
+Definition at line 69 of file R\-A\-M\-File\-Lib.\-cpp.
+
+\hypertarget{_r_a_m_file_lib_8cpp_a1cdfae6a61eca2b63cd5f75f66bc576b}{\index{R\-A\-M\-File\-Lib.\-cpp@{R\-A\-M\-File\-Lib.\-cpp}!rd\-\_\-read@{rd\-\_\-read}}
+\index{rd\-\_\-read@{rd\-\_\-read}!RAMFileLib.cpp@{R\-A\-M\-File\-Lib.\-cpp}}
+\subsubsection[{rd\-\_\-read}]{\setlength{\rightskip}{0pt plus 5cm}int rd\-\_\-read (
+\begin{DoxyParamCaption}
+\item[{int}]{fd, }
+\item[{char $\ast$}]{address, }
+\item[{int}]{num\-\_\-bytes}
+\end{DoxyParamCaption}
+)}}\label{_r_a_m_file_lib_8cpp_a1cdfae6a61eca2b63cd5f75f66bc576b}
+Read a currently opened file
+
+\begin{DoxyReturn}{Returns}
+int Number of bytes actually read, or -\/1 on fail 
+\end{DoxyReturn}
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em fd} & the file descriptor of the file to read \\
+\hline
+\mbox{\tt out}  & {\em address} & pointer to the data in userspace \\
+\hline
+\mbox{\tt in}  & {\em num\-\_\-bytes} & number of bytes to read from file \\
+\hline
+\end{DoxyParams}
+\begin{DoxyRemark}{Remarks}
+Fails if file descriptor is invalid or a directory 
+\end{DoxyRemark}
+
+
+Definition at line 120 of file R\-A\-M\-File\-Lib.\-cpp.
+
+\hypertarget{_r_a_m_file_lib_8cpp_af02b8be74cc62678c064cfc9e49bb432}{\index{R\-A\-M\-File\-Lib.\-cpp@{R\-A\-M\-File\-Lib.\-cpp}!rd\-\_\-readdir@{rd\-\_\-readdir}}
+\index{rd\-\_\-readdir@{rd\-\_\-readdir}!RAMFileLib.cpp@{R\-A\-M\-File\-Lib.\-cpp}}
+\subsubsection[{rd\-\_\-readdir}]{\setlength{\rightskip}{0pt plus 5cm}int rd\-\_\-readdir (
+\begin{DoxyParamCaption}
+\item[{int}]{fd, }
+\item[{char $\ast$}]{address}
+\end{DoxyParamCaption}
+)}}\label{_r_a_m_file_lib_8cpp_af02b8be74cc62678c064cfc9e49bb432}
+Read one entry from the directory file
+
+\begin{DoxyReturn}{Returns}
+int 1 on success, -\/1 on failure 
+\end{DoxyReturn}
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em fd} & file descriptor of directory to read \\
+\hline
+\mbox{\tt out}  & {\em address} & 16 byte output, 14 bytes filename, 2 bytesindex\-\_\-node num \\
+\hline
+\end{DoxyParams}
+\begin{DoxyRemark}{Remarks}
+Fails if fd is a regular file. On each call, file position of fd incremented by 1 
+\end{DoxyRemark}
+
+
+Definition at line 238 of file R\-A\-M\-File\-Lib.\-cpp.
+
+\hypertarget{_r_a_m_file_lib_8cpp_af4213a21e51f92e48a75e743740a9b46}{\index{R\-A\-M\-File\-Lib.\-cpp@{R\-A\-M\-File\-Lib.\-cpp}!rd\-\_\-unlink@{rd\-\_\-unlink}}
+\index{rd\-\_\-unlink@{rd\-\_\-unlink}!RAMFileLib.cpp@{R\-A\-M\-File\-Lib.\-cpp}}
+\subsubsection[{rd\-\_\-unlink}]{\setlength{\rightskip}{0pt plus 5cm}int rd\-\_\-unlink (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{pathname}
+\end{DoxyParamCaption}
+)}}\label{_r_a_m_file_lib_8cpp_af4213a21e51f92e48a75e743740a9b46}
+Unlinks the file from ramdisk memory
+
+\begin{DoxyReturn}{Returns}
+int 0 on success, -\/1 on failure 
+\end{DoxyReturn}
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em pathname} & absolute path of the file or directory to unlink \\
+\hline
+\end{DoxyParams}
+\begin{DoxyRemark}{Remarks}
+Error occurs if file does not exist, file is open, file is a directory, or file is root 
+\end{DoxyRemark}
+
+
+Definition at line 214 of file R\-A\-M\-File\-Lib.\-cpp.
+
+\hypertarget{_r_a_m_file_lib_8cpp_ab63f9f2f683b02fe582bfa34f7b00e32}{\index{R\-A\-M\-File\-Lib.\-cpp@{R\-A\-M\-File\-Lib.\-cpp}!rd\-\_\-write@{rd\-\_\-write}}
+\index{rd\-\_\-write@{rd\-\_\-write}!RAMFileLib.cpp@{R\-A\-M\-File\-Lib.\-cpp}}
+\subsubsection[{rd\-\_\-write}]{\setlength{\rightskip}{0pt plus 5cm}int rd\-\_\-write (
+\begin{DoxyParamCaption}
+\item[{int}]{fd, }
+\item[{char $\ast$}]{address, }
+\item[{int}]{num\-\_\-bytes}
+\end{DoxyParamCaption}
+)}}\label{_r_a_m_file_lib_8cpp_ab63f9f2f683b02fe582bfa34f7b00e32}
+Write to a currently opened file
+
+\begin{DoxyReturn}{Returns}
+int Number of bytes return, or -\/1 on error 
+\end{DoxyReturn}
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em fd} & the file descriptor of the file to read \\
+\hline
+\mbox{\tt in}  & {\em address} & data to write to memory \\
+\hline
+\mbox{\tt in}  & {\em num\-\_\-bytes} & number of bytes to write \\
+\hline
+\end{DoxyParams}
+\begin{DoxyRemark}{Remarks}
+Fails if file descriptor is invalid or a directory 
+\end{DoxyRemark}
+
+
+Definition at line 151 of file R\-A\-M\-File\-Lib.\-cpp.
+
+
+
+\subsection{Variable Documentation}
+\hypertarget{_r_a_m_file_lib_8cpp_ad29d6c77271d1aded009ab5bd7117777}{\index{R\-A\-M\-File\-Lib.\-cpp@{R\-A\-M\-File\-Lib.\-cpp}!current\-Fd\-Num@{current\-Fd\-Num}}
+\index{current\-Fd\-Num@{current\-Fd\-Num}!RAMFileLib.cpp@{R\-A\-M\-File\-Lib.\-cpp}}
+\subsubsection[{current\-Fd\-Num}]{\setlength{\rightskip}{0pt plus 5cm}int current\-Fd\-Num}}\label{_r_a_m_file_lib_8cpp_ad29d6c77271d1aded009ab5bd7117777}
+
+
+Definition at line 13 of file R\-A\-M\-File\-Lib.\-cpp.
+
+\hypertarget{_r_a_m_file_lib_8cpp_ab392c325603acad969546cf906c807ad}{\index{R\-A\-M\-File\-Lib.\-cpp@{R\-A\-M\-File\-Lib.\-cpp}!fd\-\_\-\-Table@{fd\-\_\-\-Table}}
+\index{fd\-\_\-\-Table@{fd\-\_\-\-Table}!RAMFileLib.cpp@{R\-A\-M\-File\-Lib.\-cpp}}
+\subsubsection[{fd\-\_\-\-Table}]{\setlength{\rightskip}{0pt plus 5cm}vector$<${\bf F\-D\-\_\-entry}$>$ fd\-\_\-\-Table}}\label{_r_a_m_file_lib_8cpp_ab392c325603acad969546cf906c807ad}
+
+
+Definition at line 6 of file R\-A\-M\-File\-Lib.\-cpp.
+
+\hypertarget{_r_a_m_file_lib_8cpp_a7e9d757c9982bd721d598bad366fbe62}{\index{R\-A\-M\-File\-Lib.\-cpp@{R\-A\-M\-File\-Lib.\-cpp}!proc@{proc}}
+\index{proc@{proc}!RAMFileLib.cpp@{R\-A\-M\-File\-Lib.\-cpp}}
+\subsubsection[{proc}]{\setlength{\rightskip}{0pt plus 5cm}int proc}}\label{_r_a_m_file_lib_8cpp_a7e9d757c9982bd721d598bad366fbe62}
+
+
+Definition at line 10 of file R\-A\-M\-File\-Lib.\-cpp.
+

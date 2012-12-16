@@ -1,0 +1,371 @@
+\hypertarget{structs_8h}{\section{structs.\-h File Reference}
+\label{structs_8h}\index{structs.\-h@{structs.\-h}}
+}
+\subsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{struct_r_a_m__path}{R\-A\-M\-\_\-path}
+\item 
+struct \hyperlink{struct_r_a_m__file}{R\-A\-M\-\_\-file}
+\item 
+struct \hyperlink{struct_r_a_m__access_file}{R\-A\-M\-\_\-access\-File}
+\item 
+struct \hyperlink{struct_f_d__entry}{F\-D\-\_\-entry}
+\end{DoxyCompactItemize}
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \hyperlink{structs_8h_ad08286e477b9d09647af8752b1edeee2}{K\-E\-R\-N\-E\-L\-R\-E\-A\-D\-Y}~1
+\item 
+\#define \hyperlink{structs_8h_a85c575d6bbd47bae4283cc742e3553da}{R\-A\-M\-\_\-\-C\-R\-E\-A\-T\-E}~\-\_\-\-I\-O\-W\-R(0, 6, struct \hyperlink{struct_r_a_m__path}{R\-A\-M\-\_\-path})
+\item 
+\#define \hyperlink{structs_8h_ac872d28f8e37b5d11dec4000d09c7623}{R\-A\-M\-\_\-\-M\-K\-D\-I\-R}~\-\_\-\-I\-O\-W\-R(1, 7, struct \hyperlink{struct_r_a_m__path}{R\-A\-M\-\_\-path})
+\item 
+\#define \hyperlink{structs_8h_a95bb95f519c088f161efd1a6043ea211}{R\-A\-M\-\_\-\-O\-P\-E\-N}~\-\_\-\-I\-O\-W\-R(1, 8, struct \hyperlink{struct_r_a_m__path}{R\-A\-M\-\_\-path})
+\item 
+\#define \hyperlink{structs_8h_a03c074a7558839cecf6a6d6be5790318}{R\-A\-M\-\_\-\-R\-E\-A\-D}~\-\_\-\-I\-O\-W\-R(1, 10, struct \hyperlink{struct_r_a_m__access_file}{R\-A\-M\-\_\-access\-File})
+\item 
+\#define \hyperlink{structs_8h_aefa6b25d5b020007a836e62c54da23a1}{R\-A\-M\-\_\-\-W\-R\-I\-T\-E}~\-\_\-\-I\-O\-W\-R(1, 11, struct \hyperlink{struct_r_a_m__access_file}{R\-A\-M\-\_\-access\-File})
+\item 
+\#define \hyperlink{structs_8h_a732331ba05ede60212e84261dc8e452b}{R\-A\-M\-\_\-\-L\-S\-E\-E\-K}~\-\_\-\-I\-O\-W\-R(1, 12, struct \hyperlink{struct_r_a_m__file}{R\-A\-M\-\_\-file})
+\item 
+\#define \hyperlink{structs_8h_afec1bc3b37214b0e088796f66545d8db}{R\-A\-M\-\_\-\-U\-N\-L\-I\-N\-K}~\-\_\-\-I\-O\-W\-R(1, 13, struct \hyperlink{struct_r_a_m__path}{R\-A\-M\-\_\-path})
+\item 
+\#define \hyperlink{structs_8h_af6349b6e95e85f6fb46ed0c5d031c8e1}{R\-A\-M\-\_\-\-R\-E\-A\-D\-D\-I\-R}~\-\_\-\-I\-O\-W\-R(1, 14, struct \hyperlink{struct_r_a_m__access_file}{R\-A\-M\-\_\-access\-File})
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \hyperlink{structs_8h_ae0e940f4f67d2004ef3ae64af8cba709}{kr\-\_\-creat} (struct \hyperlink{struct_r_a_m__path}{R\-A\-M\-\_\-path} $\ast$input)
+\item 
+void \hyperlink{structs_8h_a8507609aa3c490d47e20ddffd7bb32c0}{kr\-\_\-mkdir} (struct \hyperlink{struct_r_a_m__path}{R\-A\-M\-\_\-path} $\ast$input)
+\item 
+void \hyperlink{structs_8h_acb668f0e9e26eb597cf57b3d05fa28ee}{kr\-\_\-open} (struct \hyperlink{struct_r_a_m__file}{R\-A\-M\-\_\-file} $\ast$input)
+\item 
+void \hyperlink{structs_8h_a9980b2e7dd14dd395508823de99629ed}{kr\-\_\-read} (struct \hyperlink{struct_r_a_m__access_file}{R\-A\-M\-\_\-access\-File} $\ast$input)
+\item 
+void \hyperlink{structs_8h_a29d6e1dd3d324d3f7133e9b32e152e48}{kr\-\_\-write} (struct \hyperlink{struct_r_a_m__access_file}{R\-A\-M\-\_\-access\-File} $\ast$input)
+\item 
+void \hyperlink{structs_8h_a1451ce13a20c4fe783ba1dc235f312e3}{kr\-\_\-lseek} (struct \hyperlink{struct_r_a_m__file}{R\-A\-M\-\_\-file} $\ast$input)
+\item 
+void \hyperlink{structs_8h_a4bba9c3faeb862be31ac55d03a0bb00f}{kr\-\_\-unlink} (struct \hyperlink{struct_r_a_m__path}{R\-A\-M\-\_\-path} $\ast$input)
+\item 
+void \hyperlink{structs_8h_a63b5a53b38f18c369cf548213463614b}{kr\-\_\-readdir} (struct \hyperlink{struct_r_a_m__access_file}{R\-A\-M\-\_\-access\-File} $\ast$input)
+\item 
+int \hyperlink{structs_8h_a36015fe10c54ca54f1f4dd489d3cff80}{check\-If\-Index\-Node\-Already\-Exists} (int inode)
+\item 
+int \hyperlink{structs_8h_ad8e5c137c4b9dccc4cbb6f47997473ec}{fd\-From\-Index\-Node} (int index\-Node)
+\item 
+struct \hyperlink{struct_f_d__entry}{F\-D\-\_\-entry} $\ast$ \hyperlink{structs_8h_a02e14c0e25511eed0fe118e074b8c57c}{get\-Entry\-From\-Fd} (int fd)
+\item 
+int \hyperlink{structs_8h_a2e2606afa73b377add66dba6d672e6f7}{check\-If\-File\-Exists} (int fd)
+\item 
+int \hyperlink{structs_8h_af760a44d03ad9f85bfce33c087cd5a9c}{index\-Node\-Fromfd} (int fd)
+\item 
+int \hyperlink{structs_8h_ab0dc21541784903cda618f09ea3a1098}{delete\-File\-From\-F\-D\-Table} (int fd)
+\item 
+char $\ast$ \hyperlink{structs_8h_acd7641577f5df3e67204cb88e963a3a5}{get\-File\-Name\-From\-Path} (char $\ast$pathname)
+\item 
+char $\ast$ \hyperlink{structs_8h_aaa05b4b0468e7e5bf596cf8232dd13f8}{concat\-Dir\-To\-Path} (char $\ast$path)
+\end{DoxyCompactItemize}
+
+
+\subsection{Macro Definition Documentation}
+\hypertarget{structs_8h_ad08286e477b9d09647af8752b1edeee2}{\index{structs.\-h@{structs.\-h}!K\-E\-R\-N\-E\-L\-R\-E\-A\-D\-Y@{K\-E\-R\-N\-E\-L\-R\-E\-A\-D\-Y}}
+\index{K\-E\-R\-N\-E\-L\-R\-E\-A\-D\-Y@{K\-E\-R\-N\-E\-L\-R\-E\-A\-D\-Y}!structs.h@{structs.\-h}}
+\subsubsection[{K\-E\-R\-N\-E\-L\-R\-E\-A\-D\-Y}]{\setlength{\rightskip}{0pt plus 5cm}\#define K\-E\-R\-N\-E\-L\-R\-E\-A\-D\-Y~1}}\label{structs_8h_ad08286e477b9d09647af8752b1edeee2}
+
+
+Definition at line 1 of file structs.\-h.
+
+\hypertarget{structs_8h_a85c575d6bbd47bae4283cc742e3553da}{\index{structs.\-h@{structs.\-h}!R\-A\-M\-\_\-\-C\-R\-E\-A\-T\-E@{R\-A\-M\-\_\-\-C\-R\-E\-A\-T\-E}}
+\index{R\-A\-M\-\_\-\-C\-R\-E\-A\-T\-E@{R\-A\-M\-\_\-\-C\-R\-E\-A\-T\-E}!structs.h@{structs.\-h}}
+\subsubsection[{R\-A\-M\-\_\-\-C\-R\-E\-A\-T\-E}]{\setlength{\rightskip}{0pt plus 5cm}\#define R\-A\-M\-\_\-\-C\-R\-E\-A\-T\-E~\-\_\-\-I\-O\-W\-R(0, 6, struct {\bf R\-A\-M\-\_\-path})}}\label{structs_8h_a85c575d6bbd47bae4283cc742e3553da}
+
+
+Definition at line 6 of file structs.\-h.
+
+\hypertarget{structs_8h_a732331ba05ede60212e84261dc8e452b}{\index{structs.\-h@{structs.\-h}!R\-A\-M\-\_\-\-L\-S\-E\-E\-K@{R\-A\-M\-\_\-\-L\-S\-E\-E\-K}}
+\index{R\-A\-M\-\_\-\-L\-S\-E\-E\-K@{R\-A\-M\-\_\-\-L\-S\-E\-E\-K}!structs.h@{structs.\-h}}
+\subsubsection[{R\-A\-M\-\_\-\-L\-S\-E\-E\-K}]{\setlength{\rightskip}{0pt plus 5cm}\#define R\-A\-M\-\_\-\-L\-S\-E\-E\-K~\-\_\-\-I\-O\-W\-R(1, 12, struct {\bf R\-A\-M\-\_\-file})}}\label{structs_8h_a732331ba05ede60212e84261dc8e452b}
+
+
+Definition at line 11 of file structs.\-h.
+
+\hypertarget{structs_8h_ac872d28f8e37b5d11dec4000d09c7623}{\index{structs.\-h@{structs.\-h}!R\-A\-M\-\_\-\-M\-K\-D\-I\-R@{R\-A\-M\-\_\-\-M\-K\-D\-I\-R}}
+\index{R\-A\-M\-\_\-\-M\-K\-D\-I\-R@{R\-A\-M\-\_\-\-M\-K\-D\-I\-R}!structs.h@{structs.\-h}}
+\subsubsection[{R\-A\-M\-\_\-\-M\-K\-D\-I\-R}]{\setlength{\rightskip}{0pt plus 5cm}\#define R\-A\-M\-\_\-\-M\-K\-D\-I\-R~\-\_\-\-I\-O\-W\-R(1, 7, struct {\bf R\-A\-M\-\_\-path})}}\label{structs_8h_ac872d28f8e37b5d11dec4000d09c7623}
+
+
+Definition at line 7 of file structs.\-h.
+
+\hypertarget{structs_8h_a95bb95f519c088f161efd1a6043ea211}{\index{structs.\-h@{structs.\-h}!R\-A\-M\-\_\-\-O\-P\-E\-N@{R\-A\-M\-\_\-\-O\-P\-E\-N}}
+\index{R\-A\-M\-\_\-\-O\-P\-E\-N@{R\-A\-M\-\_\-\-O\-P\-E\-N}!structs.h@{structs.\-h}}
+\subsubsection[{R\-A\-M\-\_\-\-O\-P\-E\-N}]{\setlength{\rightskip}{0pt plus 5cm}\#define R\-A\-M\-\_\-\-O\-P\-E\-N~\-\_\-\-I\-O\-W\-R(1, 8, struct {\bf R\-A\-M\-\_\-path})}}\label{structs_8h_a95bb95f519c088f161efd1a6043ea211}
+
+
+Definition at line 8 of file structs.\-h.
+
+\hypertarget{structs_8h_a03c074a7558839cecf6a6d6be5790318}{\index{structs.\-h@{structs.\-h}!R\-A\-M\-\_\-\-R\-E\-A\-D@{R\-A\-M\-\_\-\-R\-E\-A\-D}}
+\index{R\-A\-M\-\_\-\-R\-E\-A\-D@{R\-A\-M\-\_\-\-R\-E\-A\-D}!structs.h@{structs.\-h}}
+\subsubsection[{R\-A\-M\-\_\-\-R\-E\-A\-D}]{\setlength{\rightskip}{0pt plus 5cm}\#define R\-A\-M\-\_\-\-R\-E\-A\-D~\-\_\-\-I\-O\-W\-R(1, 10, struct {\bf R\-A\-M\-\_\-access\-File})}}\label{structs_8h_a03c074a7558839cecf6a6d6be5790318}
+
+
+Definition at line 9 of file structs.\-h.
+
+\hypertarget{structs_8h_af6349b6e95e85f6fb46ed0c5d031c8e1}{\index{structs.\-h@{structs.\-h}!R\-A\-M\-\_\-\-R\-E\-A\-D\-D\-I\-R@{R\-A\-M\-\_\-\-R\-E\-A\-D\-D\-I\-R}}
+\index{R\-A\-M\-\_\-\-R\-E\-A\-D\-D\-I\-R@{R\-A\-M\-\_\-\-R\-E\-A\-D\-D\-I\-R}!structs.h@{structs.\-h}}
+\subsubsection[{R\-A\-M\-\_\-\-R\-E\-A\-D\-D\-I\-R}]{\setlength{\rightskip}{0pt plus 5cm}\#define R\-A\-M\-\_\-\-R\-E\-A\-D\-D\-I\-R~\-\_\-\-I\-O\-W\-R(1, 14, struct {\bf R\-A\-M\-\_\-access\-File})}}\label{structs_8h_af6349b6e95e85f6fb46ed0c5d031c8e1}
+
+
+Definition at line 13 of file structs.\-h.
+
+\hypertarget{structs_8h_afec1bc3b37214b0e088796f66545d8db}{\index{structs.\-h@{structs.\-h}!R\-A\-M\-\_\-\-U\-N\-L\-I\-N\-K@{R\-A\-M\-\_\-\-U\-N\-L\-I\-N\-K}}
+\index{R\-A\-M\-\_\-\-U\-N\-L\-I\-N\-K@{R\-A\-M\-\_\-\-U\-N\-L\-I\-N\-K}!structs.h@{structs.\-h}}
+\subsubsection[{R\-A\-M\-\_\-\-U\-N\-L\-I\-N\-K}]{\setlength{\rightskip}{0pt plus 5cm}\#define R\-A\-M\-\_\-\-U\-N\-L\-I\-N\-K~\-\_\-\-I\-O\-W\-R(1, 13, struct {\bf R\-A\-M\-\_\-path})}}\label{structs_8h_afec1bc3b37214b0e088796f66545d8db}
+
+
+Definition at line 12 of file structs.\-h.
+
+\hypertarget{structs_8h_aefa6b25d5b020007a836e62c54da23a1}{\index{structs.\-h@{structs.\-h}!R\-A\-M\-\_\-\-W\-R\-I\-T\-E@{R\-A\-M\-\_\-\-W\-R\-I\-T\-E}}
+\index{R\-A\-M\-\_\-\-W\-R\-I\-T\-E@{R\-A\-M\-\_\-\-W\-R\-I\-T\-E}!structs.h@{structs.\-h}}
+\subsubsection[{R\-A\-M\-\_\-\-W\-R\-I\-T\-E}]{\setlength{\rightskip}{0pt plus 5cm}\#define R\-A\-M\-\_\-\-W\-R\-I\-T\-E~\-\_\-\-I\-O\-W\-R(1, 11, struct {\bf R\-A\-M\-\_\-access\-File})}}\label{structs_8h_aefa6b25d5b020007a836e62c54da23a1}
+
+
+Definition at line 10 of file structs.\-h.
+
+
+
+\subsection{Function Documentation}
+\hypertarget{structs_8h_a2e2606afa73b377add66dba6d672e6f7}{\index{structs.\-h@{structs.\-h}!check\-If\-File\-Exists@{check\-If\-File\-Exists}}
+\index{check\-If\-File\-Exists@{check\-If\-File\-Exists}!structs.h@{structs.\-h}}
+\subsubsection[{check\-If\-File\-Exists}]{\setlength{\rightskip}{0pt plus 5cm}int check\-If\-File\-Exists (
+\begin{DoxyParamCaption}
+\item[{int}]{fd}
+\end{DoxyParamCaption}
+)}}\label{structs_8h_a2e2606afa73b377add66dba6d672e6f7}
+
+
+Definition at line 273 of file R\-A\-M\-File\-Lib.\-cpp.
+
+\hypertarget{structs_8h_a36015fe10c54ca54f1f4dd489d3cff80}{\index{structs.\-h@{structs.\-h}!check\-If\-Index\-Node\-Already\-Exists@{check\-If\-Index\-Node\-Already\-Exists}}
+\index{check\-If\-Index\-Node\-Already\-Exists@{check\-If\-Index\-Node\-Already\-Exists}!structs.h@{structs.\-h}}
+\subsubsection[{check\-If\-Index\-Node\-Already\-Exists}]{\setlength{\rightskip}{0pt plus 5cm}int check\-If\-Index\-Node\-Already\-Exists (
+\begin{DoxyParamCaption}
+\item[{int}]{inode}
+\end{DoxyParamCaption}
+)}}\label{structs_8h_a36015fe10c54ca54f1f4dd489d3cff80}
+
+
+Definition at line 284 of file R\-A\-M\-File\-Lib.\-cpp.
+
+\hypertarget{structs_8h_aaa05b4b0468e7e5bf596cf8232dd13f8}{\index{structs.\-h@{structs.\-h}!concat\-Dir\-To\-Path@{concat\-Dir\-To\-Path}}
+\index{concat\-Dir\-To\-Path@{concat\-Dir\-To\-Path}!structs.h@{structs.\-h}}
+\subsubsection[{concat\-Dir\-To\-Path}]{\setlength{\rightskip}{0pt plus 5cm}char$\ast$ concat\-Dir\-To\-Path (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{path}
+\end{DoxyParamCaption}
+)}}\label{structs_8h_aaa05b4b0468e7e5bf596cf8232dd13f8}
+
+
+Definition at line 369 of file R\-A\-M\-File\-Lib.\-cpp.
+
+\hypertarget{structs_8h_ab0dc21541784903cda618f09ea3a1098}{\index{structs.\-h@{structs.\-h}!delete\-File\-From\-F\-D\-Table@{delete\-File\-From\-F\-D\-Table}}
+\index{delete\-File\-From\-F\-D\-Table@{delete\-File\-From\-F\-D\-Table}!structs.h@{structs.\-h}}
+\subsubsection[{delete\-File\-From\-F\-D\-Table}]{\setlength{\rightskip}{0pt plus 5cm}int delete\-File\-From\-F\-D\-Table (
+\begin{DoxyParamCaption}
+\item[{int}]{fd}
+\end{DoxyParamCaption}
+)}}\label{structs_8h_ab0dc21541784903cda618f09ea3a1098}
+
+
+Definition at line 333 of file R\-A\-M\-File\-Lib.\-cpp.
+
+\hypertarget{structs_8h_ad8e5c137c4b9dccc4cbb6f47997473ec}{\index{structs.\-h@{structs.\-h}!fd\-From\-Index\-Node@{fd\-From\-Index\-Node}}
+\index{fd\-From\-Index\-Node@{fd\-From\-Index\-Node}!structs.h@{structs.\-h}}
+\subsubsection[{fd\-From\-Index\-Node}]{\setlength{\rightskip}{0pt plus 5cm}int fd\-From\-Index\-Node (
+\begin{DoxyParamCaption}
+\item[{int}]{index\-Node}
+\end{DoxyParamCaption}
+)}}\label{structs_8h_ad8e5c137c4b9dccc4cbb6f47997473ec}
+
+
+Definition at line 296 of file R\-A\-M\-File\-Lib.\-cpp.
+
+\hypertarget{structs_8h_a02e14c0e25511eed0fe118e074b8c57c}{\index{structs.\-h@{structs.\-h}!get\-Entry\-From\-Fd@{get\-Entry\-From\-Fd}}
+\index{get\-Entry\-From\-Fd@{get\-Entry\-From\-Fd}!structs.h@{structs.\-h}}
+\subsubsection[{get\-Entry\-From\-Fd}]{\setlength{\rightskip}{0pt plus 5cm}struct {\bf F\-D\-\_\-entry}$\ast$ get\-Entry\-From\-Fd (
+\begin{DoxyParamCaption}
+\item[{int}]{fd}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [read]}}}\label{structs_8h_a02e14c0e25511eed0fe118e074b8c57c}
+
+
+Definition at line 318 of file R\-A\-M\-File\-Lib.\-cpp.
+
+\hypertarget{structs_8h_acd7641577f5df3e67204cb88e963a3a5}{\index{structs.\-h@{structs.\-h}!get\-File\-Name\-From\-Path@{get\-File\-Name\-From\-Path}}
+\index{get\-File\-Name\-From\-Path@{get\-File\-Name\-From\-Path}!structs.h@{structs.\-h}}
+\subsubsection[{get\-File\-Name\-From\-Path}]{\setlength{\rightskip}{0pt plus 5cm}char$\ast$ get\-File\-Name\-From\-Path (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{pathname}
+\end{DoxyParamCaption}
+)}}\label{structs_8h_acd7641577f5df3e67204cb88e963a3a5}
+
+
+Definition at line 693 of file ramdisk\-\_\-ioctl.\-c.
+
+\hypertarget{structs_8h_af760a44d03ad9f85bfce33c087cd5a9c}{\index{structs.\-h@{structs.\-h}!index\-Node\-Fromfd@{index\-Node\-Fromfd}}
+\index{index\-Node\-Fromfd@{index\-Node\-Fromfd}!structs.h@{structs.\-h}}
+\subsubsection[{index\-Node\-Fromfd}]{\setlength{\rightskip}{0pt plus 5cm}int index\-Node\-Fromfd (
+\begin{DoxyParamCaption}
+\item[{int}]{fd}
+\end{DoxyParamCaption}
+)}}\label{structs_8h_af760a44d03ad9f85bfce33c087cd5a9c}
+
+
+Definition at line 307 of file R\-A\-M\-File\-Lib.\-cpp.
+
+\hypertarget{structs_8h_ae0e940f4f67d2004ef3ae64af8cba709}{\index{structs.\-h@{structs.\-h}!kr\-\_\-creat@{kr\-\_\-creat}}
+\index{kr\-\_\-creat@{kr\-\_\-creat}!structs.h@{structs.\-h}}
+\subsubsection[{kr\-\_\-creat}]{\setlength{\rightskip}{0pt plus 5cm}void kr\-\_\-creat (
+\begin{DoxyParamCaption}
+\item[{struct {\bf R\-A\-M\-\_\-path} $\ast$}]{input}
+\end{DoxyParamCaption}
+)}}\label{structs_8h_ae0e940f4f67d2004ef3ae64af8cba709}
+Kernel pair for the create function
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em input} & The \hyperlink{struct_r_a_m__path}{R\-A\-M\-\_\-path} struct for creating the file \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 1907 of file ramdisk\-\_\-ioctl.\-c.
+
+\hypertarget{structs_8h_a1451ce13a20c4fe783ba1dc235f312e3}{\index{structs.\-h@{structs.\-h}!kr\-\_\-lseek@{kr\-\_\-lseek}}
+\index{kr\-\_\-lseek@{kr\-\_\-lseek}!structs.h@{structs.\-h}}
+\subsubsection[{kr\-\_\-lseek}]{\setlength{\rightskip}{0pt plus 5cm}void kr\-\_\-lseek (
+\begin{DoxyParamCaption}
+\item[{struct {\bf R\-A\-M\-\_\-file} $\ast$}]{input}
+\end{DoxyParamCaption}
+)}}\label{structs_8h_a1451ce13a20c4fe783ba1dc235f312e3}
+Kernel pair for the seeking function
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em input} & input, use offset in here to index into file \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 1964 of file ramdisk\-\_\-ioctl.\-c.
+
+\hypertarget{structs_8h_a8507609aa3c490d47e20ddffd7bb32c0}{\index{structs.\-h@{structs.\-h}!kr\-\_\-mkdir@{kr\-\_\-mkdir}}
+\index{kr\-\_\-mkdir@{kr\-\_\-mkdir}!structs.h@{structs.\-h}}
+\subsubsection[{kr\-\_\-mkdir}]{\setlength{\rightskip}{0pt plus 5cm}void kr\-\_\-mkdir (
+\begin{DoxyParamCaption}
+\item[{struct {\bf R\-A\-M\-\_\-path} $\ast$}]{input}
+\end{DoxyParamCaption}
+)}}\label{structs_8h_a8507609aa3c490d47e20ddffd7bb32c0}
+Kernel pair for making a new directory
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em input} & The \hyperlink{struct_r_a_m__path}{R\-A\-M\-\_\-path} struct for creating the file \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 1919 of file ramdisk\-\_\-ioctl.\-c.
+
+\hypertarget{structs_8h_acb668f0e9e26eb597cf57b3d05fa28ee}{\index{structs.\-h@{structs.\-h}!kr\-\_\-open@{kr\-\_\-open}}
+\index{kr\-\_\-open@{kr\-\_\-open}!structs.h@{structs.\-h}}
+\subsubsection[{kr\-\_\-open}]{\setlength{\rightskip}{0pt plus 5cm}void kr\-\_\-open (
+\begin{DoxyParamCaption}
+\item[{struct {\bf R\-A\-M\-\_\-file} $\ast$}]{input}
+\end{DoxyParamCaption}
+)}}\label{structs_8h_acb668f0e9e26eb597cf57b3d05fa28ee}
+Kernel pair for opening a file
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em input} & The \hyperlink{struct_r_a_m__path}{R\-A\-M\-\_\-path} struct for opening the file \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 1931 of file ramdisk\-\_\-ioctl.\-c.
+
+\hypertarget{structs_8h_a9980b2e7dd14dd395508823de99629ed}{\index{structs.\-h@{structs.\-h}!kr\-\_\-read@{kr\-\_\-read}}
+\index{kr\-\_\-read@{kr\-\_\-read}!structs.h@{structs.\-h}}
+\subsubsection[{kr\-\_\-read}]{\setlength{\rightskip}{0pt plus 5cm}void kr\-\_\-read (
+\begin{DoxyParamCaption}
+\item[{struct {\bf R\-A\-M\-\_\-access\-File} $\ast$}]{input}
+\end{DoxyParamCaption}
+)}}\label{structs_8h_a9980b2e7dd14dd395508823de99629ed}
+Kernel pair for reading a file
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em input} & The accessfile struct. Output read is placed into this struct \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 1943 of file ramdisk\-\_\-ioctl.\-c.
+
+\hypertarget{structs_8h_a63b5a53b38f18c369cf548213463614b}{\index{structs.\-h@{structs.\-h}!kr\-\_\-readdir@{kr\-\_\-readdir}}
+\index{kr\-\_\-readdir@{kr\-\_\-readdir}!structs.h@{structs.\-h}}
+\subsubsection[{kr\-\_\-readdir}]{\setlength{\rightskip}{0pt plus 5cm}void kr\-\_\-readdir (
+\begin{DoxyParamCaption}
+\item[{struct {\bf R\-A\-M\-\_\-access\-File} $\ast$}]{input}
+\end{DoxyParamCaption}
+)}}\label{structs_8h_a63b5a53b38f18c369cf548213463614b}
+Kernel pair for the readdir function
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em input} & Accessfile struct. Used to read the relevant directory \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 1974 of file ramdisk\-\_\-ioctl.\-c.
+
+\hypertarget{structs_8h_a4bba9c3faeb862be31ac55d03a0bb00f}{\index{structs.\-h@{structs.\-h}!kr\-\_\-unlink@{kr\-\_\-unlink}}
+\index{kr\-\_\-unlink@{kr\-\_\-unlink}!structs.h@{structs.\-h}}
+\subsubsection[{kr\-\_\-unlink}]{\setlength{\rightskip}{0pt plus 5cm}void kr\-\_\-unlink (
+\begin{DoxyParamCaption}
+\item[{struct {\bf R\-A\-M\-\_\-path} $\ast$}]{input}
+\end{DoxyParamCaption}
+)}}\label{structs_8h_a4bba9c3faeb862be31ac55d03a0bb00f}
+Kernel pair for unlinking a file from the filesystem
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em input} & Path struct. Will delete file at the desired \hyperlink{struct_r_a_m__path}{R\-A\-M\-\_\-path} \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 1967 of file ramdisk\-\_\-ioctl.\-c.
+
+\hypertarget{structs_8h_a29d6e1dd3d324d3f7133e9b32e152e48}{\index{structs.\-h@{structs.\-h}!kr\-\_\-write@{kr\-\_\-write}}
+\index{kr\-\_\-write@{kr\-\_\-write}!structs.h@{structs.\-h}}
+\subsubsection[{kr\-\_\-write}]{\setlength{\rightskip}{0pt plus 5cm}void kr\-\_\-write (
+\begin{DoxyParamCaption}
+\item[{struct {\bf R\-A\-M\-\_\-access\-File} $\ast$}]{input}
+\end{DoxyParamCaption}
+)}}\label{structs_8h_a29d6e1dd3d324d3f7133e9b32e152e48}
+Kernel pair for the write function
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em input} & The accessfile struct. Input for writing is in this struct \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 1955 of file ramdisk\-\_\-ioctl.\-c.
+

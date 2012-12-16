@@ -1,0 +1,111 @@
+\hypertarget{ioctl__module_8c}{\section{example\-I\-O\-C\-T\-L/ioctl\-\_\-module.c File Reference}
+\label{ioctl__module_8c}\index{example\-I\-O\-C\-T\-L/ioctl\-\_\-module.\-c@{example\-I\-O\-C\-T\-L/ioctl\-\_\-module.\-c}}
+}
+{\ttfamily \#include $<$linux/module.\-h$>$}\\*
+{\ttfamily \#include $<$linux/errno.\-h$>$}\\*
+{\ttfamily \#include $<$linux/proc\-\_\-fs.\-h$>$}\\*
+{\ttfamily \#include $<$asm/uaccess.\-h$>$}\\*
+{\ttfamily \#include $<$linux/tty.\-h$>$}\\*
+{\ttfamily \#include $<$linux/sched.\-h$>$}\\*
+{\ttfamily \#include $<$linux/interrupt.\-h$>$}\\*
+\subsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{structioctl__test__t}{ioctl\-\_\-test\-\_\-t}
+\item 
+struct \hyperlink{structkeyboard__struct}{keyboard\-\_\-struct}
+\end{DoxyCompactItemize}
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \hyperlink{ioctl__module_8c_a37364d2334ea38bd379cbce9fa2333ff}{I\-O\-C\-T\-L\-\_\-\-T\-E\-S\-T}~\-\_\-\-I\-O\-W(0, 6, struct \hyperlink{structioctl__test__t}{ioctl\-\_\-test\-\_\-t})
+\item 
+\#define \hyperlink{ioctl__module_8c_a870e17d2a367b321990369cc08ff3bff}{K\-E\-Y\-B\-O\-A\-R\-D}~\-\_\-\-I\-O\-R(1, 7, struct \hyperlink{structkeyboard__struct}{keyboard\-\_\-struct})
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{ioctl__module_8c_ad94b36675e7eb067ea3ce6ff9e244a44}{M\-O\-D\-U\-L\-E\-\_\-\-L\-I\-C\-E\-N\-S\-E} (\char`\"{}G\-P\-L\char`\"{})
+\item 
+void \hyperlink{ioctl__module_8c_af20c30d3022ed03165bf6ede8ea48d77}{my\-\_\-printk} (char $\ast$string)
+\item 
+char \hyperlink{ioctl__module_8c_a60686c33c051f5966245d43611f27678}{my\-\_\-getchar} (void)
+\item 
+\hyperlink{ioctl__module_8c_a424f990a513b1875436547f7ef17c622}{module\-\_\-init} (initialization\-\_\-routine)
+\item 
+\hyperlink{ioctl__module_8c_a39d4cb9a64be1783fd1da532f904f5d4}{module\-\_\-exit} (cleanup\-\_\-routine)
+\end{DoxyCompactItemize}
+\subsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{structkeyboard__struct}{keyboard\-\_\-struct} \hyperlink{ioctl__module_8c_a7ae5a8046c43d71c9894a2b41d73fc24}{key}
+\end{DoxyCompactItemize}
+
+
+\subsection{Macro Definition Documentation}
+\hypertarget{ioctl__module_8c_a37364d2334ea38bd379cbce9fa2333ff}{\index{ioctl\-\_\-module.\-c@{ioctl\-\_\-module.\-c}!I\-O\-C\-T\-L\-\_\-\-T\-E\-S\-T@{I\-O\-C\-T\-L\-\_\-\-T\-E\-S\-T}}
+\index{I\-O\-C\-T\-L\-\_\-\-T\-E\-S\-T@{I\-O\-C\-T\-L\-\_\-\-T\-E\-S\-T}!ioctl_module.c@{ioctl\-\_\-module.\-c}}
+\subsubsection[{I\-O\-C\-T\-L\-\_\-\-T\-E\-S\-T}]{\setlength{\rightskip}{0pt plus 5cm}\#define I\-O\-C\-T\-L\-\_\-\-T\-E\-S\-T~\-\_\-\-I\-O\-W(0, 6, struct {\bf ioctl\-\_\-test\-\_\-t})}}\label{ioctl__module_8c_a37364d2334ea38bd379cbce9fa2333ff}
+
+
+Definition at line 26 of file ioctl\-\_\-module.\-c.
+
+\hypertarget{ioctl__module_8c_a870e17d2a367b321990369cc08ff3bff}{\index{ioctl\-\_\-module.\-c@{ioctl\-\_\-module.\-c}!K\-E\-Y\-B\-O\-A\-R\-D@{K\-E\-Y\-B\-O\-A\-R\-D}}
+\index{K\-E\-Y\-B\-O\-A\-R\-D@{K\-E\-Y\-B\-O\-A\-R\-D}!ioctl_module.c@{ioctl\-\_\-module.\-c}}
+\subsubsection[{K\-E\-Y\-B\-O\-A\-R\-D}]{\setlength{\rightskip}{0pt plus 5cm}\#define K\-E\-Y\-B\-O\-A\-R\-D~\-\_\-\-I\-O\-R(1, 7, struct {\bf keyboard\-\_\-struct})}}\label{ioctl__module_8c_a870e17d2a367b321990369cc08ff3bff}
+
+
+Definition at line 28 of file ioctl\-\_\-module.\-c.
+
+
+
+\subsection{Function Documentation}
+\hypertarget{ioctl__module_8c_a39d4cb9a64be1783fd1da532f904f5d4}{\index{ioctl\-\_\-module.\-c@{ioctl\-\_\-module.\-c}!module\-\_\-exit@{module\-\_\-exit}}
+\index{module\-\_\-exit@{module\-\_\-exit}!ioctl_module.c@{ioctl\-\_\-module.\-c}}
+\subsubsection[{module\-\_\-exit}]{\setlength{\rightskip}{0pt plus 5cm}module\-\_\-exit (
+\begin{DoxyParamCaption}
+\item[{cleanup\-\_\-routine}]{}
+\end{DoxyParamCaption}
+)}}\label{ioctl__module_8c_a39d4cb9a64be1783fd1da532f904f5d4}
+\hypertarget{ioctl__module_8c_a424f990a513b1875436547f7ef17c622}{\index{ioctl\-\_\-module.\-c@{ioctl\-\_\-module.\-c}!module\-\_\-init@{module\-\_\-init}}
+\index{module\-\_\-init@{module\-\_\-init}!ioctl_module.c@{ioctl\-\_\-module.\-c}}
+\subsubsection[{module\-\_\-init}]{\setlength{\rightskip}{0pt plus 5cm}module\-\_\-init (
+\begin{DoxyParamCaption}
+\item[{initialization\-\_\-routine}]{}
+\end{DoxyParamCaption}
+)}}\label{ioctl__module_8c_a424f990a513b1875436547f7ef17c622}
+\hypertarget{ioctl__module_8c_ad94b36675e7eb067ea3ce6ff9e244a44}{\index{ioctl\-\_\-module.\-c@{ioctl\-\_\-module.\-c}!M\-O\-D\-U\-L\-E\-\_\-\-L\-I\-C\-E\-N\-S\-E@{M\-O\-D\-U\-L\-E\-\_\-\-L\-I\-C\-E\-N\-S\-E}}
+\index{M\-O\-D\-U\-L\-E\-\_\-\-L\-I\-C\-E\-N\-S\-E@{M\-O\-D\-U\-L\-E\-\_\-\-L\-I\-C\-E\-N\-S\-E}!ioctl_module.c@{ioctl\-\_\-module.\-c}}
+\subsubsection[{M\-O\-D\-U\-L\-E\-\_\-\-L\-I\-C\-E\-N\-S\-E}]{\setlength{\rightskip}{0pt plus 5cm}M\-O\-D\-U\-L\-E\-\_\-\-L\-I\-C\-E\-N\-S\-E (
+\begin{DoxyParamCaption}
+\item[{\char`\"{}G\-P\-L\char`\"{}}]{}
+\end{DoxyParamCaption}
+)}}\label{ioctl__module_8c_ad94b36675e7eb067ea3ce6ff9e244a44}
+\hypertarget{ioctl__module_8c_a60686c33c051f5966245d43611f27678}{\index{ioctl\-\_\-module.\-c@{ioctl\-\_\-module.\-c}!my\-\_\-getchar@{my\-\_\-getchar}}
+\index{my\-\_\-getchar@{my\-\_\-getchar}!ioctl_module.c@{ioctl\-\_\-module.\-c}}
+\subsubsection[{my\-\_\-getchar}]{\setlength{\rightskip}{0pt plus 5cm}char my\-\_\-getchar (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}}\label{ioctl__module_8c_a60686c33c051f5966245d43611f27678}
+
+
+Definition at line 98 of file ioctl\-\_\-module.\-c.
+
+\hypertarget{ioctl__module_8c_af20c30d3022ed03165bf6ede8ea48d77}{\index{ioctl\-\_\-module.\-c@{ioctl\-\_\-module.\-c}!my\-\_\-printk@{my\-\_\-printk}}
+\index{my\-\_\-printk@{my\-\_\-printk}!ioctl_module.c@{ioctl\-\_\-module.\-c}}
+\subsubsection[{my\-\_\-printk}]{\setlength{\rightskip}{0pt plus 5cm}void my\-\_\-printk (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{string}
+\end{DoxyParamCaption}
+)}}\label{ioctl__module_8c_af20c30d3022ed03165bf6ede8ea48d77}
+
+
+Definition at line 85 of file ioctl\-\_\-module.\-c.
+
+
+
+\subsection{Variable Documentation}
+\hypertarget{ioctl__module_8c_a7ae5a8046c43d71c9894a2b41d73fc24}{\index{ioctl\-\_\-module.\-c@{ioctl\-\_\-module.\-c}!key@{key}}
+\index{key@{key}!ioctl_module.c@{ioctl\-\_\-module.\-c}}
+\subsubsection[{key}]{\setlength{\rightskip}{0pt plus 5cm}struct {\bf keyboard\-\_\-struct}  key}}\label{ioctl__module_8c_a7ae5a8046c43d71c9894a2b41d73fc24}
