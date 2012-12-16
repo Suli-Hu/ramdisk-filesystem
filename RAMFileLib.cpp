@@ -24,7 +24,7 @@ void printfdTable ()
     printf("---------FD Table---------\n");
     for (it = fd_Table.begin() ; it != fd_Table.end() ; it++)
     {
-        printf("fd: %d  indexNode: %d  offset: %d  fileSize: %d\n", it->fd, it->indexNode, it->offset, it->fileSize);
+        printf("fd: %d  indexNode: %d  offset: %d  fileSize: %d path: %s\n", it->fd, it->indexNode, it->offset, it->fileSize, it->pathname);
     }
     printf("---------End of FD Table---------\n");
 }
@@ -76,6 +76,7 @@ int rd_open(char *pathname)
 		entry.offset = 0;	// Default file pointer to the start of file
 		entry.fd = currentFdNum++;	// Set file descriptor
 		entry.fileSize = file.fileSize;
+		entry.pathname = pathname;
 		entry.dirIndex = 0;	// Initially the file pointer is 0 (first file in dir)
 		fd_Table.push_back(entry);
 
@@ -149,13 +150,13 @@ int rd_write(int file_fd, char *address, int num_bytes)
     file.indexNode = indexNodeFromfd(file_fd);
     file.offset = entry->offset;
 
-
 #if 1
     ioctl (fd, RAM_WRITE, &file);
 #endif
 
     // Update the offset after reading the file
-    entry->offset = file.offset;
+    entry->offset = file.offset + file.ret;
+    entry->fileSize = file.fileSize;
 
     return file.ret;
 }
@@ -174,10 +175,15 @@ int rd_lseek(int file_fd, int offset)
     // move the pointer to end of file
     struct FD_entry *entry;
     entry = getEntryFromFd(file_fd);
+    entry->offset = offset;
+
     if (offset > entry->fileSize)
     {
         entry->offset = entry->fileSize;
     }
+
+    if (offset<0)
+	offset = 0;
 
     if (entry->offset < 0)
         return -1;
@@ -370,50 +376,66 @@ int main ()
     memset (data2, '2', sizeof (data2));
     memset (data3, '3', sizeof (data3));
 
-    /* ****TEST 1: MAXIMUM file creation**** */
+   /* ****TEST 2: LARGEST file size**** */
 
-    /* Assumes the pre-existence of a root directory file "/"
-       that is neither created nor deleted in this test sequence */
+  
+  /* Generate one LARGEST file */
+  retval = rd_creat ("/bigfile");
 
-    /* Generate MAXIMUM regular files */
-    for (i = 0; i < MAX_FILES + 1; i++)   // go beyond the limit
-    {
-        sprintf (pathname, "/file%d", i);
+  if (retval < 0) {
+    fprintf (stderr, "rd_creat: File creation error! status: %d\n", 
+	     retval);
 
-        retval = rd_creat (pathname);
+    exit (1);
+  }
 
-        if (retval < 0)
-        {
-            fprintf (stderr, "rd_create: File creation error! status: %d\n",
-                     retval);
+  retval =  rd_open ("/bigfile"); /* Open file to write to it */
+  
+  if (retval < 0) {
+    fprintf (stderr, "rd_open: File open error! status: %d\n", 
+	     retval);
 
-            if (i != MAX_FILES)
-                exit (1);
-        }
+    exit (1);
+  }
 
-        memset (pathname, 0, 80);
-    }
+  fd = retval;			/* Assign valid fd */
 
-    printf("Made it here\n");
-    rd_open("/\0");
-    /* Delete all the files created */
-    for (i = 0; i < MAX_FILES; i++)
-    {
-        sprintf (pathname, "/file%d", i);
+  /* Try writing to all direct data blocks */
+  retval = rd_write (fd, data1, sizeof(data1));
+  
+  if (retval < 0) {
+    fprintf (stderr, "rd_write: File write STAGE1 error! status: %d\n", 
+	     retval);
 
-        retval = rd_unlink (pathname);
-        printf("Unlink %d\n", i);
+    exit (1);
+  }
 
-        if (retval < 0)
-        {
-            fprintf (stderr, "rd_unlink: File deletion error! status: %d\n",
-                     retval);
+	printfdTable();
+retval = rd_write (fd, data2, sizeof(data2));
+  
+  if (retval < 0) {
+    fprintf (stderr, "rd_write: File write STAGE2 error! status: %d\n", 
+	     retval);
 
-            exit (1);
-        }
+    exit (1);
+  }
 
-        memset (pathname, 0, 80);
-    }
+printfdTable();
 
+  /* Try writing to all double-indirect data blocks */
+  retval = rd_write (fd, data3, sizeof(data3));
+  
+  if (retval < 0) {
+    fprintf (stderr, "rd_write: File write STAGE3 error! status: %d\n", 
+	     retval);
+
+    exit (1);
+  }
+
+	printfdTable();
+
+	rd_lseek(fd, 1000);
+
+	printfdTable();
     printf("We made it to the end!\n");
 }
