@@ -51,6 +51,11 @@ int rd_creat(char *pathname)
 int rd_mkdir(char *pathname)
 {
     struct RAM_path rampath;
+
+    // Concat / to end of pathname
+    pathname = concatDirToPath(pathname);
+    printf("new path name: %s\n",pathname);
+
     rampath.name = pathname;
     char *filename;
     filename = getFileNameFromPath(pathname);
@@ -167,7 +172,6 @@ int rd_write(int file_fd, char *address, int num_bytes)
 
 #if 1
     ioctl (fd, RAM_WRITE, &file);
-    perror("Why\n");
 #endif
 
     // Update the offset after reading the file
@@ -350,7 +354,7 @@ char *getFileNameFromPath(char *pathname)
 char* concatDirToPath(char *path) {
     int length;
     length = strlen(path);
-    char *newpath = (char *) malloc(sizeof(char)*(length+1));
+    char *newpath = (char*)malloc(sizeof(char)*(length+1));
     strcpy(newpath, path);
     newpath[length] = '/';
     newpath[length+1] = '\0';
@@ -374,8 +378,66 @@ int main ()
 {
 
     fd = open ("/proc/ramdisk", O_RDONLY);
+    currentFdNum = 0;
+    //  printf("Hello world\n");
+
+    FD_entry entry;
+    entry.indexNode = 1;
+    entry.offset = 0;   // Default file pointer to the start of file
+    entry.fileSize = 10; // -1 indicates the file does not have size yet
+    entry.fd = 1;   // Set file descriptor
+    //  fd_Table.push_back(entry);
+
+    int inode, ret;
+    // ret = rd_creat("/mytxt.txt");
+    // printf("New Index Node: %d\n", inode);
+
+    // printfdTable();
+
+    // inode =rd_open("/mytxt.txt");
+
+    // printfdTable();
+
+    // printf("fd: %d\n", inode);
+    // ret =rd_write(inode, "hello world\n", 10);
+    // printf("Write ret: %d\n", ret);
+    char output[12];
+
+    // printfdTable();
+    // ret = rd_read(inode, output, 10);
+    // printf("Read data: %s inode: %d\n", output, inode);
+
+    // rd_creat("/mytxt.txt\0");
+    // inode = rd_open("/mytxt.txt\0");
+    // int dir = rd_open("/\0");
+    // rd_mkdir("/folder/\0");
+    // printfdTable();
+    // rd_write(inode, "hello world\n", 12);
+    // rd_read(inode, output, 12);
+    // printf("The file has - %s\n", output);
+    // rd_readdir(dir, output);
+    // printf("The file in the dir - %s\n", output);
+    // rd_readdir(dir, output);
+    // printf("The file in the dir - %s\n", output);
+    // rd_readdir(dir, output);
+    // printf("The file in the dir - %s\n", output);
+    // rd_unlink("/mytxt.txt\0");
+
+    int retval, i;
+    int fd;
+    int index_node_number;
+
+    /* Some arbitrary data for our files */
+    memset (data1, '1', sizeof (data1));
+    memset (data2, '2', sizeof (data2));
+    memset (data3, '3', sizeof (data3));
+
+
+/////////////////
+  
+
   /* ****TEST 2: LARGEST file size**** */
-    int retval;
+
   
   /* Generate one LARGEST file */
   retval = rd_creat ("/bigfile");
@@ -407,6 +469,8 @@ int main ()
 
     exit (1);
   }
+
+#ifdef TEST_SINGLE_INDIRECT
   
   /* Try writing to all single-indirect data blocks */
   retval = rd_write (fd, data2, sizeof(data2));
@@ -417,6 +481,8 @@ int main ()
 
     exit (1);
   }
+
+#ifdef TEST_DOUBLE_INDIRECT
 
   /* Try writing to all double-indirect data blocks */
   retval = rd_write (fd, data3, sizeof(data3));
@@ -429,6 +495,10 @@ int main ()
   }
 
 
-// 	printfdTable();
-//     printf("We made it to the end!\n");
+
+
+  ///////////////////
+
+	printfdTable();
+    printf("We made it to the end!\n");
 }
