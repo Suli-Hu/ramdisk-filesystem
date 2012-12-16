@@ -434,6 +434,7 @@ void clearIndexNode(int IndexNodeNumber)
     for (i = 0; i < NUM_DIRECT; i++)
     {
         blocknumber = (int) * (indexNodeStart + DIRECT_1 + i * 4);
+        PRINT("Block number in delete is %d\n", blocknumber);
 
         // If we received an unallocated block, we are done freeing memory
         if (blocknumber <= 0)
@@ -1064,9 +1065,7 @@ int deleteFile(char *pathname)
     }
 
     /* At this point, we should be able to delete this file, no problem, so we can clear it */
-    printSuperblock();
     clearIndexNode(indexNode);
-    printSuperblock();
 
     /* Now we need to delete this file from the parent, not optimizing right now, so we just delete the file */
     getAllocatedBlockNumbers(allocatedBlocks, parentIndexNode);
