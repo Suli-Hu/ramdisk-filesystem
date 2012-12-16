@@ -2185,6 +2185,7 @@ void kr_read(struct RAM_accessFile *input)
     printk("%d, %ld, %d, %d\n", input->indexNode, input->address, input->numBytes, input->offset);
     ret = readFromFile(input->indexNode, input->address, input->numBytes, input->offset);
     input->ret = ret;
+    input->offset = input->offset + ret;
 }
 
 /**
