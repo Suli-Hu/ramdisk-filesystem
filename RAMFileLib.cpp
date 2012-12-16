@@ -33,6 +33,14 @@ int rd_creat(char *pathname)
 {
     struct RAM_path rampath;
     rampath.name = pathname;
+
+    char *filename;
+    filename = getFileNameFromPath(pathname);
+    if (strlen(filename)>13) {
+    	printf("Error: filename too long, filename must be less than 14 chars\n");
+    	return -1;
+    }
+
 #if 1
     ioctl (fd, RAM_CREATE, &rampath);
 #endif
@@ -44,6 +52,13 @@ int rd_mkdir(char *pathname)
 {
     struct RAM_path rampath;
     rampath.name = pathname;
+    char *filename;
+    filename = getFileNameFromPath(pathname);
+    if (strlen(filename)>12) {
+    	printf("Error: filename too long, dir must be less than 14 chars\n");
+    	return -1;
+    }
+
 #if 1
     ioctl (fd, RAM_MKDIR, &rampath);
 #endif
@@ -228,8 +243,10 @@ int rd_readdir(int file_fd, char *address)
     // If the number of files pointer have exceeded total num of files, reset it
     entry->numOfFiles = file.numOfFiles;
     entry->dirIndex = entry->dirIndex + 1;
-    if (entry->dirIndex == (entry->numOfFiles - 1))
+    if (entry->dirIndex == (entry->numOfFiles - 1)) {
         entry->dirIndex = 0;
+        return 0;
+    }
 
     return file.ret;
 }
@@ -305,6 +322,40 @@ void deleteFileFromFDTable(int fd)
     }
 }
 
+char *getFileNameFromPath(char *pathname)
+{
+
+    char delim, temp, *returnFilename;
+    int delimPosition, index;
+    delim =  '/';
+    index = 0;
+    temp = pathname[index];
+    while (temp != '\0')
+    {
+        if (temp == delim)
+        {
+            if (pathname[index + 1] != '\0')
+                delimPosition = index;
+        }
+        index++;
+        temp = pathname[index];
+    }
+
+    returnFilename = pathname + delimPosition + 1;
+    return returnFilename;
+}
+
+
+char* concatDirToPath(char *path) {
+    int length;
+    length = strlen(path);
+    char *newpath = malloc(sizeof(char)*(length+1));
+    strcpy(newpath, path);
+    newpath[length] = '/';
+    newpath[length+1] = '\0';
+    return newpath;
+}
+
 #define MAX_FILES 1023
 #define BLK_SZ 256      /* Block size */
 #define DIRECT 8        /* Direct pointers in location attribute */
@@ -376,23 +427,41 @@ int main ()
     memset (data2, '2', sizeof (data2));
     memset (data3, '3', sizeof (data3));
 
-   /* ****TEST 2: LARGEST file size**** */
 
+/////////////////
   
-  /* Generate one LARGEST file */
-  retval = rd_creat ("/bigfile");
-
+  /* ****TEST 4: Make directory and read directory entries**** */
+  retval = rd_mkdir ("/dir1");
+    
   if (retval < 0) {
-    fprintf (stderr, "rd_creat: File creation error! status: %d\n", 
+    fprintf (stderr, "rd_mkdir: Directory 1 creation error! status: %d\n", 
 	     retval);
 
     exit (1);
   }
 
-  retval =  rd_open ("/bigfile"); /* Open file to write to it */
+  retval = rd_mkdir ("/dir1/dir2");
+    
+  if (retval < 0) {
+    fprintf (stderr, "rd_mkdir: Directory 2 creation error! status: %d\n", 
+	     retval);
+
+    exit (1);
+  }
+
+  retval = rd_mkdir ("/dir1/dir3");
+    
+  if (retval < 0) {
+    fprintf (stderr, "rd_mkdir: Directory 3 creation error! status: %d\n", 
+	     retval);
+
+    exit (1);
+  }
+
+  retval =  rd_open ("/dir1"); /* Open directory file to read its entries */
   
   if (retval < 0) {
-    fprintf (stderr, "rd_open: File open error! status: %d\n", 
+    fprintf (stderr, "rd_open: Directory open error! status: %d\n", 
 	     retval);
 
     exit (1);
@@ -400,41 +469,23 @@ int main ()
 
   fd = retval;			/* Assign valid fd */
 
-  /* Try writing to all direct data blocks */
-  retval = rd_write (fd, data1, sizeof(data1));
-  
-  if (retval < 0) {
-    fprintf (stderr, "rd_write: File write STAGE1 error! status: %d\n", 
-	     retval);
+  memset (addr, 0, sizeof(addr)); /* Clear scratchpad memory */
 
-    exit (1);
+  while ((retval = rd_readdir (fd, addr))) { /* 0 indicates end-of-file */
+
+    if (retval < 0) {
+      fprintf (stderr, "rd_readdir: Directory read error! status: %d\n", 
+	       retval);
+      
+      exit (1);
+    }
+
+    index_node_number = atoi(&addr[14]);
+    printf ("Contents at addr: [%s,%d]\n", addr, index_node_number);
   }
 
-	printfdTable();
-retval = rd_write (fd, data2, sizeof(data2));
-  
-  if (retval < 0) {
-    fprintf (stderr, "rd_write: File write STAGE2 error! status: %d\n", 
-	     retval);
 
-    exit (1);
-  }
-
-printfdTable();
-
-  /* Try writing to all double-indirect data blocks */
-  retval = rd_write (fd, data3, sizeof(data3));
-  
-  if (retval < 0) {
-    fprintf (stderr, "rd_write: File write STAGE3 error! status: %d\n", 
-	     retval);
-
-    exit (1);
-  }
-
-	printfdTable();
-
-	rd_lseek(fd, 1000);
+  ///////////////////
 
 	printfdTable();
     printf("We made it to the end!\n");

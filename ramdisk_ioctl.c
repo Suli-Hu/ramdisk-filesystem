@@ -824,6 +824,7 @@ int readFileName(int indexNodeNum, char *address, int index)
 
     char *indexNodeStart, *dirlistingstart, *filename;
     int i, j, memoryblock, dirIndex, numOfFiles, k;
+    short inodeOfFile;
     dirIndex = 0;
 
     indexNodeStart = RAM_memory + INDEX_NODE_ARRAY_OFFSET + indexNodeNum * INODE_SIZE;
@@ -858,6 +859,8 @@ int readFileName(int indexNodeNum, char *address, int index)
                 {
                     // Get file name
                     filename = (dirlistingstart + FILE_INFO_SIZE * j);
+                    inodeOfFile = (short)*(short*)(dirlistingstart + FILE_INFO_SIZE * j + INODE_NUM_OFFSET);
+
                     // Copy the filename into the specified address
                     if (dirIndex == index)
                     {
@@ -865,6 +868,8 @@ int readFileName(int indexNodeNum, char *address, int index)
                         while (1)
                         {
                             memcpy(&(address[k]), &(filename[k]), sizeof(char));
+
+                            // After we have copied the NULL char, we are done
                             if (filename[k] == '\0')
                                 break;
                             k++;
@@ -874,11 +879,15 @@ int readFileName(int indexNodeNum, char *address, int index)
                         return numOfFiles;
                     }
 
+                    // Copy inode number of specified address
+                     memcpy(&(address[14]), &(inodeOfFile), sizeof(short));
+
                     dirIndex++;
                 }
             }
             i++;
         }
+
 
     }
     else
@@ -1115,6 +1124,9 @@ int deleteFile(char *pathname)
 */
 int writeToFile(int indexNode, char *data, int size, int offset)
 {
+
+    printSuperblock();
+    
     /* Declare all of the vars */
     char *indexNodePointer, *blockPointer;
     int ii, jj, dataCounter;
@@ -1275,6 +1287,7 @@ int readFromFile(int indexNode, char *data, int size, int offset)
     // If we have reached this point, we have read enough bytes, return
     return bytesRead;
 }
+
 
 int getFileSize(int indexNode) {
     char *indexNodeStart;
@@ -1804,11 +1817,15 @@ void testReadDir(void)
 
     printIndexNode(indexNodeNum);
 
-    //    ret = readFileName(input->indexNode, input->address, input->dirIndex);
+    // ret = readFileName(input->indexNode, input->address, input->dirIndex);
 
     char blah[30];
-    readFileName(0, blah, 3);
-    PRINT("Result: %s\n", blah);
+    readFileName(0, blah, 2);
+    short inode;
+    inode = (short)*(short*)(blah+14);    
+    PRINT("Result: %s inode: %d\n", blah, inode);
+
+
 
 }
 
@@ -1904,7 +1921,7 @@ int main()
     // testDirCreation();
 
     /* Uncomment to test max file size and file write */
-    testFileCreation();
+    // testFileCreation();
 
     /* Uncomment to test read files */
     
@@ -1920,7 +1937,8 @@ int main()
     // printIndexNode(indexNodeNum);
     // printIndexNode(indexNodeNum);
     // printSuperblock();
-    indexNodeNum =  createIndexNode("reg\0", "/otherfile.txt\0",  200);
+    // indexNodeNum =  createIndexNode("reg\0", "/otherfile.txt\0",  200);
+
 
     // createIndexNode("dir\0", "/myfolder/\0",  0);
     // indexNodeNum = createIndexNode("reg\0", "/myfolder/hello.txt\0",  0);
