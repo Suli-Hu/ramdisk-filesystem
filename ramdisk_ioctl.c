@@ -2229,7 +2229,6 @@ void kr_open(struct RAM_file *input)
 
     PRINT("Opening pathname: %s\n",input->name);
     indexNodeNum = getIndexNodeNumberFromPathname(input->name, 0);
-    printIndexNode(indexNodeNum);
 
     PRINT("INDEX NODE: %d\n", indexNodeNum);
     input->indexNode = indexNodeNum;
