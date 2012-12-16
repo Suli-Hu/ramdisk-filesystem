@@ -618,6 +618,7 @@ int createIndexNode(char *type, char *pathname, int memorysize)
 #endif
 
     /* Check if the file already exists */
+    PRINT("PATH - %s\n", pathname);
     existance = getIndexNodeNumberFromPathname(pathname, 0);
     // PRINT("%s %d\n", pathname, existance);
     if (existance > 0)
