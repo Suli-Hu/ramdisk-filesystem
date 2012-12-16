@@ -218,7 +218,10 @@ int rd_unlink(char *pathname)
     {
         // If the pathname is in a fd entry, we cannot delete an open file
         if (strcmp(it->pathname,pathname)==0)
+        {
+            printf("Can't delete open\n");
             return -1;
+        }
     }
     
 
