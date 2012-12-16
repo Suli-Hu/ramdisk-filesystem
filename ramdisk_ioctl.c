@@ -437,7 +437,10 @@ void clearIndexNode(int IndexNodeNumber)
 
         // If we received an unallocated block, we are done freeing memory
         if (blocknumber <= 0)
+        {
+            changeIndexNodeCount(1);
             return;
+        }
 
         freeBlock(blocknumber);
     }
@@ -447,6 +450,7 @@ void clearIndexNode(int IndexNodeNumber)
     if (blocknumber <= 0)
     {
         /* Check if we are done now */
+        changeIndexNodeCount(1);
         return;
     }
     singleIndirectBlockStart =  RAM_memory + DATA_BLOCKS_OFFSET + (blocknumber * RAM_BLOCK_SIZE);
@@ -458,7 +462,10 @@ void clearIndexNode(int IndexNodeNumber)
 
         // If we received an unallocated block, we are done freeing memory
         if (blocknumber == -1)
+        {
+            changeIndexNodeCount(1);
             return;
+        }
 
         freeBlock(blocknumber);
     }
@@ -468,6 +475,7 @@ void clearIndexNode(int IndexNodeNumber)
     if (blocknumber <= 0)
     {
         /* Check if we are done now */
+        changeIndexNodeCount(1);
         return;
     }
     singleIndirectBlockStart =  RAM_memory + DATA_BLOCKS_OFFSET + (blocknumber * RAM_BLOCK_SIZE);
@@ -479,7 +487,10 @@ void clearIndexNode(int IndexNodeNumber)
 
         // If we received an unallocated block, we are done freeing memory
         if (blocknumber <= 0)
+        {
+            changeIndexNodeCount(1);
             return;
+        }
 
         doubleIndirectBlockStart = RAM_memory + DATA_BLOCKS_OFFSET + (blocknumber * RAM_BLOCK_SIZE);
 
