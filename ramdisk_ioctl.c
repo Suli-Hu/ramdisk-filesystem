@@ -1143,10 +1143,7 @@ int deleteFile(char *pathname)
 * @param[in]    offset    the offset into the file to start writing at (offset of 0 is the beginning of the file)
 */
 int writeToFile(int indexNode, char *data, int size, int offset)
-{
-
-    printSuperblock();
-    
+{   
     /* Declare all of the vars */
     char *indexNodePointer, *blockPointer;
     int ii, jj, dataCounter;
@@ -2174,8 +2171,6 @@ void kr_open(struct RAM_file *input)
     PRINT("INDEX NODE: %d\n", indexNodeNum);
     input->indexNode = indexNodeNum;
     input->fileSize = getFileSize(indexNodeNum);
-    printIndexNode(0);
-    printSuperblock();
 }
 
 void kr_read(struct RAM_accessFile *input)
