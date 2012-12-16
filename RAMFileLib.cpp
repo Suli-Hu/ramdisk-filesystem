@@ -52,6 +52,7 @@ int rd_mkdir(char *pathname)
     pathname = concatDirToPath(pathname);
     char *filename;
     filename = getFileNameFromPath(pathname);
+    printf("Filename out of mkdir is %s\n", filename);
     if (strlen(filename)>12) {
         printf("Error: filename too long, dir must be less than 14 chars\n");
         return -1;
