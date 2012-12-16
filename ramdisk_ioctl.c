@@ -480,8 +480,8 @@ void clearIndexNode(int IndexNodeNumber)
         singleIndirectBlockStart =  RAM_memory + DATA_BLOCKS_OFFSET + (blocknumber * RAM_BLOCK_SIZE);
         freeBlock(blocknumber);
 
-        PRINT("Made it to past double indirect check\n");
-        return; 
+        PRINT("Made it to past double indirect check, ignoring last part to return\n");
+        break; 
 
         for (i = 0; i < 64; i++)
         {
@@ -1089,9 +1089,7 @@ int deleteFile(char *pathname)
 
     /* At this point, we should be able to delete this file, no problem, so we can clear it */
     clearIndexNode(indexNode);
-    PRINT("Made it here!\n");
-    return -1;
-
+    
     /* Now we need to delete this file from the parent, not optimizing right now, so we just delete the file */
     getAllocatedBlockNumbers(allocatedBlocks, parentIndexNode);
     fileCount = (short) * ( (short *) (parentPointer + INODE_FILE_COUNT) );
