@@ -226,10 +226,10 @@ int main () {
     exit (1);
   }
 
-  printf("Exiting early\n");
-  return 0;
   /* Should be all 3s here... */
   printf ("Data at addr: %s\n", addr);
+  printf("Exiting early\n");
+  return 0;
 
 #endif // TEST_DOUBLE_INDIRECT
 
