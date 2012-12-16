@@ -446,8 +446,6 @@ void clearIndexNode(int IndexNodeNumber)
 
             freeBlock(blocknumber);
         }
-        PRINT("Made it to past direct free\n");
-        return; 
 
         // Single indirect memory freeing
         blocknumber = (int) * (int *)(indexNodeStart + SINGLE_INDIR);
@@ -458,6 +456,9 @@ void clearIndexNode(int IndexNodeNumber)
         }
         singleIndirectBlockStart =  RAM_memory + DATA_BLOCKS_OFFSET + (blocknumber * RAM_BLOCK_SIZE);
         freeBlock(blocknumber);
+        PRINT("Made it to past direct free\n");
+        printIndexNode(IndexNodeNumber);
+        return; 
 
         for (i = 0; i < 64; i++)
         {
