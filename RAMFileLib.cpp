@@ -111,7 +111,7 @@ int rd_open(char *pathname)
 	return entry.fd;
 }
 
-void kr_close(int fd)
+int rd_close(int fd)
 {
 
     // Closing a file simply means removing a file from the FD table
@@ -317,14 +317,15 @@ FD_entry *getEntryFromFd(int fd_file)
     return entry;
 }
 
-void deleteFileFromFDTable(int fd)
+int deleteFileFromFDTable(int fd)
 {
     vector<FD_entry>::iterator it;
     for (it = fd_Table.begin() ; it != fd_Table.end() ; it++)
     {
         fd_Table.erase(it);
-        return;
+        return 0;
     }
+    return -1;
 }
 
 char *getFileNameFromPath(char *pathname)

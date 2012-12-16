@@ -120,6 +120,6 @@ int fdFromIndexNode(int indexNode);
 struct FD_entry *getEntryFromFd(int fd);
 int checkIfFileExists(int fd);
 int indexNodeFromfd(int fd);
-void deleteFileFromFDTable(int fd);
+int deleteFileFromFDTable(int fd);
 char *getFileNameFromPath(char *pathname);
 char* concatDirToPath(char *path);
