@@ -254,6 +254,7 @@ int main () {
     
     exit (1);
   }
+  printf("Beat test3!\n");
 
 #endif // TEST3
 

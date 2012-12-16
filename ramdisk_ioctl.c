@@ -1130,6 +1130,7 @@ int deleteFile(char *pathname)
     inodeSize = (int) *( (int *) (parentPointer + INODE_SIZE) );
     inodeSize -= 16;
     memcpy(parentPointer + INODE_SIZE, &inodeSize, sizeof(int));
+    PRINT("Successful file deletion\n");
     return 0; /* successful deletion */
 }
 
