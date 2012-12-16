@@ -618,8 +618,6 @@ int createIndexNode(char *type, char *pathname, int memorysize)
 #endif
 
     /* Check if the file already exists */
-    PRINT("PATH - %s\n", pathname);
-    printIndexNode(0);
     existance = getIndexNodeNumberFromPathname(pathname, 0);
     // PRINT("%s %d\n", pathname, existance);
     if (existance > 0)
@@ -870,7 +868,6 @@ int readFileName(int indexNodeNum, char *address, int index)
 
     indexNodeStart = RAM_memory + INDEX_NODE_ARRAY_OFFSET + indexNodeNum * INDEX_NODE_SIZE;
     numOfFiles = (short) * (short *)(indexNodeStart + INODE_FILE_COUNT);
-    printIndexNode(indexNodeNum);
 
     // Make sure the file index is not greater than the number of files
     if (index >= numOfFiles)
