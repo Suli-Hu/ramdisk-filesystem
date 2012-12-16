@@ -84,6 +84,8 @@ int rd_open(char *pathname)
     if (file.ret < 0)
         return file.ret;
 
+    printf("No error\n");
+
     // If this file is not currently open, create new entry
     FD_entry entry;
 
