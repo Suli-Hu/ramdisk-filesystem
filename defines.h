@@ -19,6 +19,7 @@
 	#include <linux/sched.h>
 	#include <linux/string.h>
 	#include <linux/interrupt.h>
+	#include <linux/semaphore.h>
 
 	#define PRINT printk
 #endif

@@ -16,6 +16,7 @@ MODULE_LICENSE("GPL");
 static int ramdisk_ioctl(struct inode *inode, struct file *file, unsigned int cmd, unsigned long arg);
 static struct file_operations pseudo_dev_proc_operations;
 static struct proc_dir_entry *proc_entry;
+static DECLARE_MUTEX(FS_mutex);
 #endif
 
 // @var The ramdisk memory in the kernel */
@@ -2000,6 +2001,8 @@ static int ramdisk_ioctl(struct inode *inode, struct file *file,
     struct RAM_file ramFile;
     struct RAM_accessFile access;
 
+    while (down_interruptible(FS_mutex));
+
     switch (cmd)
     {
 
@@ -2087,6 +2090,9 @@ static int ramdisk_ioctl(struct inode *inode, struct file *file,
         return -EINVAL;
         break;
     }
+
+    /* Release the mutex */
+    up(FS_mutex);
 
     return 0;
 }
