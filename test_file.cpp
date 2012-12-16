@@ -315,7 +315,7 @@ int main () {
 #ifdef TEST5
 
   /* ****TEST 5: 2 process test**** */
-  
+  printf("Starting test 5\n");
   if((retval = fork())) {
 
     if(retval == -1) {
@@ -357,7 +357,6 @@ int main () {
     
       memset (pathname, 0, 80);
     }
-    rd_open("/\0");
   }
 
 #endif // TEST5

@@ -2002,7 +2002,10 @@ static int ramdisk_ioctl(struct inode *inode, struct file *file,
     struct RAM_file ramFile;
     struct RAM_accessFile access;
 
-    while (down_interruptible(&FS_mutex));
+    while (down_interruptible(&FS_mutex))
+    {
+        PRINT("INTERRUPTED\n");
+    }
 
     switch (cmd)
     {
