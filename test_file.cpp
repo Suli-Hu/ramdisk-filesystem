@@ -287,7 +287,6 @@ int main () {
   }
 
   retval =  rd_open ("/dir1/"); /* Open directory file to read its entries */
-    return -1;
   
   if (retval < 0) {
     fprintf (stderr, "rd_open: Directory open error! status: %d\n", 
