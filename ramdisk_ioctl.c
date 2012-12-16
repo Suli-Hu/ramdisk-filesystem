@@ -17,6 +17,7 @@ static int ramdisk_ioctl(struct inode *inode, struct file *file, unsigned int cm
 static struct file_operations pseudo_dev_proc_operations;
 static struct proc_dir_entry *proc_entry;
 static DECLARE_MUTEX(FS_mutex);
+static int rootCreated;
 #endif
 
 // @var The ramdisk memory in the kernel */
@@ -123,6 +124,9 @@ void init_ramdisk(void)
 
     /****************Create the root directory******************/
     createIndexNode("dir\0", "/\0",  0);
+#ifndef DEBUG
+    rootCreated = 1;
+#endif
     printIndexNode(0);
     printSuperblock();
 
@@ -605,11 +609,13 @@ int createIndexNode(char *type, char *pathname, int memorysize)
         return -1;
     }
 
-    if (strcmp("/\0", pathname) == 0)
+#ifndef DEBUG
+    if (strcmp("/\0", pathname) == 0 && rootCreated)
     {
         PRINT("Can't remake root\n");
         return -1;
     }
+#endif
 
     /* Check if the file already exists */
     existance = getIndexNodeNumberFromPathname(pathname, 0);
@@ -1996,6 +2002,7 @@ int main()
 static int __init initialization_routine(void)
 {
     int indexNodeNum;
+    rootCreated = 0;
 
     PRINT("<1> Loading RAMDISK filesystem\n");
 
