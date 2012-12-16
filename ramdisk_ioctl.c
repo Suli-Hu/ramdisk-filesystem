@@ -482,7 +482,7 @@ void clearIndexNode(int IndexNodeNumber)
 
         PRINT("Made it to past double indirect check, ignoring inner deletion\n");
 
-        for (i = 0; i < 64; i++)
+        for (i = 0; i < 1; i++)
         {
             blocknumber = (int) * (int *)(singleIndirectBlockStart + i * 4);
 
