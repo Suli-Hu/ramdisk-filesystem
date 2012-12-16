@@ -7,6 +7,12 @@
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<script type="text/javascript">
+  $(document).ready(initResizable);
+</script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="search/search.js"></script>
 <script type="text/javascript">
@@ -67,28 +73,40 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
     <ul class="tablist">
       <li><a href="globals.html"><span>All</span></a></li>
       <li><a href="globals_func.html"><span>Functions</span></a></li>
+      <li><a href="globals_vars.html"><span>Variables</span></a></li>
       <li class="current"><a href="globals_defs.html"><span>Macros</span></a></li>
     </ul>
   </div>
   <div id="navrow4" class="tabs3">
     <ul class="tablist">
       <li><a href="#index_b"><span>b</span></a></li>
-      <li><a href="#index_c"><span>c</span></a></li>
       <li><a href="#index_d"><span>d</span></a></li>
       <li><a href="#index_f"><span>f</span></a></li>
       <li><a href="#index_i"><span>i</span></a></li>
-      <li><a href="#index_l"><span>l</span></a></li>
+      <li><a href="#index_k"><span>k</span></a></li>
       <li><a href="#index_m"><span>m</span></a></li>
-      <li><a href="#index_o"><span>o</span></a></li>
+      <li><a href="#index_n"><span>n</span></a></li>
       <li><a href="#index_p"><span>p</span></a></li>
       <li><a href="#index_r"><span>r</span></a></li>
       <li><a href="#index_s"><span>s</span></a></li>
       <li><a href="#index_t"><span>t</span></a></li>
-      <li><a href="#index_u"><span>u</span></a></li>
-      <li><a href="#index_w"><span>w</span></a></li>
     </ul>
   </div>
 </div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+$(document).ready(function(){initNavTree('globals_defs.html','');});
+</script>
+<div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -108,7 +126,10 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <h3><a class="anchor" id="index_b"></a>- b -</h3><ul>
 <li>BLK_SZ
-: <a class="el" href="test__file_8c.html#a564c42a6b59e8f7210f708678bfff3a4">test_file.c</a>
+: <a class="el" href="test__file_8cpp.html#a564c42a6b59e8f7210f708678bfff3a4">test_file.cpp</a>
+</li>
+<li>BLOCK_BITMAP_BLOCK_COUNT
+: <a class="el" href="defines_8h.html#ac5d5ca797fd94b950d89e52868fe5386">defines.h</a>
 </li>
 <li>BLOCK_BITMAP_OFFSET
 : <a class="el" href="defines_8h.html#ab9b6f109a6de8a02776f531652006296">defines.h</a>
@@ -116,49 +137,21 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <li>BLOCK_BITMAP_SIZE
 : <a class="el" href="defines_8h.html#a53c9b2f427bfb998d4b820209cca03cd">defines.h</a>
 </li>
-<li>BLOCK_SIZE
-: <a class="el" href="defines_8h.html#ad51ded0bbd705f02f73fc60c0b721ced">defines.h</a>
-</li>
-</ul>
-
-
-<h3><a class="anchor" id="index_c"></a>- c -</h3><ul>
-<li>CLOSE
-: <a class="el" href="defines_8h.html#a0e29f488071372aa0530842e60b64511">defines.h</a>
-</li>
-<li>CREATE
-: <a class="el" href="defines_8h.html#a4c6b87853cbaf189fe1e484706ae1875">defines.h</a>
-</li>
 </ul>
 
 
 <h3><a class="anchor" id="index_d"></a>- d -</h3><ul>
+<li>DATA_BLOCKS_OFFSET
+: <a class="el" href="defines_8h.html#a6a4bc429928537956bef270e1505de40">defines.h</a>
+</li>
+<li>DEBUG
+: <a class="el" href="defines_8h.html#ad72dbcf6d0153db1b8d8a58001feed83">defines.h</a>
+</li>
 <li>DIRECT
-: <a class="el" href="test__file_8c.html#a86720ded03b3f5b5ca53d30b33cb33bb">test_file.c</a>
+: <a class="el" href="test__file_8cpp.html#a86720ded03b3f5b5ca53d30b33cb33bb">test_file.cpp</a>
 </li>
 <li>DIRECT_1
 : <a class="el" href="defines_8h.html#a905598653bf870e3e958acf0380a77e7">defines.h</a>
-</li>
-<li>DIRECT_2
-: <a class="el" href="defines_8h.html#a965f8604e02513e91ef6c9162742d810">defines.h</a>
-</li>
-<li>DIRECT_3
-: <a class="el" href="defines_8h.html#a0dfbc44dec94b531056459343fba8503">defines.h</a>
-</li>
-<li>DIRECT_4
-: <a class="el" href="defines_8h.html#a6839369f1b71648927c5cbb54f6be24c">defines.h</a>
-</li>
-<li>DIRECT_5
-: <a class="el" href="defines_8h.html#af5e65433e08cbbd9a613d1a3cd6d9b22">defines.h</a>
-</li>
-<li>DIRECT_6
-: <a class="el" href="defines_8h.html#aa2445e929732869089d3081276d1ddc1">defines.h</a>
-</li>
-<li>DIRECT_7
-: <a class="el" href="defines_8h.html#adbdb5fb58f757840cdaef27b7866e49d">defines.h</a>
-</li>
-<li>DIRECT_8
-: <a class="el" href="defines_8h.html#a43cc89a83d10925c225b325f7e5d3a00">defines.h</a>
 </li>
 <li>DOUBLE_INDIR
 : <a class="el" href="defines_8h.html#a2a129c797c5e972e51d89a0c6cf6d1bd">defines.h</a>
@@ -167,9 +160,6 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 
 <h3><a class="anchor" id="index_f"></a>- f -</h3><ul>
-<li>FILE_COUNT
-: <a class="el" href="defines_8h.html#a7ee3b243ddbfbae35ee2b5af95e069b5">defines.h</a>
-</li>
 <li>FILE_INFO_SIZE
 : <a class="el" href="defines_8h.html#a9c3c179c039c3f784e9effdf15399e28">defines.h</a>
 </li>
@@ -192,6 +182,12 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <li>INDEX_NODE_SIZE
 : <a class="el" href="defines_8h.html#a629824d26fc98ae1a4a7e33c08903410">defines.h</a>
 </li>
+<li>INODE_COUNT_OFFSET
+: <a class="el" href="defines_8h.html#a0749774409574d1c22c248aafe8cb8f1">defines.h</a>
+</li>
+<li>INODE_FILE_COUNT
+: <a class="el" href="defines_8h.html#aa7dde50fbcf897662fa0dcd25a27e43e">defines.h</a>
+</li>
 <li>INODE_FILE_NAME
 : <a class="el" href="defines_8h.html#ab2643d41f4160853e5744931081850ff">defines.h</a>
 </li>
@@ -204,52 +200,85 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <li>INODE_TYPE
 : <a class="el" href="defines_8h.html#a5837260343c8eaf0f7e8a2ee8123129e">defines.h</a>
 </li>
+<li>IOCTL_TEST
+: <a class="el" href="ioctl__test_8c.html#a37364d2334ea38bd379cbce9fa2333ff">ioctl_test.c</a>
+, <a class="el" href="ioctl__module_8c.html#a37364d2334ea38bd379cbce9fa2333ff">ioctl_module.c</a>
+</li>
 </ul>
 
 
-<h3><a class="anchor" id="index_l"></a>- l -</h3><ul>
-<li>LSEEK
-: <a class="el" href="defines_8h.html#ad9ef8c774e19ef27832f682082179824">defines.h</a>
+<h3><a class="anchor" id="index_k"></a>- k -</h3><ul>
+<li>KERNELREADY
+: <a class="el" href="structs_8h.html#ad08286e477b9d09647af8752b1edeee2">structs.h</a>
+, <a class="el" href="userdefines_8h.html#ad08286e477b9d09647af8752b1edeee2">userdefines.h</a>
+</li>
+<li>KEYBOARD
+: <a class="el" href="ioctl__module_8c.html#a870e17d2a367b321990369cc08ff3bff">ioctl_module.c</a>
+, <a class="el" href="ioctl__test_8c.html#a870e17d2a367b321990369cc08ff3bff">ioctl_test.c</a>
 </li>
 </ul>
 
 
 <h3><a class="anchor" id="index_m"></a>- m -</h3><ul>
-<li>MAX_FILES
-: <a class="el" href="test__file_8c.html#a2c5eecb22513a88c24ae5831a3265e54">test_file.c</a>
+<li>MAX_BLOCKS_ALLOCATABLE
+: <a class="el" href="defines_8h.html#a2a16acd83cf3a56116f8cbf882d34bb8">defines.h</a>
 </li>
-<li>MKDIR
-: <a class="el" href="defines_8h.html#a9165713ff17c8ca8fc2951e82d1a6e57">defines.h</a>
+<li>MAX_FILE_SIZE
+: <a class="el" href="defines_8h.html#a649ad5274d988d17a275a3cead056746">defines.h</a>
+</li>
+<li>MAX_FILES
+: <a class="el" href="test__file_8cpp.html#a2c5eecb22513a88c24ae5831a3265e54">test_file.cpp</a>
 </li>
 </ul>
 
 
-<h3><a class="anchor" id="index_o"></a>- o -</h3><ul>
-<li>OPEN
-: <a class="el" href="defines_8h.html#a1354b70ac6803a06beebe84f61b5f95b">defines.h</a>
+<h3><a class="anchor" id="index_n"></a>- n -</h3><ul>
+<li>NUM_DIRECT
+: <a class="el" href="defines_8h.html#aa817d070d33ea842616102d3a9b3cac6">defines.h</a>
 </li>
 </ul>
 
 
 <h3><a class="anchor" id="index_p"></a>- p -</h3><ul>
+<li>PRINT
+: <a class="el" href="defines_8h.html#a8b43bafee90b30676faae508c21cb8d7">defines.h</a>
+</li>
 <li>PTR_SZ
-: <a class="el" href="test__file_8c.html#aa01050c4a3c2e5f70f2bf199fd58834e">test_file.c</a>
+: <a class="el" href="test__file_8cpp.html#aa01050c4a3c2e5f70f2bf199fd58834e">test_file.cpp</a>
 </li>
 <li>PTRS_PB
-: <a class="el" href="test__file_8c.html#a6cd333738fdd8ff03ee5c53df5a19f48">test_file.c</a>
+: <a class="el" href="test__file_8cpp.html#a6cd333738fdd8ff03ee5c53df5a19f48">test_file.cpp</a>
 </li>
 </ul>
 
 
 <h3><a class="anchor" id="index_r"></a>- r -</h3><ul>
-<li>READ
-: <a class="el" href="defines_8h.html#ada74e7db007a68e763f20c17f2985356">defines.h</a>
+<li>RAM_BLOCK_SIZE
+: <a class="el" href="defines_8h.html#a71b835e5a2ed06d647c7e74dafca5625">defines.h</a>
 </li>
-<li>READDIR
-: <a class="el" href="defines_8h.html#a82f77fa5f9c3fa9e1f3521bbb2cfad6a">defines.h</a>
+<li>RAM_CREATE
+: <a class="el" href="structs_8h.html#a85c575d6bbd47bae4283cc742e3553da">structs.h</a>
 </li>
-<li>ROOT_DIR
-: <a class="el" href="defines_8h.html#a62b075ec29b7b301c68f539d8aafd029">defines.h</a>
+<li>RAM_LSEEK
+: <a class="el" href="structs_8h.html#a732331ba05ede60212e84261dc8e452b">structs.h</a>
+</li>
+<li>RAM_MKDIR
+: <a class="el" href="structs_8h.html#ac872d28f8e37b5d11dec4000d09c7623">structs.h</a>
+</li>
+<li>RAM_OPEN
+: <a class="el" href="structs_8h.html#a95bb95f519c088f161efd1a6043ea211">structs.h</a>
+</li>
+<li>RAM_READ
+: <a class="el" href="structs_8h.html#a03c074a7558839cecf6a6d6be5790318">structs.h</a>
+</li>
+<li>RAM_READDIR
+: <a class="el" href="structs_8h.html#af6349b6e95e85f6fb46ed0c5d031c8e1">structs.h</a>
+</li>
+<li>RAM_UNLINK
+: <a class="el" href="structs_8h.html#afec1bc3b37214b0e088796f66545d8db">structs.h</a>
+</li>
+<li>RAM_WRITE
+: <a class="el" href="structs_8h.html#aefa6b25d5b020007a836e62c54da23a1">structs.h</a>
 </li>
 <li>ROOT_INDEX_NODE
 : <a class="el" href="defines_8h.html#a1c40273eaeeaee04089b6a60b541c5bf">defines.h</a>
@@ -269,47 +298,39 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <h3><a class="anchor" id="index_t"></a>- t -</h3><ul>
 <li>TEST1
-: <a class="el" href="test__file_8c.html#aef8471770769d5643c8d0e9d49de0678">test_file.c</a>
+: <a class="el" href="test__file_8cpp.html#aef8471770769d5643c8d0e9d49de0678">test_file.cpp</a>
 </li>
 <li>TEST2
-: <a class="el" href="test__file_8c.html#a1b5997c11166c594b80d44bfde1cfa9c">test_file.c</a>
+: <a class="el" href="test__file_8cpp.html#a1b5997c11166c594b80d44bfde1cfa9c">test_file.cpp</a>
 </li>
 <li>TEST3
-: <a class="el" href="test__file_8c.html#a4671cc5352089a85a3b62399fd09099d">test_file.c</a>
+: <a class="el" href="test__file_8cpp.html#a4671cc5352089a85a3b62399fd09099d">test_file.cpp</a>
 </li>
 <li>TEST4
-: <a class="el" href="test__file_8c.html#a48a5cfeeedd2a33c0cc9bf96155603fe">test_file.c</a>
+: <a class="el" href="test__file_8cpp.html#a48a5cfeeedd2a33c0cc9bf96155603fe">test_file.cpp</a>
 </li>
 <li>TEST5
-: <a class="el" href="test__file_8c.html#ad4a724344bcd74cd04df6fe59720b44f">test_file.c</a>
+: <a class="el" href="test__file_8cpp.html#ad4a724344bcd74cd04df6fe59720b44f">test_file.cpp</a>
 </li>
 <li>TEST_DOUBLE_INDIRECT
-: <a class="el" href="test__file_8c.html#a8a17092d7c5c4dc8e6b825dfc80da558">test_file.c</a>
+: <a class="el" href="test__file_8cpp.html#a8a17092d7c5c4dc8e6b825dfc80da558">test_file.cpp</a>
 </li>
 <li>TEST_SINGLE_INDIRECT
-: <a class="el" href="test__file_8c.html#a50cae46453ec7fc3c1afcd8f94dc3172">test_file.c</a>
+: <a class="el" href="test__file_8cpp.html#a50cae46453ec7fc3c1afcd8f94dc3172">test_file.cpp</a>
 </li>
-</ul>
-
-
-<h3><a class="anchor" id="index_u"></a>- u -</h3><ul>
-<li>UNLINK
-: <a class="el" href="defines_8h.html#a70c455687eb4a0f89b7bd0a5ea3ef6bf">defines.h</a>
-</li>
-</ul>
-
-
-<h3><a class="anchor" id="index_w"></a>- w -</h3><ul>
-<li>WRITE
-: <a class="el" href="defines_8h.html#aa10f470e996d0f51210d24f442d25e1e">defines.h</a>
+<li>TOT_AVAILABLE_BLOCKS
+: <a class="el" href="defines_8h.html#ab6c1c960cedf8ee643e3688711dc7ed2">defines.h</a>
 </li>
 </ul>
 </div><!-- contents -->
+</div><!-- doc-content -->
 <!-- start footer part -->
-<hr class="footer"/><address class="footer"><small>
-Generated on Tue Dec 4 2012 21:03:09 for My Project by &#160;<a href="http://www.doxygen.org/index.html">
-<img class="footer" src="doxygen.png" alt="doxygen"/>
-</a> 1.8.2
-</small></address>
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="footer">Generated on Sun Dec 16 2012 16:55:08 for My Project by
+    <a href="http://www.doxygen.org/index.html">
+    <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.2 </li>
+  </ul>
+</div>
 </body>
 </html>

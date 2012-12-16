@@ -5,38 +5,913 @@
 \subsection*{Functions}
 \begin{DoxyCompactItemize}
 \item 
-\hyperlink{ramdisk__ioctl_8c_ad94b36675e7eb067ea3ce6ff9e244a44}{M\-O\-D\-U\-L\-E\-\_\-\-L\-I\-C\-E\-N\-S\-E} (\char`\"{}G\-P\-L\char`\"{})
+void \hyperlink{ramdisk__ioctl_8c_a9ca0242af058ca3177c5910028f5e539}{set\-Bit} (int index, int bit)
 \item 
-\hyperlink{ramdisk__ioctl_8c_a424f990a513b1875436547f7ef17c622}{module\-\_\-init} (initialization\-\_\-routine)
+void \hyperlink{ramdisk__ioctl_8c_a313672c89a2873201ba702c1dbe87b8a}{clear\-Bit} (int index, int bit)
 \item 
-\hyperlink{ramdisk__ioctl_8c_a39d4cb9a64be1783fd1da532f904f5d4}{module\-\_\-exit} (cleanup\-\_\-routine)
+int \hyperlink{ramdisk__ioctl_8c_aab978eeb7939a34773abec29e57ebc29}{check\-Bit} (int index, int bit)
+\item 
+void \hyperlink{ramdisk__ioctl_8c_a827d551042255dc9358ba93a63dc73b7}{change\-Block\-Count} (int delta)
+\item 
+void \hyperlink{ramdisk__ioctl_8c_ae89d5922a39c678343413a18028c7540}{change\-Index\-Node\-Count} (int delta)
+\item 
+void \hyperlink{ramdisk__ioctl_8c_aa8c641082321bba47aa38fd2690ab15c}{init\-\_\-ramdisk} (void)
+\item 
+void \hyperlink{ramdisk__ioctl_8c_a1782427f3bf8c87f6d3253aa97b74f9b}{get\-Allocated\-Block\-Numbers} (int $\ast$block\-Array, int inode\-Num)
+\item 
+int \hyperlink{ramdisk__ioctl_8c_a8add9144ebc0b81f00b85c9fb28ff4a2}{find\-File\-Index\-Node\-In\-Dir} (int index\-Node, char $\ast$filename)
+\item 
+int \hyperlink{ramdisk__ioctl_8c_abed9bc66c41f05c25f859ec3da324c43}{get\-Index\-Node\-Number\-From\-Pathname} (char $\ast$pathname, int dir\-Flag)
+\item 
+int \hyperlink{ramdisk__ioctl_8c_a3d4431d37381f627988efc2c4038cb0a}{get\-New\-Index\-Node\-Number} (void)
+\item 
+void \hyperlink{ramdisk__ioctl_8c_ac33cfa3c7861c5cf675e17eee9fd2fbd}{clear\-Index\-Node} (int Index\-Node\-Number)
+\item 
+void \hyperlink{ramdisk__ioctl_8c_a8c3a51079cc4f7345b2a44e11473a95e}{negate\-Index\-Node\-Pointers} (int index\-Node\-Number)
+\item 
+int \hyperlink{ramdisk__ioctl_8c_a07611c240172061713a83fceb233145d}{string\-Contains\-Char} (char $\ast$string, char ourchar)
+\item 
+int \hyperlink{ramdisk__ioctl_8c_a31eb316a0b5fa0f802d4d8be5e98a811}{create\-Index\-Node} (char $\ast$type, char $\ast$pathname, int memorysize)
+\item 
+char $\ast$ \hyperlink{ramdisk__ioctl_8c_afc0dbb6478a5595861c6999243a59590}{get\-Index\-Node\-Type} (int index\-Node)
+\item 
+char $\ast$ \hyperlink{ramdisk__ioctl_8c_acd7641577f5df3e67204cb88e963a3a5}{get\-File\-Name\-From\-Path} (char $\ast$pathname)
+\item 
+int \hyperlink{ramdisk__ioctl_8c_a0f464845b19b01649eca623504473b16}{number\-Of\-Files\-In\-Memory\-Block} (int memory\-Block)
+\item 
+int \hyperlink{ramdisk__ioctl_8c_a27c39b76cb81f341e5e99a09c60f2a62}{insert\-File\-Into\-Directory\-Node} (int directory\-Node\-Num, int file\-Node\-Num, char $\ast$filename)
+\item 
+int \hyperlink{ramdisk__ioctl_8c_a141938c96079a53ebfdde763b974aaee}{read\-File\-Name} (int index\-Node\-Num, char $\ast$address, int index)
+\item 
+void \hyperlink{ramdisk__ioctl_8c_a5cbf1cbdddf2b848e566c95ff2831f17}{alloc\-Memory\-For\-Index\-Node} (int index\-Node\-Number, int number\-Of\-Blocks)
+\item 
+int \hyperlink{ramdisk__ioctl_8c_aab4649048b055ad638528ae18e98e325}{delete\-File} (char $\ast$pathname)
+\item 
+int \hyperlink{ramdisk__ioctl_8c_a6268b05a277a309f32b9705f907b181c}{write\-To\-File} (int index\-Node, char $\ast$data, int size, int offset)
+\item 
+int \hyperlink{ramdisk__ioctl_8c_a33f5aa9f2aa10268d9ddc8d390845404}{read\-From\-File} (int index\-Node, char $\ast$data, int size, int offset)
+\item 
+int \hyperlink{ramdisk__ioctl_8c_aaf5187c8df1589e6e89735a513878eaf}{get\-File\-Size} (int index\-Node)
+\item 
+int \hyperlink{ramdisk__ioctl_8c_aa837de32c6a6c1381d2684177520b8f1}{alloc\-Block\-For\-Node} (int index\-Node, int current\-Size)
+\item 
+void \hyperlink{ramdisk__ioctl_8c_a3db03e531c3c195859d4976f8e744b09}{zero\-Block} (int block\-Num)
+\item 
+int \hyperlink{ramdisk__ioctl_8c_a5c2c1ddb13c40a740f5584468eed23a6}{get\-Free\-Block} (void)
+\item 
+void \hyperlink{ramdisk__ioctl_8c_aa67b077799f8bce89efca38502b55cf2}{free\-Block} (int blockindex)
+\item 
+void \hyperlink{ramdisk__ioctl_8c_a0a277ce5803161d4f63b76fc12a634a8}{print\-Superblock} (void)
+\item 
+void \hyperlink{ramdisk__ioctl_8c_a07e6138dfacc7d77d935c148730cc0e1}{print\-Bitmap} (int number\-Of\-Bits)
+\item 
+void \hyperlink{ramdisk__ioctl_8c_a33a5a36b52d624bee5d9f1571c58317c}{print\-Index\-Node} (int node\-Index)
+\item 
+void \hyperlink{ramdisk__ioctl_8c_ad9078ce38c4b40bcfabb6655a593da2b}{test\-Dir\-Creation} (void)
+\item 
+void \hyperlink{ramdisk__ioctl_8c_a4d50d67dd9008e391f75cd5216ccb8f0}{test\-File\-Creation} (void)
+\item 
+void \hyperlink{ramdisk__ioctl_8c_a4b61b6aa04dc3806cd9686460fb82287}{test\-Read\-From\-File} (void)
+\item 
+void \hyperlink{ramdisk__ioctl_8c_a18b9439422de5a38fdf3bd9ddce24442}{test\-File\-Deletion} (void)
+\item 
+void \hyperlink{ramdisk__ioctl_8c_a03b4a83ccc10aeb35570e8123656119c}{test\-Read\-Dir} (void)
+\item 
+void \hyperlink{ramdisk__ioctl_8c_ae0e940f4f67d2004ef3ae64af8cba709}{kr\-\_\-creat} (struct \hyperlink{struct_r_a_m__path}{R\-A\-M\-\_\-path} $\ast$input)
+\item 
+void \hyperlink{ramdisk__ioctl_8c_a8507609aa3c490d47e20ddffd7bb32c0}{kr\-\_\-mkdir} (struct \hyperlink{struct_r_a_m__path}{R\-A\-M\-\_\-path} $\ast$input)
+\item 
+void \hyperlink{ramdisk__ioctl_8c_acb668f0e9e26eb597cf57b3d05fa28ee}{kr\-\_\-open} (struct \hyperlink{struct_r_a_m__file}{R\-A\-M\-\_\-file} $\ast$input)
+\item 
+void \hyperlink{ramdisk__ioctl_8c_a9980b2e7dd14dd395508823de99629ed}{kr\-\_\-read} (struct \hyperlink{struct_r_a_m__access_file}{R\-A\-M\-\_\-access\-File} $\ast$input)
+\item 
+void \hyperlink{ramdisk__ioctl_8c_a29d6e1dd3d324d3f7133e9b32e152e48}{kr\-\_\-write} (struct \hyperlink{struct_r_a_m__access_file}{R\-A\-M\-\_\-access\-File} $\ast$input)
+\item 
+void \hyperlink{ramdisk__ioctl_8c_a1451ce13a20c4fe783ba1dc235f312e3}{kr\-\_\-lseek} (struct \hyperlink{struct_r_a_m__file}{R\-A\-M\-\_\-file} $\ast$input)
+\item 
+void \hyperlink{ramdisk__ioctl_8c_a4bba9c3faeb862be31ac55d03a0bb00f}{kr\-\_\-unlink} (struct \hyperlink{struct_r_a_m__path}{R\-A\-M\-\_\-path} $\ast$input)
+\item 
+void \hyperlink{ramdisk__ioctl_8c_a63b5a53b38f18c369cf548213463614b}{kr\-\_\-readdir} (struct \hyperlink{struct_r_a_m__access_file}{R\-A\-M\-\_\-access\-File} $\ast$input)
+\item 
+int \hyperlink{ramdisk__ioctl_8c_ae66f6b31b5ad750f1fe042a706a4e3d4}{main} ()
 \end{DoxyCompactItemize}
 
 
 \subsection{Function Documentation}
-\hypertarget{ramdisk__ioctl_8c_a39d4cb9a64be1783fd1da532f904f5d4}{\index{ramdisk\-\_\-ioctl.\-c@{ramdisk\-\_\-ioctl.\-c}!module\-\_\-exit@{module\-\_\-exit}}
-\index{module\-\_\-exit@{module\-\_\-exit}!ramdisk_ioctl.c@{ramdisk\-\_\-ioctl.\-c}}
-\subsubsection[{module\-\_\-exit}]{\setlength{\rightskip}{0pt plus 5cm}module\-\_\-exit (
+\hypertarget{ramdisk__ioctl_8c_aa837de32c6a6c1381d2684177520b8f1}{\index{ramdisk\-\_\-ioctl.\-c@{ramdisk\-\_\-ioctl.\-c}!alloc\-Block\-For\-Node@{alloc\-Block\-For\-Node}}
+\index{alloc\-Block\-For\-Node@{alloc\-Block\-For\-Node}!ramdisk_ioctl.c@{ramdisk\-\_\-ioctl.\-c}}
+\subsubsection[{alloc\-Block\-For\-Node}]{\setlength{\rightskip}{0pt plus 5cm}int alloc\-Block\-For\-Node (
 \begin{DoxyParamCaption}
-\item[{cleanup\-\_\-routine}]{}
+\item[{int}]{index\-Node, }
+\item[{int}]{current\-Size}
 \end{DoxyParamCaption}
-)}}\label{ramdisk__ioctl_8c_a39d4cb9a64be1783fd1da532f904f5d4}
-\hypertarget{ramdisk__ioctl_8c_a424f990a513b1875436547f7ef17c622}{\index{ramdisk\-\_\-ioctl.\-c@{ramdisk\-\_\-ioctl.\-c}!module\-\_\-init@{module\-\_\-init}}
-\index{module\-\_\-init@{module\-\_\-init}!ramdisk_ioctl.c@{ramdisk\-\_\-ioctl.\-c}}
-\subsubsection[{module\-\_\-init}]{\setlength{\rightskip}{0pt plus 5cm}module\-\_\-init (
-\begin{DoxyParamCaption}
-\item[{initialization\-\_\-routine}]{}
-\end{DoxyParamCaption}
-)}}\label{ramdisk__ioctl_8c_a424f990a513b1875436547f7ef17c622}
-\hypertarget{ramdisk__ioctl_8c_ad94b36675e7eb067ea3ce6ff9e244a44}{\index{ramdisk\-\_\-ioctl.\-c@{ramdisk\-\_\-ioctl.\-c}!M\-O\-D\-U\-L\-E\-\_\-\-L\-I\-C\-E\-N\-S\-E@{M\-O\-D\-U\-L\-E\-\_\-\-L\-I\-C\-E\-N\-S\-E}}
-\index{M\-O\-D\-U\-L\-E\-\_\-\-L\-I\-C\-E\-N\-S\-E@{M\-O\-D\-U\-L\-E\-\_\-\-L\-I\-C\-E\-N\-S\-E}!ramdisk_ioctl.c@{ramdisk\-\_\-ioctl.\-c}}
-\subsubsection[{M\-O\-D\-U\-L\-E\-\_\-\-L\-I\-C\-E\-N\-S\-E}]{\setlength{\rightskip}{0pt plus 5cm}M\-O\-D\-U\-L\-E\-\_\-\-L\-I\-C\-E\-N\-S\-E (
-\begin{DoxyParamCaption}
-\item[{\char`\"{}G\-P\-L\char`\"{}}]{}
-\end{DoxyParamCaption}
-)}}\label{ramdisk__ioctl_8c_ad94b36675e7eb067ea3ce6ff9e244a44}
-\begin{DoxyAuthor}{Author}
-Raphael Landaverde 
+)}}\label{ramdisk__ioctl_8c_aa837de32c6a6c1381d2684177520b8f1}
+Function that allocates a new data block for a given index node
 
-Chenkai Liu 
-\end{DoxyAuthor}
+\begin{DoxyReturn}{Returns}
+int -\/1 if there is no more room available in the filesystem, the new block number otherwise 
+\end{DoxyReturn}
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em index\-Node} & the index\-Node to expand \\
+\hline
+\mbox{\tt in}  & {\em current} & the current number of index nodes allocated \\
+\hline
+\end{DoxyParams}
+\begin{DoxyRefDesc}{Todo}
+\item[\hyperlink{todo__todo000001}{Todo}]Special Case where we have to allocated an indirect block as well (must num available blocks in order to not leak a block by accident) \end{DoxyRefDesc}
+
+
+Definition at line 1357 of file ramdisk\-\_\-ioctl.\-c.
+
+\hypertarget{ramdisk__ioctl_8c_a5cbf1cbdddf2b848e566c95ff2831f17}{\index{ramdisk\-\_\-ioctl.\-c@{ramdisk\-\_\-ioctl.\-c}!alloc\-Memory\-For\-Index\-Node@{alloc\-Memory\-For\-Index\-Node}}
+\index{alloc\-Memory\-For\-Index\-Node@{alloc\-Memory\-For\-Index\-Node}!ramdisk_ioctl.c@{ramdisk\-\_\-ioctl.\-c}}
+\subsubsection[{alloc\-Memory\-For\-Index\-Node}]{\setlength{\rightskip}{0pt plus 5cm}void alloc\-Memory\-For\-Index\-Node (
+\begin{DoxyParamCaption}
+\item[{int}]{index\-Node\-Number, }
+\item[{int}]{number\-Of\-Blocks}
+\end{DoxyParamCaption}
+)}}\label{ramdisk__ioctl_8c_a5cbf1cbdddf2b848e566c95ff2831f17}
+Allocate memory for index Node given the number of blocks. This should be done depending on allocation size
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em index\-Node\-Number} & -\/ reference to the index node \\
+\hline
+\mbox{\tt in}  & {\em number\-Of\-Blocks} & -\/ number of blocks to allocate for \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 948 of file ramdisk\-\_\-ioctl.\-c.
+
+\hypertarget{ramdisk__ioctl_8c_a827d551042255dc9358ba93a63dc73b7}{\index{ramdisk\-\_\-ioctl.\-c@{ramdisk\-\_\-ioctl.\-c}!change\-Block\-Count@{change\-Block\-Count}}
+\index{change\-Block\-Count@{change\-Block\-Count}!ramdisk_ioctl.c@{ramdisk\-\_\-ioctl.\-c}}
+\subsubsection[{change\-Block\-Count}]{\setlength{\rightskip}{0pt plus 5cm}void change\-Block\-Count (
+\begin{DoxyParamCaption}
+\item[{int}]{delta}
+\end{DoxyParamCaption}
+)}}\label{ramdisk__ioctl_8c_a827d551042255dc9358ba93a63dc73b7}
+Changes the block count in the superblock
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em delta} & 1 if incrementing (block freed), -\/1 if decrementing (block added) \\
+\hline
+\end{DoxyParams}
+\begin{DoxyRemark}{Remarks}
+delta can be greater than 1 in magnitude, but only if you know what you are doing 
+\end{DoxyRemark}
+
+
+Definition at line 80 of file ramdisk\-\_\-ioctl.\-c.
+
+\hypertarget{ramdisk__ioctl_8c_ae89d5922a39c678343413a18028c7540}{\index{ramdisk\-\_\-ioctl.\-c@{ramdisk\-\_\-ioctl.\-c}!change\-Index\-Node\-Count@{change\-Index\-Node\-Count}}
+\index{change\-Index\-Node\-Count@{change\-Index\-Node\-Count}!ramdisk_ioctl.c@{ramdisk\-\_\-ioctl.\-c}}
+\subsubsection[{change\-Index\-Node\-Count}]{\setlength{\rightskip}{0pt plus 5cm}void change\-Index\-Node\-Count (
+\begin{DoxyParamCaption}
+\item[{int}]{delta}
+\end{DoxyParamCaption}
+)}}\label{ramdisk__ioctl_8c_ae89d5922a39c678343413a18028c7540}
+Changes the index node count in the superblock
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em delta} & 1 if incrementing (index node deleted), -\/1 if decrementing (index node added) \\
+\hline
+\end{DoxyParams}
+\begin{DoxyRemark}{Remarks}
+delta can be greater in magnitude, but only if you know what you are doing 
+\end{DoxyRemark}
+
+
+Definition at line 94 of file ramdisk\-\_\-ioctl.\-c.
+
+\hypertarget{ramdisk__ioctl_8c_aab978eeb7939a34773abec29e57ebc29}{\index{ramdisk\-\_\-ioctl.\-c@{ramdisk\-\_\-ioctl.\-c}!check\-Bit@{check\-Bit}}
+\index{check\-Bit@{check\-Bit}!ramdisk_ioctl.c@{ramdisk\-\_\-ioctl.\-c}}
+\subsubsection[{check\-Bit}]{\setlength{\rightskip}{0pt plus 5cm}int check\-Bit (
+\begin{DoxyParamCaption}
+\item[{int}]{index, }
+\item[{int}]{bit}
+\end{DoxyParamCaption}
+)}}\label{ramdisk__ioctl_8c_aab978eeb7939a34773abec29e57ebc29}
+Utility function to check if a specified bit is set within a byte
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em index} & The byte index into R\-A\-M\-\_\-memory for which to check the bit \\
+\hline
+\mbox{\tt in}  & {\em bit} & the specified bit to check \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+int returns 1 if the bit is set, 0 if it is empty 
+\end{DoxyReturn}
+\begin{DoxyRemark}{Remarks}
+The most significant bit is 7, while the least significant bit is 0 
+\end{DoxyRemark}
+
+
+Definition at line 66 of file ramdisk\-\_\-ioctl.\-c.
+
+\hypertarget{ramdisk__ioctl_8c_a313672c89a2873201ba702c1dbe87b8a}{\index{ramdisk\-\_\-ioctl.\-c@{ramdisk\-\_\-ioctl.\-c}!clear\-Bit@{clear\-Bit}}
+\index{clear\-Bit@{clear\-Bit}!ramdisk_ioctl.c@{ramdisk\-\_\-ioctl.\-c}}
+\subsubsection[{clear\-Bit}]{\setlength{\rightskip}{0pt plus 5cm}void clear\-Bit (
+\begin{DoxyParamCaption}
+\item[{int}]{index, }
+\item[{int}]{bit}
+\end{DoxyParamCaption}
+)}}\label{ramdisk__ioctl_8c_a313672c89a2873201ba702c1dbe87b8a}
+Utility function to clear a specified bit within a byte
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em index} & The byte index into R\-A\-M\-\_\-memory for which to clear the bit \\
+\hline
+\mbox{\tt in}  & {\em bit} & the specified bit to clear \\
+\hline
+\end{DoxyParams}
+\begin{DoxyRemark}{Remarks}
+The most significant bit is 7, while the least significant bit is 0 
+\end{DoxyRemark}
+
+
+Definition at line 49 of file ramdisk\-\_\-ioctl.\-c.
+
+\hypertarget{ramdisk__ioctl_8c_ac33cfa3c7861c5cf675e17eee9fd2fbd}{\index{ramdisk\-\_\-ioctl.\-c@{ramdisk\-\_\-ioctl.\-c}!clear\-Index\-Node@{clear\-Index\-Node}}
+\index{clear\-Index\-Node@{clear\-Index\-Node}!ramdisk_ioctl.c@{ramdisk\-\_\-ioctl.\-c}}
+\subsubsection[{clear\-Index\-Node}]{\setlength{\rightskip}{0pt plus 5cm}void clear\-Index\-Node (
+\begin{DoxyParamCaption}
+\item[{int}]{Index\-Node\-Number}
+\end{DoxyParamCaption}
+)}}\label{ramdisk__ioctl_8c_ac33cfa3c7861c5cf675e17eee9fd2fbd}
+Helper method to clear an index node when a file/dir is removed
+
+\begin{DoxyReturn}{Returns}
+void 
+\end{DoxyReturn}
+
+\begin{DoxyParams}{Parameters}
+{\em index\-Node\-Number\mbox{]}} & int index node number to clear \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 425 of file ramdisk\-\_\-ioctl.\-c.
+
+\hypertarget{ramdisk__ioctl_8c_a31eb316a0b5fa0f802d4d8be5e98a811}{\index{ramdisk\-\_\-ioctl.\-c@{ramdisk\-\_\-ioctl.\-c}!create\-Index\-Node@{create\-Index\-Node}}
+\index{create\-Index\-Node@{create\-Index\-Node}!ramdisk_ioctl.c@{ramdisk\-\_\-ioctl.\-c}}
+\subsubsection[{create\-Index\-Node}]{\setlength{\rightskip}{0pt plus 5cm}int create\-Index\-Node (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{type, }
+\item[{char $\ast$}]{pathname, }
+\item[{int}]{memorysize}
+\end{DoxyParamCaption}
+)}}\label{ramdisk__ioctl_8c_a31eb316a0b5fa0f802d4d8be5e98a811}
+Creates a new index node
+
+\begin{DoxyReturn}{Returns}
+type description 
+\end{DoxyReturn}
+
+\begin{DoxyParams}{Parameters}
+{\em in-\/out\mbox{]}} & type type of the node, 'dir' or 'reg' \\
+\hline
+{\em in-\/out\mbox{]}} & filename name of the file or dir, 'dir' or 'reg' \\
+\hline
+{\em in-\/out\mbox{]}} & memorysize size of the file or dir in bytes \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 575 of file ramdisk\-\_\-ioctl.\-c.
+
+\hypertarget{ramdisk__ioctl_8c_aab4649048b055ad638528ae18e98e325}{\index{ramdisk\-\_\-ioctl.\-c@{ramdisk\-\_\-ioctl.\-c}!delete\-File@{delete\-File}}
+\index{delete\-File@{delete\-File}!ramdisk_ioctl.c@{ramdisk\-\_\-ioctl.\-c}}
+\subsubsection[{delete\-File}]{\setlength{\rightskip}{0pt plus 5cm}int delete\-File (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{pathname}
+\end{DoxyParamCaption}
+)}}\label{ramdisk__ioctl_8c_aab4649048b055ad638528ae18e98e325}
+Deletes a file from the filesystem, and removes the file from the parent directory
+
+\begin{DoxyReturn}{Returns}
+int -\/1 on failure, 0 on success 
+\end{DoxyReturn}
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em pathname} & the absolute path to the file \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 1054 of file ramdisk\-\_\-ioctl.\-c.
+
+\hypertarget{ramdisk__ioctl_8c_a8add9144ebc0b81f00b85c9fb28ff4a2}{\index{ramdisk\-\_\-ioctl.\-c@{ramdisk\-\_\-ioctl.\-c}!find\-File\-Index\-Node\-In\-Dir@{find\-File\-Index\-Node\-In\-Dir}}
+\index{find\-File\-Index\-Node\-In\-Dir@{find\-File\-Index\-Node\-In\-Dir}!ramdisk_ioctl.c@{ramdisk\-\_\-ioctl.\-c}}
+\subsubsection[{find\-File\-Index\-Node\-In\-Dir}]{\setlength{\rightskip}{0pt plus 5cm}int find\-File\-Index\-Node\-In\-Dir (
+\begin{DoxyParamCaption}
+\item[{int}]{index\-Node, }
+\item[{char $\ast$}]{filename}
+\end{DoxyParamCaption}
+)}}\label{ramdisk__ioctl_8c_a8add9144ebc0b81f00b85c9fb28ff4a2}
+Returns the index node of a file stored in a directory
+
+\begin{DoxyReturn}{Returns}
+int the index node index for the desired file, returns -\/1 if not found or -\/2 if index\-Node is not a directory 
+\end{DoxyReturn}
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em index\-Node} & the index\-Node to search, must be a valid directory \\
+\hline
+\mbox{\tt in}  & {\em filename} & the filename to search for \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 241 of file ramdisk\-\_\-ioctl.\-c.
+
+\hypertarget{ramdisk__ioctl_8c_aa67b077799f8bce89efca38502b55cf2}{\index{ramdisk\-\_\-ioctl.\-c@{ramdisk\-\_\-ioctl.\-c}!free\-Block@{free\-Block}}
+\index{free\-Block@{free\-Block}!ramdisk_ioctl.c@{ramdisk\-\_\-ioctl.\-c}}
+\subsubsection[{free\-Block}]{\setlength{\rightskip}{0pt plus 5cm}void free\-Block (
+\begin{DoxyParamCaption}
+\item[{int}]{blockindex}
+\end{DoxyParamCaption}
+)}}\label{ramdisk__ioctl_8c_aa67b077799f8bce89efca38502b55cf2}
+
+
+Definition at line 1571 of file ramdisk\-\_\-ioctl.\-c.
+
+\hypertarget{ramdisk__ioctl_8c_a1782427f3bf8c87f6d3253aa97b74f9b}{\index{ramdisk\-\_\-ioctl.\-c@{ramdisk\-\_\-ioctl.\-c}!get\-Allocated\-Block\-Numbers@{get\-Allocated\-Block\-Numbers}}
+\index{get\-Allocated\-Block\-Numbers@{get\-Allocated\-Block\-Numbers}!ramdisk_ioctl.c@{ramdisk\-\_\-ioctl.\-c}}
+\subsubsection[{get\-Allocated\-Block\-Numbers}]{\setlength{\rightskip}{0pt plus 5cm}void get\-Allocated\-Block\-Numbers (
+\begin{DoxyParamCaption}
+\item[{int $\ast$}]{block\-Array, }
+\item[{int}]{inode\-Num}
+\end{DoxyParamCaption}
+)}}\label{ramdisk__ioctl_8c_a1782427f3bf8c87f6d3253aa97b74f9b}
+Fills the input array with the block numbers of all the allocated blocks for a given index node, valid for both dir and fil
+
+
+\begin{DoxyParams}[1]{Parameters}
+ & {\em in-\/out\mbox{]}} & block\-Array An int array which will hold the values of allocated blocks. \\
+\hline
+\mbox{\tt in}  & {\em inode\-Num} & the inode number to search through  block\-Array M\-U\-S\-T be allocated with size 4168 before being passed into this functino \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 146 of file ramdisk\-\_\-ioctl.\-c.
+
+\hypertarget{ramdisk__ioctl_8c_acd7641577f5df3e67204cb88e963a3a5}{\index{ramdisk\-\_\-ioctl.\-c@{ramdisk\-\_\-ioctl.\-c}!get\-File\-Name\-From\-Path@{get\-File\-Name\-From\-Path}}
+\index{get\-File\-Name\-From\-Path@{get\-File\-Name\-From\-Path}!ramdisk_ioctl.c@{ramdisk\-\_\-ioctl.\-c}}
+\subsubsection[{get\-File\-Name\-From\-Path}]{\setlength{\rightskip}{0pt plus 5cm}char$\ast$ get\-File\-Name\-From\-Path (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{pathname}
+\end{DoxyParamCaption}
+)}}\label{ramdisk__ioctl_8c_acd7641577f5df3e67204cb88e963a3a5}
+
+
+Definition at line 693 of file ramdisk\-\_\-ioctl.\-c.
+
+\hypertarget{ramdisk__ioctl_8c_aaf5187c8df1589e6e89735a513878eaf}{\index{ramdisk\-\_\-ioctl.\-c@{ramdisk\-\_\-ioctl.\-c}!get\-File\-Size@{get\-File\-Size}}
+\index{get\-File\-Size@{get\-File\-Size}!ramdisk_ioctl.c@{ramdisk\-\_\-ioctl.\-c}}
+\subsubsection[{get\-File\-Size}]{\setlength{\rightskip}{0pt plus 5cm}int get\-File\-Size (
+\begin{DoxyParamCaption}
+\item[{int}]{index\-Node}
+\end{DoxyParamCaption}
+)}}\label{ramdisk__ioctl_8c_aaf5187c8df1589e6e89735a513878eaf}
+
+
+Definition at line 1340 of file ramdisk\-\_\-ioctl.\-c.
+
+\hypertarget{ramdisk__ioctl_8c_a5c2c1ddb13c40a740f5584468eed23a6}{\index{ramdisk\-\_\-ioctl.\-c@{ramdisk\-\_\-ioctl.\-c}!get\-Free\-Block@{get\-Free\-Block}}
+\index{get\-Free\-Block@{get\-Free\-Block}!ramdisk_ioctl.c@{ramdisk\-\_\-ioctl.\-c}}
+\subsubsection[{get\-Free\-Block}]{\setlength{\rightskip}{0pt plus 5cm}int get\-Free\-Block (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}}\label{ramdisk__ioctl_8c_a5c2c1ddb13c40a740f5584468eed23a6}
+
+
+Definition at line 1543 of file ramdisk\-\_\-ioctl.\-c.
+
+\hypertarget{ramdisk__ioctl_8c_abed9bc66c41f05c25f859ec3da324c43}{\index{ramdisk\-\_\-ioctl.\-c@{ramdisk\-\_\-ioctl.\-c}!get\-Index\-Node\-Number\-From\-Pathname@{get\-Index\-Node\-Number\-From\-Pathname}}
+\index{get\-Index\-Node\-Number\-From\-Pathname@{get\-Index\-Node\-Number\-From\-Pathname}!ramdisk_ioctl.c@{ramdisk\-\_\-ioctl.\-c}}
+\subsubsection[{get\-Index\-Node\-Number\-From\-Pathname}]{\setlength{\rightskip}{0pt plus 5cm}int get\-Index\-Node\-Number\-From\-Pathname (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{pathname, }
+\item[{int}]{dir\-Flag}
+\end{DoxyParamCaption}
+)}}\label{ramdisk__ioctl_8c_abed9bc66c41f05c25f859ec3da324c43}
+Get the index Node number for a file from the pathname
+
+\begin{DoxyReturn}{Returns}
+the index node number of the directory that holds the specified file or dir, or -\/1 if file doesn't exist, or a dir holding it doesn't exist If the dir\-Flag is not 0, then it returns the index node of the directory of the file, else it returns the index node of the file itself 
+\end{DoxyReturn}
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em pathname} & the pathname to parse  pathname must N\-O\-T have a trailing '/' \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 314 of file ramdisk\-\_\-ioctl.\-c.
+
+\hypertarget{ramdisk__ioctl_8c_afc0dbb6478a5595861c6999243a59590}{\index{ramdisk\-\_\-ioctl.\-c@{ramdisk\-\_\-ioctl.\-c}!get\-Index\-Node\-Type@{get\-Index\-Node\-Type}}
+\index{get\-Index\-Node\-Type@{get\-Index\-Node\-Type}!ramdisk_ioctl.c@{ramdisk\-\_\-ioctl.\-c}}
+\subsubsection[{get\-Index\-Node\-Type}]{\setlength{\rightskip}{0pt plus 5cm}char$\ast$ get\-Index\-Node\-Type (
+\begin{DoxyParamCaption}
+\item[{int}]{index\-Node}
+\end{DoxyParamCaption}
+)}}\label{ramdisk__ioctl_8c_afc0dbb6478a5595861c6999243a59590}
+
+
+Definition at line 674 of file ramdisk\-\_\-ioctl.\-c.
+
+\hypertarget{ramdisk__ioctl_8c_a3d4431d37381f627988efc2c4038cb0a}{\index{ramdisk\-\_\-ioctl.\-c@{ramdisk\-\_\-ioctl.\-c}!get\-New\-Index\-Node\-Number@{get\-New\-Index\-Node\-Number}}
+\index{get\-New\-Index\-Node\-Number@{get\-New\-Index\-Node\-Number}!ramdisk_ioctl.c@{ramdisk\-\_\-ioctl.\-c}}
+\subsubsection[{get\-New\-Index\-Node\-Number}]{\setlength{\rightskip}{0pt plus 5cm}int get\-New\-Index\-Node\-Number (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}}\label{ramdisk__ioctl_8c_a3d4431d37381f627988efc2c4038cb0a}
+Get the next free Index\-Node\-Number. Also clears up the block pointers.
+
+\begin{DoxyReturn}{Returns}
+int return index node number of a free index node 
+\end{DoxyReturn}
+
+
+Definition at line 396 of file ramdisk\-\_\-ioctl.\-c.
+
+\hypertarget{ramdisk__ioctl_8c_aa8c641082321bba47aa38fd2690ab15c}{\index{ramdisk\-\_\-ioctl.\-c@{ramdisk\-\_\-ioctl.\-c}!init\-\_\-ramdisk@{init\-\_\-ramdisk}}
+\index{init\-\_\-ramdisk@{init\-\_\-ramdisk}!ramdisk_ioctl.c@{ramdisk\-\_\-ioctl.\-c}}
+\subsubsection[{init\-\_\-ramdisk}]{\setlength{\rightskip}{0pt plus 5cm}void init\-\_\-ramdisk (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}}\label{ramdisk__ioctl_8c_aa8c641082321bba47aa38fd2690ab15c}
+R\-A\-M\-D\-I\-S\-K initialization Initializes the ramdisk superblock, indexnodes, and bitmap to include the root directory and nothing else 
+
+Definition at line 107 of file ramdisk\-\_\-ioctl.\-c.
+
+\hypertarget{ramdisk__ioctl_8c_a27c39b76cb81f341e5e99a09c60f2a62}{\index{ramdisk\-\_\-ioctl.\-c@{ramdisk\-\_\-ioctl.\-c}!insert\-File\-Into\-Directory\-Node@{insert\-File\-Into\-Directory\-Node}}
+\index{insert\-File\-Into\-Directory\-Node@{insert\-File\-Into\-Directory\-Node}!ramdisk_ioctl.c@{ramdisk\-\_\-ioctl.\-c}}
+\subsubsection[{insert\-File\-Into\-Directory\-Node}]{\setlength{\rightskip}{0pt plus 5cm}int insert\-File\-Into\-Directory\-Node (
+\begin{DoxyParamCaption}
+\item[{int}]{directory\-Node\-Num, }
+\item[{int}]{file\-Node\-Num, }
+\item[{char $\ast$}]{filename}
+\end{DoxyParamCaption}
+)}}\label{ramdisk__ioctl_8c_a27c39b76cb81f341e5e99a09c60f2a62}
+Inserts a file into a directory node
+
+\begin{DoxyReturn}{Returns}
+int -\/1 on fail, 0 on success 
+\end{DoxyReturn}
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em directory\-Node\-Num} & the indexnode number for the directory \\
+\hline
+\mbox{\tt in}  & {\em file\-Node\-Num} & the index\-Node of the file to insert(must be generated already) \\
+\hline
+\mbox{\tt in}  & {\em filename} & the filename of the file to insert \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 757 of file ramdisk\-\_\-ioctl.\-c.
+
+\hypertarget{ramdisk__ioctl_8c_ae0e940f4f67d2004ef3ae64af8cba709}{\index{ramdisk\-\_\-ioctl.\-c@{ramdisk\-\_\-ioctl.\-c}!kr\-\_\-creat@{kr\-\_\-creat}}
+\index{kr\-\_\-creat@{kr\-\_\-creat}!ramdisk_ioctl.c@{ramdisk\-\_\-ioctl.\-c}}
+\subsubsection[{kr\-\_\-creat}]{\setlength{\rightskip}{0pt plus 5cm}void kr\-\_\-creat (
+\begin{DoxyParamCaption}
+\item[{struct {\bf R\-A\-M\-\_\-path} $\ast$}]{input}
+\end{DoxyParamCaption}
+)}}\label{ramdisk__ioctl_8c_ae0e940f4f67d2004ef3ae64af8cba709}
+Kernel pair for the create function
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em input} & The \hyperlink{struct_r_a_m__path}{R\-A\-M\-\_\-path} struct for creating the file \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 1907 of file ramdisk\-\_\-ioctl.\-c.
+
+\hypertarget{ramdisk__ioctl_8c_a1451ce13a20c4fe783ba1dc235f312e3}{\index{ramdisk\-\_\-ioctl.\-c@{ramdisk\-\_\-ioctl.\-c}!kr\-\_\-lseek@{kr\-\_\-lseek}}
+\index{kr\-\_\-lseek@{kr\-\_\-lseek}!ramdisk_ioctl.c@{ramdisk\-\_\-ioctl.\-c}}
+\subsubsection[{kr\-\_\-lseek}]{\setlength{\rightskip}{0pt plus 5cm}void kr\-\_\-lseek (
+\begin{DoxyParamCaption}
+\item[{struct {\bf R\-A\-M\-\_\-file} $\ast$}]{input}
+\end{DoxyParamCaption}
+)}}\label{ramdisk__ioctl_8c_a1451ce13a20c4fe783ba1dc235f312e3}
+Kernel pair for the seeking function
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em input} & input, use offset in here to index into file \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 1964 of file ramdisk\-\_\-ioctl.\-c.
+
+\hypertarget{ramdisk__ioctl_8c_a8507609aa3c490d47e20ddffd7bb32c0}{\index{ramdisk\-\_\-ioctl.\-c@{ramdisk\-\_\-ioctl.\-c}!kr\-\_\-mkdir@{kr\-\_\-mkdir}}
+\index{kr\-\_\-mkdir@{kr\-\_\-mkdir}!ramdisk_ioctl.c@{ramdisk\-\_\-ioctl.\-c}}
+\subsubsection[{kr\-\_\-mkdir}]{\setlength{\rightskip}{0pt plus 5cm}void kr\-\_\-mkdir (
+\begin{DoxyParamCaption}
+\item[{struct {\bf R\-A\-M\-\_\-path} $\ast$}]{input}
+\end{DoxyParamCaption}
+)}}\label{ramdisk__ioctl_8c_a8507609aa3c490d47e20ddffd7bb32c0}
+Kernel pair for making a new directory
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em input} & The \hyperlink{struct_r_a_m__path}{R\-A\-M\-\_\-path} struct for creating the file \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 1919 of file ramdisk\-\_\-ioctl.\-c.
+
+\hypertarget{ramdisk__ioctl_8c_acb668f0e9e26eb597cf57b3d05fa28ee}{\index{ramdisk\-\_\-ioctl.\-c@{ramdisk\-\_\-ioctl.\-c}!kr\-\_\-open@{kr\-\_\-open}}
+\index{kr\-\_\-open@{kr\-\_\-open}!ramdisk_ioctl.c@{ramdisk\-\_\-ioctl.\-c}}
+\subsubsection[{kr\-\_\-open}]{\setlength{\rightskip}{0pt plus 5cm}void kr\-\_\-open (
+\begin{DoxyParamCaption}
+\item[{struct {\bf R\-A\-M\-\_\-file} $\ast$}]{input}
+\end{DoxyParamCaption}
+)}}\label{ramdisk__ioctl_8c_acb668f0e9e26eb597cf57b3d05fa28ee}
+Kernel pair for opening a file
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em input} & The \hyperlink{struct_r_a_m__path}{R\-A\-M\-\_\-path} struct for opening the file \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 1931 of file ramdisk\-\_\-ioctl.\-c.
+
+\hypertarget{ramdisk__ioctl_8c_a9980b2e7dd14dd395508823de99629ed}{\index{ramdisk\-\_\-ioctl.\-c@{ramdisk\-\_\-ioctl.\-c}!kr\-\_\-read@{kr\-\_\-read}}
+\index{kr\-\_\-read@{kr\-\_\-read}!ramdisk_ioctl.c@{ramdisk\-\_\-ioctl.\-c}}
+\subsubsection[{kr\-\_\-read}]{\setlength{\rightskip}{0pt plus 5cm}void kr\-\_\-read (
+\begin{DoxyParamCaption}
+\item[{struct {\bf R\-A\-M\-\_\-access\-File} $\ast$}]{input}
+\end{DoxyParamCaption}
+)}}\label{ramdisk__ioctl_8c_a9980b2e7dd14dd395508823de99629ed}
+Kernel pair for reading a file
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em input} & The accessfile struct. Output read is placed into this struct \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 1943 of file ramdisk\-\_\-ioctl.\-c.
+
+\hypertarget{ramdisk__ioctl_8c_a63b5a53b38f18c369cf548213463614b}{\index{ramdisk\-\_\-ioctl.\-c@{ramdisk\-\_\-ioctl.\-c}!kr\-\_\-readdir@{kr\-\_\-readdir}}
+\index{kr\-\_\-readdir@{kr\-\_\-readdir}!ramdisk_ioctl.c@{ramdisk\-\_\-ioctl.\-c}}
+\subsubsection[{kr\-\_\-readdir}]{\setlength{\rightskip}{0pt plus 5cm}void kr\-\_\-readdir (
+\begin{DoxyParamCaption}
+\item[{struct {\bf R\-A\-M\-\_\-access\-File} $\ast$}]{input}
+\end{DoxyParamCaption}
+)}}\label{ramdisk__ioctl_8c_a63b5a53b38f18c369cf548213463614b}
+Kernel pair for the readdir function
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em input} & Accessfile struct. Used to read the relevant directory \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 1974 of file ramdisk\-\_\-ioctl.\-c.
+
+\hypertarget{ramdisk__ioctl_8c_a4bba9c3faeb862be31ac55d03a0bb00f}{\index{ramdisk\-\_\-ioctl.\-c@{ramdisk\-\_\-ioctl.\-c}!kr\-\_\-unlink@{kr\-\_\-unlink}}
+\index{kr\-\_\-unlink@{kr\-\_\-unlink}!ramdisk_ioctl.c@{ramdisk\-\_\-ioctl.\-c}}
+\subsubsection[{kr\-\_\-unlink}]{\setlength{\rightskip}{0pt plus 5cm}void kr\-\_\-unlink (
+\begin{DoxyParamCaption}
+\item[{struct {\bf R\-A\-M\-\_\-path} $\ast$}]{input}
+\end{DoxyParamCaption}
+)}}\label{ramdisk__ioctl_8c_a4bba9c3faeb862be31ac55d03a0bb00f}
+Kernel pair for unlinking a file from the filesystem
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em input} & Path struct. Will delete file at the desired \hyperlink{struct_r_a_m__path}{R\-A\-M\-\_\-path} \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 1967 of file ramdisk\-\_\-ioctl.\-c.
+
+\hypertarget{ramdisk__ioctl_8c_a29d6e1dd3d324d3f7133e9b32e152e48}{\index{ramdisk\-\_\-ioctl.\-c@{ramdisk\-\_\-ioctl.\-c}!kr\-\_\-write@{kr\-\_\-write}}
+\index{kr\-\_\-write@{kr\-\_\-write}!ramdisk_ioctl.c@{ramdisk\-\_\-ioctl.\-c}}
+\subsubsection[{kr\-\_\-write}]{\setlength{\rightskip}{0pt plus 5cm}void kr\-\_\-write (
+\begin{DoxyParamCaption}
+\item[{struct {\bf R\-A\-M\-\_\-access\-File} $\ast$}]{input}
+\end{DoxyParamCaption}
+)}}\label{ramdisk__ioctl_8c_a29d6e1dd3d324d3f7133e9b32e152e48}
+Kernel pair for the write function
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em input} & The accessfile struct. Input for writing is in this struct \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 1955 of file ramdisk\-\_\-ioctl.\-c.
+
+\hypertarget{ramdisk__ioctl_8c_ae66f6b31b5ad750f1fe042a706a4e3d4}{\index{ramdisk\-\_\-ioctl.\-c@{ramdisk\-\_\-ioctl.\-c}!main@{main}}
+\index{main@{main}!ramdisk_ioctl.c@{ramdisk\-\_\-ioctl.\-c}}
+\subsubsection[{main}]{\setlength{\rightskip}{0pt plus 5cm}int main (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{ramdisk__ioctl_8c_ae66f6b31b5ad750f1fe042a706a4e3d4}
+
+
+Definition at line 1986 of file ramdisk\-\_\-ioctl.\-c.
+
+\hypertarget{ramdisk__ioctl_8c_a8c3a51079cc4f7345b2a44e11473a95e}{\index{ramdisk\-\_\-ioctl.\-c@{ramdisk\-\_\-ioctl.\-c}!negate\-Index\-Node\-Pointers@{negate\-Index\-Node\-Pointers}}
+\index{negate\-Index\-Node\-Pointers@{negate\-Index\-Node\-Pointers}!ramdisk_ioctl.c@{ramdisk\-\_\-ioctl.\-c}}
+\subsubsection[{negate\-Index\-Node\-Pointers}]{\setlength{\rightskip}{0pt plus 5cm}void negate\-Index\-Node\-Pointers (
+\begin{DoxyParamCaption}
+\item[{int}]{index\-Node\-Number}
+\end{DoxyParamCaption}
+)}}\label{ramdisk__ioctl_8c_a8c3a51079cc4f7345b2a44e11473a95e}
+Helper function for setting memory region to -\/1 for easier tracking Set Direct 1-\/8, single indirect 9 and double indirect 10 byte to -\/1
+
+
+\begin{DoxyParams}{Parameters}
+{\em in-\/out\mbox{]}} & index\-Node\-Number -\/ id of the index number \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 528 of file ramdisk\-\_\-ioctl.\-c.
+
+\hypertarget{ramdisk__ioctl_8c_a0f464845b19b01649eca623504473b16}{\index{ramdisk\-\_\-ioctl.\-c@{ramdisk\-\_\-ioctl.\-c}!number\-Of\-Files\-In\-Memory\-Block@{number\-Of\-Files\-In\-Memory\-Block}}
+\index{number\-Of\-Files\-In\-Memory\-Block@{number\-Of\-Files\-In\-Memory\-Block}!ramdisk_ioctl.c@{ramdisk\-\_\-ioctl.\-c}}
+\subsubsection[{number\-Of\-Files\-In\-Memory\-Block}]{\setlength{\rightskip}{0pt plus 5cm}int number\-Of\-Files\-In\-Memory\-Block (
+\begin{DoxyParamCaption}
+\item[{int}]{memory\-Block}
+\end{DoxyParamCaption}
+)}}\label{ramdisk__ioctl_8c_a0f464845b19b01649eca623504473b16}
+Helper method that returns how many files are stored in a memory block
+
+\begin{DoxyReturn}{Returns}
+number of memory block, or -\/1 if the memory\-Block passed in is -\/1 
+\end{DoxyReturn}
+
+\begin{DoxyParams}{Parameters}
+{\em in-\/out\mbox{]}} & name description \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 723 of file ramdisk\-\_\-ioctl.\-c.
+
+\hypertarget{ramdisk__ioctl_8c_a07e6138dfacc7d77d935c148730cc0e1}{\index{ramdisk\-\_\-ioctl.\-c@{ramdisk\-\_\-ioctl.\-c}!print\-Bitmap@{print\-Bitmap}}
+\index{print\-Bitmap@{print\-Bitmap}!ramdisk_ioctl.c@{ramdisk\-\_\-ioctl.\-c}}
+\subsubsection[{print\-Bitmap}]{\setlength{\rightskip}{0pt plus 5cm}void print\-Bitmap (
+\begin{DoxyParamCaption}
+\item[{int}]{number\-Of\-Bits}
+\end{DoxyParamCaption}
+)}}\label{ramdisk__ioctl_8c_a07e6138dfacc7d77d935c148730cc0e1}
+This debugging function prints the specified number of bitmap number\-Of\-Bits
+
+\begin{DoxyReturn}{Returns}
+void prints the bitmap bits in 25 bit chunks 
+\end{DoxyReturn}
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em number\-Of\-Bits} & specifies the number of bits to print \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 1604 of file ramdisk\-\_\-ioctl.\-c.
+
+\hypertarget{ramdisk__ioctl_8c_a33a5a36b52d624bee5d9f1571c58317c}{\index{ramdisk\-\_\-ioctl.\-c@{ramdisk\-\_\-ioctl.\-c}!print\-Index\-Node@{print\-Index\-Node}}
+\index{print\-Index\-Node@{print\-Index\-Node}!ramdisk_ioctl.c@{ramdisk\-\_\-ioctl.\-c}}
+\subsubsection[{print\-Index\-Node}]{\setlength{\rightskip}{0pt plus 5cm}void print\-Index\-Node (
+\begin{DoxyParamCaption}
+\item[{int}]{node\-Index}
+\end{DoxyParamCaption}
+)}}\label{ramdisk__ioctl_8c_a33a5a36b52d624bee5d9f1571c58317c}
+
+
+Definition at line 1628 of file ramdisk\-\_\-ioctl.\-c.
+
+\hypertarget{ramdisk__ioctl_8c_a0a277ce5803161d4f63b76fc12a634a8}{\index{ramdisk\-\_\-ioctl.\-c@{ramdisk\-\_\-ioctl.\-c}!print\-Superblock@{print\-Superblock}}
+\index{print\-Superblock@{print\-Superblock}!ramdisk_ioctl.c@{ramdisk\-\_\-ioctl.\-c}}
+\subsubsection[{print\-Superblock}]{\setlength{\rightskip}{0pt plus 5cm}void print\-Superblock (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}}\label{ramdisk__ioctl_8c_a0a277ce5803161d4f63b76fc12a634a8}
+Prints out the superblock 
+
+Definition at line 1589 of file ramdisk\-\_\-ioctl.\-c.
+
+\hypertarget{ramdisk__ioctl_8c_a141938c96079a53ebfdde763b974aaee}{\index{ramdisk\-\_\-ioctl.\-c@{ramdisk\-\_\-ioctl.\-c}!read\-File\-Name@{read\-File\-Name}}
+\index{read\-File\-Name@{read\-File\-Name}!ramdisk_ioctl.c@{ramdisk\-\_\-ioctl.\-c}}
+\subsubsection[{read\-File\-Name}]{\setlength{\rightskip}{0pt plus 5cm}int read\-File\-Name (
+\begin{DoxyParamCaption}
+\item[{int}]{index\-Node\-Num, }
+\item[{char $\ast$}]{address, }
+\item[{int}]{index}
+\end{DoxyParamCaption}
+)}}\label{ramdisk__ioctl_8c_a141938c96079a53ebfdde763b974aaee}
+Reads a file name from a path name which is a directory
+
+\begin{DoxyReturn}{Returns}
+type description 
+\end{DoxyReturn}
+
+\begin{DoxyParams}{Parameters}
+{\em in-\/out\mbox{]}} & name description \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 861 of file ramdisk\-\_\-ioctl.\-c.
+
+\hypertarget{ramdisk__ioctl_8c_a33f5aa9f2aa10268d9ddc8d390845404}{\index{ramdisk\-\_\-ioctl.\-c@{ramdisk\-\_\-ioctl.\-c}!read\-From\-File@{read\-From\-File}}
+\index{read\-From\-File@{read\-From\-File}!ramdisk_ioctl.c@{ramdisk\-\_\-ioctl.\-c}}
+\subsubsection[{read\-From\-File}]{\setlength{\rightskip}{0pt plus 5cm}int read\-From\-File (
+\begin{DoxyParamCaption}
+\item[{int}]{index\-Node, }
+\item[{char $\ast$}]{data, }
+\item[{int}]{size, }
+\item[{int}]{offset}
+\end{DoxyParamCaption}
+)}}\label{ramdisk__ioctl_8c_a33f5aa9f2aa10268d9ddc8d390845404}
+Read specify number of bytes to destinated location Fails if file is a directory. Assumes that data has size+1 elements in order to place a null
+
+\begin{DoxyReturn}{Returns}
+int 1=success -\/1=fail 
+\end{DoxyReturn}
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em index\-Node} & index node of the file to read from \\
+\hline
+\mbox{\tt in}  & {\em data} & a char $\ast$ pointer to the userspace memory that needs to be read to \\
+\hline
+\mbox{\tt in}  & {\em size} & the number of bytes to read into the index\-Node \\
+\hline
+\mbox{\tt in}  & {\em offset} & the offset into the file to start reading at \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 1279 of file ramdisk\-\_\-ioctl.\-c.
+
+\hypertarget{ramdisk__ioctl_8c_a9ca0242af058ca3177c5910028f5e539}{\index{ramdisk\-\_\-ioctl.\-c@{ramdisk\-\_\-ioctl.\-c}!set\-Bit@{set\-Bit}}
+\index{set\-Bit@{set\-Bit}!ramdisk_ioctl.c@{ramdisk\-\_\-ioctl.\-c}}
+\subsubsection[{set\-Bit}]{\setlength{\rightskip}{0pt plus 5cm}void set\-Bit (
+\begin{DoxyParamCaption}
+\item[{int}]{index, }
+\item[{int}]{bit}
+\end{DoxyParamCaption}
+)}}\label{ramdisk__ioctl_8c_a9ca0242af058ca3177c5910028f5e539}
+Utility function to set a specified bit within a byte
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em index} & The byte index into R\-A\-M\-\_\-memory for which to set the bit \\
+\hline
+\mbox{\tt in}  & {\em bit} & the specified bit to set \\
+\hline
+\end{DoxyParams}
+\begin{DoxyRemark}{Remarks}
+The most significant bit is 7, while the least significant bit is 0 
+\end{DoxyRemark}
+
+
+Definition at line 34 of file ramdisk\-\_\-ioctl.\-c.
+
+\hypertarget{ramdisk__ioctl_8c_a07611c240172061713a83fceb233145d}{\index{ramdisk\-\_\-ioctl.\-c@{ramdisk\-\_\-ioctl.\-c}!string\-Contains\-Char@{string\-Contains\-Char}}
+\index{string\-Contains\-Char@{string\-Contains\-Char}!ramdisk_ioctl.c@{ramdisk\-\_\-ioctl.\-c}}
+\subsubsection[{string\-Contains\-Char}]{\setlength{\rightskip}{0pt plus 5cm}int string\-Contains\-Char (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{string, }
+\item[{char}]{ourchar}
+\end{DoxyParamCaption}
+)}}\label{ramdisk__ioctl_8c_a07611c240172061713a83fceb233145d}
+Helper function to find if a char exists in a string
+
+\begin{DoxyReturn}{Returns}
+bool true -\/ char found false -\/ char not found 
+\end{DoxyReturn}
+
+\begin{DoxyParams}{Parameters}
+{\em in-\/out\mbox{]}} & name description \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 546 of file ramdisk\-\_\-ioctl.\-c.
+
+\hypertarget{ramdisk__ioctl_8c_ad9078ce38c4b40bcfabb6655a593da2b}{\index{ramdisk\-\_\-ioctl.\-c@{ramdisk\-\_\-ioctl.\-c}!test\-Dir\-Creation@{test\-Dir\-Creation}}
+\index{test\-Dir\-Creation@{test\-Dir\-Creation}!ramdisk_ioctl.c@{ramdisk\-\_\-ioctl.\-c}}
+\subsubsection[{test\-Dir\-Creation}]{\setlength{\rightskip}{0pt plus 5cm}void test\-Dir\-Creation (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}}\label{ramdisk__ioctl_8c_ad9078ce38c4b40bcfabb6655a593da2b}
+
+
+Definition at line 1735 of file ramdisk\-\_\-ioctl.\-c.
+
+\hypertarget{ramdisk__ioctl_8c_a4d50d67dd9008e391f75cd5216ccb8f0}{\index{ramdisk\-\_\-ioctl.\-c@{ramdisk\-\_\-ioctl.\-c}!test\-File\-Creation@{test\-File\-Creation}}
+\index{test\-File\-Creation@{test\-File\-Creation}!ramdisk_ioctl.c@{ramdisk\-\_\-ioctl.\-c}}
+\subsubsection[{test\-File\-Creation}]{\setlength{\rightskip}{0pt plus 5cm}void test\-File\-Creation (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}}\label{ramdisk__ioctl_8c_a4d50d67dd9008e391f75cd5216ccb8f0}
+
+
+Definition at line 1755 of file ramdisk\-\_\-ioctl.\-c.
+
+\hypertarget{ramdisk__ioctl_8c_a18b9439422de5a38fdf3bd9ddce24442}{\index{ramdisk\-\_\-ioctl.\-c@{ramdisk\-\_\-ioctl.\-c}!test\-File\-Deletion@{test\-File\-Deletion}}
+\index{test\-File\-Deletion@{test\-File\-Deletion}!ramdisk_ioctl.c@{ramdisk\-\_\-ioctl.\-c}}
+\subsubsection[{test\-File\-Deletion}]{\setlength{\rightskip}{0pt plus 5cm}void test\-File\-Deletion (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}}\label{ramdisk__ioctl_8c_a18b9439422de5a38fdf3bd9ddce24442}
+
+
+Definition at line 1857 of file ramdisk\-\_\-ioctl.\-c.
+
+\hypertarget{ramdisk__ioctl_8c_a03b4a83ccc10aeb35570e8123656119c}{\index{ramdisk\-\_\-ioctl.\-c@{ramdisk\-\_\-ioctl.\-c}!test\-Read\-Dir@{test\-Read\-Dir}}
+\index{test\-Read\-Dir@{test\-Read\-Dir}!ramdisk_ioctl.c@{ramdisk\-\_\-ioctl.\-c}}
+\subsubsection[{test\-Read\-Dir}]{\setlength{\rightskip}{0pt plus 5cm}void test\-Read\-Dir (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}}\label{ramdisk__ioctl_8c_a03b4a83ccc10aeb35570e8123656119c}
+
+
+Definition at line 1872 of file ramdisk\-\_\-ioctl.\-c.
+
+\hypertarget{ramdisk__ioctl_8c_a4b61b6aa04dc3806cd9686460fb82287}{\index{ramdisk\-\_\-ioctl.\-c@{ramdisk\-\_\-ioctl.\-c}!test\-Read\-From\-File@{test\-Read\-From\-File}}
+\index{test\-Read\-From\-File@{test\-Read\-From\-File}!ramdisk_ioctl.c@{ramdisk\-\_\-ioctl.\-c}}
+\subsubsection[{test\-Read\-From\-File}]{\setlength{\rightskip}{0pt plus 5cm}void test\-Read\-From\-File (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}}\label{ramdisk__ioctl_8c_a4b61b6aa04dc3806cd9686460fb82287}
+
+
+Definition at line 1799 of file ramdisk\-\_\-ioctl.\-c.
+
+\hypertarget{ramdisk__ioctl_8c_a6268b05a277a309f32b9705f907b181c}{\index{ramdisk\-\_\-ioctl.\-c@{ramdisk\-\_\-ioctl.\-c}!write\-To\-File@{write\-To\-File}}
+\index{write\-To\-File@{write\-To\-File}!ramdisk_ioctl.c@{ramdisk\-\_\-ioctl.\-c}}
+\subsubsection[{write\-To\-File}]{\setlength{\rightskip}{0pt plus 5cm}int write\-To\-File (
+\begin{DoxyParamCaption}
+\item[{int}]{index\-Node, }
+\item[{char $\ast$}]{data, }
+\item[{int}]{size, }
+\item[{int}]{offset}
+\end{DoxyParamCaption}
+)}}\label{ramdisk__ioctl_8c_a6268b05a277a309f32b9705f907b181c}
+Writes to designated file marked by index node. Fails if file is a directory
+
+\begin{DoxyReturn}{Returns}
+int actual number of bytes written 
+\end{DoxyReturn}
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em index\-Node} & index node of the file to write to \\
+\hline
+\mbox{\tt in}  & {\em data} & a char $\ast$ pointer to the userspace memory that needs to be written \\
+\hline
+\mbox{\tt in}  & {\em size} & the number of bytes to write into the index\-Node \\
+\hline
+\mbox{\tt in}  & {\em offset} & the offset into the file to start writing at (offset of 0 is the beginning of the file) \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 1170 of file ramdisk\-\_\-ioctl.\-c.
+
+\hypertarget{ramdisk__ioctl_8c_a3db03e531c3c195859d4976f8e744b09}{\index{ramdisk\-\_\-ioctl.\-c@{ramdisk\-\_\-ioctl.\-c}!zero\-Block@{zero\-Block}}
+\index{zero\-Block@{zero\-Block}!ramdisk_ioctl.c@{ramdisk\-\_\-ioctl.\-c}}
+\subsubsection[{zero\-Block}]{\setlength{\rightskip}{0pt plus 5cm}void zero\-Block (
+\begin{DoxyParamCaption}
+\item[{int}]{block\-Num}
+\end{DoxyParamCaption}
+)}}\label{ramdisk__ioctl_8c_a3db03e531c3c195859d4976f8e744b09}
+
+
+Definition at line 1529 of file ramdisk\-\_\-ioctl.\-c.
+

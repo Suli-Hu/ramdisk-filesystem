@@ -7,6 +7,12 @@
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<script type="text/javascript">
+  $(document).ready(initResizable);
+</script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="search/search.js"></script>
 <script type="text/javascript">
@@ -67,29 +73,45 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
     <ul class="tablist">
       <li class="current"><a href="globals.html"><span>All</span></a></li>
       <li><a href="globals_func.html"><span>Functions</span></a></li>
+      <li><a href="globals_vars.html"><span>Variables</span></a></li>
       <li><a href="globals_defs.html"><span>Macros</span></a></li>
     </ul>
   </div>
   <div id="navrow4" class="tabs3">
     <ul class="tablist">
+      <li><a href="#index_a"><span>a</span></a></li>
       <li><a href="#index_b"><span>b</span></a></li>
       <li><a href="#index_c"><span>c</span></a></li>
       <li><a href="#index_d"><span>d</span></a></li>
       <li><a href="#index_f"><span>f</span></a></li>
+      <li><a href="#index_g"><span>g</span></a></li>
       <li><a href="#index_i"><span>i</span></a></li>
       <li><a href="#index_k"><span>k</span></a></li>
-      <li><a href="#index_l"><span>l</span></a></li>
       <li><a href="#index_m"><span>m</span></a></li>
-      <li><a href="#index_o"><span>o</span></a></li>
+      <li><a href="#index_n"><span>n</span></a></li>
       <li><a href="#index_p"><span>p</span></a></li>
       <li><a href="#index_r"><span>r</span></a></li>
       <li><a href="#index_s"><span>s</span></a></li>
       <li><a href="#index_t"><span>t</span></a></li>
-      <li><a href="#index_u"><span>u</span></a></li>
       <li><a href="#index_w"><span>w</span></a></li>
+      <li><a href="#index_z"><span>z</span></a></li>
     </ul>
   </div>
 </div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+$(document).ready(function(){initNavTree('globals.html','');});
+</script>
+<div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -107,9 +129,24 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="contents">
 <div class="textblock">Here is a list of all file members with links to the files they belong to:</div>
 
+<h3><a class="anchor" id="index_a"></a>- a -</h3><ul>
+<li>allocBlockForNode()
+: <a class="el" href="defines_8h.html#aa837de32c6a6c1381d2684177520b8f1">defines.h</a>
+, <a class="el" href="ramdisk__ioctl_8c.html#aa837de32c6a6c1381d2684177520b8f1">ramdisk_ioctl.c</a>
+</li>
+<li>allocMemoryForIndexNode()
+: <a class="el" href="defines_8h.html#a5cbf1cbdddf2b848e566c95ff2831f17">defines.h</a>
+, <a class="el" href="ramdisk__ioctl_8c.html#a5cbf1cbdddf2b848e566c95ff2831f17">ramdisk_ioctl.c</a>
+</li>
+</ul>
+
+
 <h3><a class="anchor" id="index_b"></a>- b -</h3><ul>
 <li>BLK_SZ
-: <a class="el" href="test__file_8c.html#a564c42a6b59e8f7210f708678bfff3a4">test_file.c</a>
+: <a class="el" href="test__file_8cpp.html#a564c42a6b59e8f7210f708678bfff3a4">test_file.cpp</a>
+</li>
+<li>BLOCK_BITMAP_BLOCK_COUNT
+: <a class="el" href="defines_8h.html#ac5d5ca797fd94b950d89e52868fe5386">defines.h</a>
 </li>
 <li>BLOCK_BITMAP_OFFSET
 : <a class="el" href="defines_8h.html#ab9b6f109a6de8a02776f531652006296">defines.h</a>
@@ -117,49 +154,67 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <li>BLOCK_BITMAP_SIZE
 : <a class="el" href="defines_8h.html#a53c9b2f427bfb998d4b820209cca03cd">defines.h</a>
 </li>
-<li>BLOCK_SIZE
-: <a class="el" href="defines_8h.html#ad51ded0bbd705f02f73fc60c0b721ced">defines.h</a>
-</li>
 </ul>
 
 
 <h3><a class="anchor" id="index_c"></a>- c -</h3><ul>
-<li>CLOSE
-: <a class="el" href="defines_8h.html#a0e29f488071372aa0530842e60b64511">defines.h</a>
+<li>changeBlockCount()
+: <a class="el" href="ramdisk__ioctl_8c.html#a827d551042255dc9358ba93a63dc73b7">ramdisk_ioctl.c</a>
 </li>
-<li>CREATE
-: <a class="el" href="defines_8h.html#a4c6b87853cbaf189fe1e484706ae1875">defines.h</a>
+<li>changeIndexNodeCount()
+: <a class="el" href="ramdisk__ioctl_8c.html#ae89d5922a39c678343413a18028c7540">ramdisk_ioctl.c</a>
+</li>
+<li>checkBit()
+: <a class="el" href="ramdisk__ioctl_8c.html#aab978eeb7939a34773abec29e57ebc29">ramdisk_ioctl.c</a>
+</li>
+<li>checkIfFileExists()
+: <a class="el" href="_r_a_m_file_lib_8cpp.html#a0d43d7b56cddc853f20c40e615d84b6c">RAMFileLib.cpp</a>
+, <a class="el" href="structs_8h.html#a2e2606afa73b377add66dba6d672e6f7">structs.h</a>
+</li>
+<li>checkIfIndexNodeAlreadyExists()
+: <a class="el" href="_r_a_m_file_lib_8cpp.html#a36015fe10c54ca54f1f4dd489d3cff80">RAMFileLib.cpp</a>
+, <a class="el" href="structs_8h.html#a36015fe10c54ca54f1f4dd489d3cff80">structs.h</a>
+</li>
+<li>clearBit()
+: <a class="el" href="ramdisk__ioctl_8c.html#a313672c89a2873201ba702c1dbe87b8a">ramdisk_ioctl.c</a>
+</li>
+<li>clearIndexNode()
+: <a class="el" href="ramdisk__ioctl_8c.html#ac33cfa3c7861c5cf675e17eee9fd2fbd">ramdisk_ioctl.c</a>
+</li>
+<li>concatDirToPath()
+: <a class="el" href="_r_a_m_file_lib_8cpp.html#aaa05b4b0468e7e5bf596cf8232dd13f8">RAMFileLib.cpp</a>
+, <a class="el" href="structs_8h.html#aaa05b4b0468e7e5bf596cf8232dd13f8">structs.h</a>
+</li>
+<li>createIndexNode()
+: <a class="el" href="ramdisk__ioctl_8c.html#a31eb316a0b5fa0f802d4d8be5e98a811">ramdisk_ioctl.c</a>
+, <a class="el" href="defines_8h.html#a31eb316a0b5fa0f802d4d8be5e98a811">defines.h</a>
+</li>
+<li>currentFdNum
+: <a class="el" href="_r_a_m_file_lib_8cpp.html#ad29d6c77271d1aded009ab5bd7117777">RAMFileLib.cpp</a>
+, <a class="el" href="test__file_8cpp.html#ad29d6c77271d1aded009ab5bd7117777">test_file.cpp</a>
 </li>
 </ul>
 
 
 <h3><a class="anchor" id="index_d"></a>- d -</h3><ul>
+<li>DATA_BLOCKS_OFFSET
+: <a class="el" href="defines_8h.html#a6a4bc429928537956bef270e1505de40">defines.h</a>
+</li>
+<li>DEBUG
+: <a class="el" href="defines_8h.html#ad72dbcf6d0153db1b8d8a58001feed83">defines.h</a>
+</li>
+<li>deleteFile()
+: <a class="el" href="ramdisk__ioctl_8c.html#aab4649048b055ad638528ae18e98e325">ramdisk_ioctl.c</a>
+</li>
+<li>deleteFileFromFDTable()
+: <a class="el" href="_r_a_m_file_lib_8cpp.html#ab0dc21541784903cda618f09ea3a1098">RAMFileLib.cpp</a>
+, <a class="el" href="structs_8h.html#ab0dc21541784903cda618f09ea3a1098">structs.h</a>
+</li>
 <li>DIRECT
-: <a class="el" href="test__file_8c.html#a86720ded03b3f5b5ca53d30b33cb33bb">test_file.c</a>
+: <a class="el" href="test__file_8cpp.html#a86720ded03b3f5b5ca53d30b33cb33bb">test_file.cpp</a>
 </li>
 <li>DIRECT_1
 : <a class="el" href="defines_8h.html#a905598653bf870e3e958acf0380a77e7">defines.h</a>
-</li>
-<li>DIRECT_2
-: <a class="el" href="defines_8h.html#a965f8604e02513e91ef6c9162742d810">defines.h</a>
-</li>
-<li>DIRECT_3
-: <a class="el" href="defines_8h.html#a0dfbc44dec94b531056459343fba8503">defines.h</a>
-</li>
-<li>DIRECT_4
-: <a class="el" href="defines_8h.html#a6839369f1b71648927c5cbb54f6be24c">defines.h</a>
-</li>
-<li>DIRECT_5
-: <a class="el" href="defines_8h.html#af5e65433e08cbbd9a613d1a3cd6d9b22">defines.h</a>
-</li>
-<li>DIRECT_6
-: <a class="el" href="defines_8h.html#aa2445e929732869089d3081276d1ddc1">defines.h</a>
-</li>
-<li>DIRECT_7
-: <a class="el" href="defines_8h.html#adbdb5fb58f757840cdaef27b7866e49d">defines.h</a>
-</li>
-<li>DIRECT_8
-: <a class="el" href="defines_8h.html#a43cc89a83d10925c225b325f7e5d3a00">defines.h</a>
 </li>
 <li>DOUBLE_INDIR
 : <a class="el" href="defines_8h.html#a2a129c797c5e972e51d89a0c6cf6d1bd">defines.h</a>
@@ -168,14 +223,60 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 
 <h3><a class="anchor" id="index_f"></a>- f -</h3><ul>
-<li>FILE_COUNT
-: <a class="el" href="defines_8h.html#a7ee3b243ddbfbae35ee2b5af95e069b5">defines.h</a>
+<li>fd_Table
+: <a class="el" href="_r_a_m_file_lib_8cpp.html#ab392c325603acad969546cf906c807ad">RAMFileLib.cpp</a>
+, <a class="el" href="test__file_8cpp.html#a61a58915626efba266cdec789256700b">test_file.cpp</a>
+</li>
+<li>fdFromIndexNode()
+: <a class="el" href="structs_8h.html#ad8e5c137c4b9dccc4cbb6f47997473ec">structs.h</a>
+, <a class="el" href="_r_a_m_file_lib_8cpp.html#ad8e5c137c4b9dccc4cbb6f47997473ec">RAMFileLib.cpp</a>
 </li>
 <li>FILE_INFO_SIZE
 : <a class="el" href="defines_8h.html#a9c3c179c039c3f784e9effdf15399e28">defines.h</a>
 </li>
+<li>findFileIndexNodeInDir()
+: <a class="el" href="ramdisk__ioctl_8c.html#a8add9144ebc0b81f00b85c9fb28ff4a2">ramdisk_ioctl.c</a>
+</li>
+<li>freeBlock()
+: <a class="el" href="ramdisk__ioctl_8c.html#aa67b077799f8bce89efca38502b55cf2">ramdisk_ioctl.c</a>
+, <a class="el" href="defines_8h.html#aa67b077799f8bce89efca38502b55cf2">defines.h</a>
+</li>
 <li>FS_SIZE
 : <a class="el" href="defines_8h.html#a3167e1c51bc79684fdfb78c181075d11">defines.h</a>
+</li>
+</ul>
+
+
+<h3><a class="anchor" id="index_g"></a>- g -</h3><ul>
+<li>getAllocatedBlockNumbers()
+: <a class="el" href="ramdisk__ioctl_8c.html#a1782427f3bf8c87f6d3253aa97b74f9b">ramdisk_ioctl.c</a>
+</li>
+<li>getEntryFromFd()
+: <a class="el" href="_r_a_m_file_lib_8cpp.html#a0f60b83ed50bc1b11178200e368b91d9">RAMFileLib.cpp</a>
+, <a class="el" href="structs_8h.html#a02e14c0e25511eed0fe118e074b8c57c">structs.h</a>
+</li>
+<li>getFileNameFromPath()
+: <a class="el" href="defines_8h.html#acd7641577f5df3e67204cb88e963a3a5">defines.h</a>
+, <a class="el" href="ramdisk__ioctl_8c.html#acd7641577f5df3e67204cb88e963a3a5">ramdisk_ioctl.c</a>
+, <a class="el" href="_r_a_m_file_lib_8cpp.html#acd7641577f5df3e67204cb88e963a3a5">RAMFileLib.cpp</a>
+, <a class="el" href="structs_8h.html#acd7641577f5df3e67204cb88e963a3a5">structs.h</a>
+</li>
+<li>getFileSize()
+: <a class="el" href="ramdisk__ioctl_8c.html#aaf5187c8df1589e6e89735a513878eaf">ramdisk_ioctl.c</a>
+</li>
+<li>getFreeBlock()
+: <a class="el" href="defines_8h.html#a5c2c1ddb13c40a740f5584468eed23a6">defines.h</a>
+, <a class="el" href="ramdisk__ioctl_8c.html#a5c2c1ddb13c40a740f5584468eed23a6">ramdisk_ioctl.c</a>
+</li>
+<li>getIndexNodeNumberFromPathname()
+: <a class="el" href="ramdisk__ioctl_8c.html#abed9bc66c41f05c25f859ec3da324c43">ramdisk_ioctl.c</a>
+, <a class="el" href="defines_8h.html#abed9bc66c41f05c25f859ec3da324c43">defines.h</a>
+</li>
+<li>getIndexNodeType()
+: <a class="el" href="ramdisk__ioctl_8c.html#afc0dbb6478a5595861c6999243a59590">ramdisk_ioctl.c</a>
+</li>
+<li>getNewIndexNodeNumber()
+: <a class="el" href="ramdisk__ioctl_8c.html#a3d4431d37381f627988efc2c4038cb0a">ramdisk_ioctl.c</a>
 </li>
 </ul>
 
@@ -193,6 +294,19 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <li>INDEX_NODE_SIZE
 : <a class="el" href="defines_8h.html#a629824d26fc98ae1a4a7e33c08903410">defines.h</a>
 </li>
+<li>indexNodeFromfd()
+: <a class="el" href="_r_a_m_file_lib_8cpp.html#af760a44d03ad9f85bfce33c087cd5a9c">RAMFileLib.cpp</a>
+, <a class="el" href="structs_8h.html#af760a44d03ad9f85bfce33c087cd5a9c">structs.h</a>
+</li>
+<li>init_ramdisk()
+: <a class="el" href="ramdisk__ioctl_8c.html#aa8c641082321bba47aa38fd2690ab15c">ramdisk_ioctl.c</a>
+</li>
+<li>INODE_COUNT_OFFSET
+: <a class="el" href="defines_8h.html#a0749774409574d1c22c248aafe8cb8f1">defines.h</a>
+</li>
+<li>INODE_FILE_COUNT
+: <a class="el" href="defines_8h.html#aa7dde50fbcf897662fa0dcd25a27e43e">defines.h</a>
+</li>
 <li>INODE_FILE_NAME
 : <a class="el" href="defines_8h.html#ab2643d41f4160853e5744931081850ff">defines.h</a>
 </li>
@@ -205,131 +319,223 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <li>INODE_TYPE
 : <a class="el" href="defines_8h.html#a5837260343c8eaf0f7e8a2ee8123129e">defines.h</a>
 </li>
+<li>insertFileIntoDirectoryNode()
+: <a class="el" href="ramdisk__ioctl_8c.html#a27c39b76cb81f341e5e99a09c60f2a62">ramdisk_ioctl.c</a>
+, <a class="el" href="defines_8h.html#a27c39b76cb81f341e5e99a09c60f2a62">defines.h</a>
+</li>
+<li>IOCTL_TEST
+: <a class="el" href="ioctl__module_8c.html#a37364d2334ea38bd379cbce9fa2333ff">ioctl_module.c</a>
+, <a class="el" href="ioctl__test_8c.html#a37364d2334ea38bd379cbce9fa2333ff">ioctl_test.c</a>
+</li>
 </ul>
 
 
 <h3><a class="anchor" id="index_k"></a>- k -</h3><ul>
+<li>KERNELREADY
+: <a class="el" href="structs_8h.html#ad08286e477b9d09647af8752b1edeee2">structs.h</a>
+, <a class="el" href="userdefines_8h.html#ad08286e477b9d09647af8752b1edeee2">userdefines.h</a>
+</li>
+<li>key
+: <a class="el" href="ioctl__module_8c.html#a7ae5a8046c43d71c9894a2b41d73fc24">ioctl_module.c</a>
+</li>
+<li>KEYBOARD
+: <a class="el" href="ioctl__module_8c.html#a870e17d2a367b321990369cc08ff3bff">ioctl_module.c</a>
+, <a class="el" href="ioctl__test_8c.html#a870e17d2a367b321990369cc08ff3bff">ioctl_test.c</a>
+</li>
 <li>kr_close()
-: <a class="el" href="defines_8h.html#a858ad5c03d98c58c2b0436294e7751c4">defines.h</a>
+: <a class="el" href="userdefines_8h.html#a824123490ad1617b58169fbc707e0653">userdefines.h</a>
 </li>
 <li>kr_creat()
-: <a class="el" href="defines_8h.html#a4d520ed004364b7547281ea486543812">defines.h</a>
+: <a class="el" href="structs_8h.html#ae0e940f4f67d2004ef3ae64af8cba709">structs.h</a>
+, <a class="el" href="userdefines_8h.html#a8f14d5e2827576075c23a7636109b5b9">userdefines.h</a>
+, <a class="el" href="ramdisk__ioctl_8c.html#ae0e940f4f67d2004ef3ae64af8cba709">ramdisk_ioctl.c</a>
 </li>
 <li>kr_lseek()
-: <a class="el" href="defines_8h.html#aabf3deda604b85c2788f5feccd2ddd54">defines.h</a>
+: <a class="el" href="ramdisk__ioctl_8c.html#a1451ce13a20c4fe783ba1dc235f312e3">ramdisk_ioctl.c</a>
+, <a class="el" href="structs_8h.html#a1451ce13a20c4fe783ba1dc235f312e3">structs.h</a>
+, <a class="el" href="userdefines_8h.html#a344f32ea385d4b5bf815c0e819fe21d4">userdefines.h</a>
 </li>
 <li>kr_mkdir()
-: <a class="el" href="defines_8h.html#a5f0208c8df29095bd437b706444bcf18">defines.h</a>
+: <a class="el" href="ramdisk__ioctl_8c.html#a8507609aa3c490d47e20ddffd7bb32c0">ramdisk_ioctl.c</a>
+, <a class="el" href="structs_8h.html#a8507609aa3c490d47e20ddffd7bb32c0">structs.h</a>
+, <a class="el" href="userdefines_8h.html#a252c8dd4998201bd12a5a7d703d3a8fb">userdefines.h</a>
 </li>
 <li>kr_open()
-: <a class="el" href="defines_8h.html#aa682788ce8cedeb98e7116ab13e9495a">defines.h</a>
+: <a class="el" href="ramdisk__ioctl_8c.html#acb668f0e9e26eb597cf57b3d05fa28ee">ramdisk_ioctl.c</a>
+, <a class="el" href="structs_8h.html#acb668f0e9e26eb597cf57b3d05fa28ee">structs.h</a>
+, <a class="el" href="userdefines_8h.html#a744b360068e1d065934776aa660eef2d">userdefines.h</a>
 </li>
 <li>kr_read()
-: <a class="el" href="defines_8h.html#aa37a477f0706105b89f31b85d7eff168">defines.h</a>
+: <a class="el" href="structs_8h.html#a9980b2e7dd14dd395508823de99629ed">structs.h</a>
+, <a class="el" href="userdefines_8h.html#a5ee29aca304aed7f02f028bd90c826cc">userdefines.h</a>
+, <a class="el" href="ramdisk__ioctl_8c.html#a9980b2e7dd14dd395508823de99629ed">ramdisk_ioctl.c</a>
 </li>
 <li>kr_readdir()
-: <a class="el" href="defines_8h.html#ad023ce5575b1ed90d42110b1e5cf9792">defines.h</a>
+: <a class="el" href="structs_8h.html#a63b5a53b38f18c369cf548213463614b">structs.h</a>
+, <a class="el" href="ramdisk__ioctl_8c.html#a63b5a53b38f18c369cf548213463614b">ramdisk_ioctl.c</a>
+, <a class="el" href="userdefines_8h.html#a6aac08740ac01ddef2c7ff9eba1605c9">userdefines.h</a>
 </li>
 <li>kr_unlink()
-: <a class="el" href="defines_8h.html#ac8b7c76f76baf1d4b417d907ddcedcd6">defines.h</a>
+: <a class="el" href="userdefines_8h.html#a9bbb1c9d1ee9618d3fea85264e416dd1">userdefines.h</a>
+, <a class="el" href="ramdisk__ioctl_8c.html#a4bba9c3faeb862be31ac55d03a0bb00f">ramdisk_ioctl.c</a>
+, <a class="el" href="structs_8h.html#a4bba9c3faeb862be31ac55d03a0bb00f">structs.h</a>
 </li>
 <li>kr_write()
-: <a class="el" href="defines_8h.html#a8167e0d644cb94348065bd8378a7110b">defines.h</a>
-</li>
-</ul>
-
-
-<h3><a class="anchor" id="index_l"></a>- l -</h3><ul>
-<li>LSEEK
-: <a class="el" href="defines_8h.html#ad9ef8c774e19ef27832f682082179824">defines.h</a>
+: <a class="el" href="userdefines_8h.html#ac370cd6c3003e84cfa4f7203d8e0bdb3">userdefines.h</a>
+, <a class="el" href="structs_8h.html#a29d6e1dd3d324d3f7133e9b32e152e48">structs.h</a>
+, <a class="el" href="ramdisk__ioctl_8c.html#a29d6e1dd3d324d3f7133e9b32e152e48">ramdisk_ioctl.c</a>
 </li>
 </ul>
 
 
 <h3><a class="anchor" id="index_m"></a>- m -</h3><ul>
 <li>main()
-: <a class="el" href="test__file_8c.html#ae66f6b31b5ad750f1fe042a706a4e3d4">test_file.c</a>
+: <a class="el" href="ioctl__test_8c.html#ae66f6b31b5ad750f1fe042a706a4e3d4">ioctl_test.c</a>
+, <a class="el" href="ramdisk__ioctl_8c.html#ae66f6b31b5ad750f1fe042a706a4e3d4">ramdisk_ioctl.c</a>
+, <a class="el" href="test__file_8cpp.html#ae66f6b31b5ad750f1fe042a706a4e3d4">test_file.cpp</a>
+</li>
+<li>MAX_BLOCKS_ALLOCATABLE
+: <a class="el" href="defines_8h.html#a2a16acd83cf3a56116f8cbf882d34bb8">defines.h</a>
+</li>
+<li>MAX_FILE_SIZE
+: <a class="el" href="defines_8h.html#a649ad5274d988d17a275a3cead056746">defines.h</a>
 </li>
 <li>MAX_FILES
-: <a class="el" href="test__file_8c.html#a2c5eecb22513a88c24ae5831a3265e54">test_file.c</a>
-</li>
-<li>MKDIR
-: <a class="el" href="defines_8h.html#a9165713ff17c8ca8fc2951e82d1a6e57">defines.h</a>
+: <a class="el" href="test__file_8cpp.html#a2c5eecb22513a88c24ae5831a3265e54">test_file.cpp</a>
 </li>
 <li>module_exit()
-: <a class="el" href="ramdisk__ioctl_8c.html#a39d4cb9a64be1783fd1da532f904f5d4">ramdisk_ioctl.c</a>
+: <a class="el" href="ioctl__module_8c.html#a39d4cb9a64be1783fd1da532f904f5d4">ioctl_module.c</a>
 </li>
 <li>module_init()
-: <a class="el" href="ramdisk__ioctl_8c.html#a424f990a513b1875436547f7ef17c622">ramdisk_ioctl.c</a>
+: <a class="el" href="ioctl__module_8c.html#a424f990a513b1875436547f7ef17c622">ioctl_module.c</a>
 </li>
 <li>MODULE_LICENSE()
-: <a class="el" href="ramdisk__ioctl_8c.html#ad94b36675e7eb067ea3ce6ff9e244a44">ramdisk_ioctl.c</a>
+: <a class="el" href="ioctl__module_8c.html#ad94b36675e7eb067ea3ce6ff9e244a44">ioctl_module.c</a>
+</li>
+<li>my_getchar()
+: <a class="el" href="ioctl__module_8c.html#a60686c33c051f5966245d43611f27678">ioctl_module.c</a>
+, <a class="el" href="ioctl__test_8c.html#a3da24e900b7749d6a2183b07bde71a85">ioctl_test.c</a>
+</li>
+<li>my_printk()
+: <a class="el" href="ioctl__module_8c.html#af20c30d3022ed03165bf6ede8ea48d77">ioctl_module.c</a>
 </li>
 </ul>
 
 
-<h3><a class="anchor" id="index_o"></a>- o -</h3><ul>
-<li>OPEN
-: <a class="el" href="defines_8h.html#a1354b70ac6803a06beebe84f61b5f95b">defines.h</a>
+<h3><a class="anchor" id="index_n"></a>- n -</h3><ul>
+<li>negateIndexNodePointers()
+: <a class="el" href="defines_8h.html#a8c3a51079cc4f7345b2a44e11473a95e">defines.h</a>
+, <a class="el" href="ramdisk__ioctl_8c.html#a8c3a51079cc4f7345b2a44e11473a95e">ramdisk_ioctl.c</a>
+</li>
+<li>NUM_DIRECT
+: <a class="el" href="defines_8h.html#aa817d070d33ea842616102d3a9b3cac6">defines.h</a>
+</li>
+<li>numberOfFilesInMemoryBlock()
+: <a class="el" href="ramdisk__ioctl_8c.html#a0f464845b19b01649eca623504473b16">ramdisk_ioctl.c</a>
 </li>
 </ul>
 
 
 <h3><a class="anchor" id="index_p"></a>- p -</h3><ul>
+<li>PRINT
+: <a class="el" href="defines_8h.html#a8b43bafee90b30676faae508c21cb8d7">defines.h</a>
+</li>
+<li>printBitmap()
+: <a class="el" href="ramdisk__ioctl_8c.html#a07e6138dfacc7d77d935c148730cc0e1">ramdisk_ioctl.c</a>
+</li>
+<li>printfdTable()
+: <a class="el" href="_r_a_m_file_lib_8cpp.html#adca42aac4f758acd0289c836ee137592">RAMFileLib.cpp</a>
+</li>
+<li>printIndexNode()
+: <a class="el" href="defines_8h.html#a33a5a36b52d624bee5d9f1571c58317c">defines.h</a>
+, <a class="el" href="ramdisk__ioctl_8c.html#a33a5a36b52d624bee5d9f1571c58317c">ramdisk_ioctl.c</a>
+</li>
+<li>printSuperblock()
+: <a class="el" href="ramdisk__ioctl_8c.html#a0a277ce5803161d4f63b76fc12a634a8">ramdisk_ioctl.c</a>
+, <a class="el" href="defines_8h.html#a0a277ce5803161d4f63b76fc12a634a8">defines.h</a>
+</li>
+<li>proc
+: <a class="el" href="test__file_8cpp.html#a7e9d757c9982bd721d598bad366fbe62">test_file.cpp</a>
+, <a class="el" href="_r_a_m_file_lib_8cpp.html#a7e9d757c9982bd721d598bad366fbe62">RAMFileLib.cpp</a>
+</li>
 <li>PTR_SZ
-: <a class="el" href="test__file_8c.html#aa01050c4a3c2e5f70f2bf199fd58834e">test_file.c</a>
+: <a class="el" href="test__file_8cpp.html#aa01050c4a3c2e5f70f2bf199fd58834e">test_file.cpp</a>
 </li>
 <li>PTRS_PB
-: <a class="el" href="test__file_8c.html#a6cd333738fdd8ff03ee5c53df5a19f48">test_file.c</a>
+: <a class="el" href="test__file_8cpp.html#a6cd333738fdd8ff03ee5c53df5a19f48">test_file.cpp</a>
 </li>
 </ul>
 
 
 <h3><a class="anchor" id="index_r"></a>- r -</h3><ul>
+<li>RAM_BLOCK_SIZE
+: <a class="el" href="defines_8h.html#a71b835e5a2ed06d647c7e74dafca5625">defines.h</a>
+</li>
+<li>RAM_CREATE
+: <a class="el" href="structs_8h.html#a85c575d6bbd47bae4283cc742e3553da">structs.h</a>
+</li>
+<li>RAM_LSEEK
+: <a class="el" href="structs_8h.html#a732331ba05ede60212e84261dc8e452b">structs.h</a>
+</li>
+<li>RAM_MKDIR
+: <a class="el" href="structs_8h.html#ac872d28f8e37b5d11dec4000d09c7623">structs.h</a>
+</li>
+<li>RAM_OPEN
+: <a class="el" href="structs_8h.html#a95bb95f519c088f161efd1a6043ea211">structs.h</a>
+</li>
+<li>RAM_READ
+: <a class="el" href="structs_8h.html#a03c074a7558839cecf6a6d6be5790318">structs.h</a>
+</li>
+<li>RAM_READDIR
+: <a class="el" href="structs_8h.html#af6349b6e95e85f6fb46ed0c5d031c8e1">structs.h</a>
+</li>
+<li>RAM_UNLINK
+: <a class="el" href="structs_8h.html#afec1bc3b37214b0e088796f66545d8db">structs.h</a>
+</li>
+<li>RAM_WRITE
+: <a class="el" href="structs_8h.html#aefa6b25d5b020007a836e62c54da23a1">structs.h</a>
+</li>
 <li>rd_close()
-: <a class="el" href="_r_a_m_file_lib_8c.html#a66fefb5d0f64c8373ed98fe3517c91e4">RAMFileLib.c</a>
+: <a class="el" href="_r_a_m_file_lib_8cpp.html#a66fefb5d0f64c8373ed98fe3517c91e4">RAMFileLib.cpp</a>
 , <a class="el" href="_r_a_m_file_lib_8h.html#a66fefb5d0f64c8373ed98fe3517c91e4">RAMFileLib.h</a>
 </li>
 <li>rd_creat()
-: <a class="el" href="_r_a_m_file_lib_8h.html#ac8cd9a3d1c4fab64e86551fa48117d06">RAMFileLib.h</a>
-, <a class="el" href="_r_a_m_file_lib_8c.html#ac8cd9a3d1c4fab64e86551fa48117d06">RAMFileLib.c</a>
+: <a class="el" href="_r_a_m_file_lib_8cpp.html#ac8cd9a3d1c4fab64e86551fa48117d06">RAMFileLib.cpp</a>
+, <a class="el" href="_r_a_m_file_lib_8h.html#ac8cd9a3d1c4fab64e86551fa48117d06">RAMFileLib.h</a>
 </li>
 <li>rd_lseek()
-: <a class="el" href="_r_a_m_file_lib_8c.html#a20fb7e3a4e0a85ef953bbfcf9d8924f1">RAMFileLib.c</a>
+: <a class="el" href="_r_a_m_file_lib_8cpp.html#aef53e37ebcce6586c36ac11447b7fd6c">RAMFileLib.cpp</a>
 , <a class="el" href="_r_a_m_file_lib_8h.html#a20fb7e3a4e0a85ef953bbfcf9d8924f1">RAMFileLib.h</a>
 </li>
 <li>rd_mkdir()
-: <a class="el" href="_r_a_m_file_lib_8h.html#a2f8c14cce1d9a12e84394f5d0a7e90d9">RAMFileLib.h</a>
-, <a class="el" href="_r_a_m_file_lib_8c.html#a2f8c14cce1d9a12e84394f5d0a7e90d9">RAMFileLib.c</a>
+: <a class="el" href="_r_a_m_file_lib_8cpp.html#a2f8c14cce1d9a12e84394f5d0a7e90d9">RAMFileLib.cpp</a>
+, <a class="el" href="_r_a_m_file_lib_8h.html#a2f8c14cce1d9a12e84394f5d0a7e90d9">RAMFileLib.h</a>
 </li>
 <li>rd_open()
-: <a class="el" href="_r_a_m_file_lib_8c.html#acae117c51314a3d124c2e080b1202c33">RAMFileLib.c</a>
+: <a class="el" href="_r_a_m_file_lib_8cpp.html#acae117c51314a3d124c2e080b1202c33">RAMFileLib.cpp</a>
 , <a class="el" href="_r_a_m_file_lib_8h.html#acae117c51314a3d124c2e080b1202c33">RAMFileLib.h</a>
 </li>
 <li>rd_read()
-: <a class="el" href="_r_a_m_file_lib_8c.html#a23d1eacc3a020171c538d8b3b82f3cc0">RAMFileLib.c</a>
+: <a class="el" href="_r_a_m_file_lib_8cpp.html#a1cdfae6a61eca2b63cd5f75f66bc576b">RAMFileLib.cpp</a>
 , <a class="el" href="_r_a_m_file_lib_8h.html#a23d1eacc3a020171c538d8b3b82f3cc0">RAMFileLib.h</a>
 </li>
 <li>rd_readdir()
-: <a class="el" href="_r_a_m_file_lib_8c.html#a95fff0fc11f82df031e1fb7462eb8687">RAMFileLib.c</a>
+: <a class="el" href="_r_a_m_file_lib_8cpp.html#af02b8be74cc62678c064cfc9e49bb432">RAMFileLib.cpp</a>
 , <a class="el" href="_r_a_m_file_lib_8h.html#a95fff0fc11f82df031e1fb7462eb8687">RAMFileLib.h</a>
 </li>
 <li>rd_unlink()
 : <a class="el" href="_r_a_m_file_lib_8h.html#af4213a21e51f92e48a75e743740a9b46">RAMFileLib.h</a>
-, <a class="el" href="_r_a_m_file_lib_8c.html#af4213a21e51f92e48a75e743740a9b46">RAMFileLib.c</a>
+, <a class="el" href="_r_a_m_file_lib_8cpp.html#af4213a21e51f92e48a75e743740a9b46">RAMFileLib.cpp</a>
 </li>
 <li>rd_write()
-: <a class="el" href="_r_a_m_file_lib_8c.html#aeb3e97aa241f7b5fb9db4ce914859481">RAMFileLib.c</a>
-, <a class="el" href="_r_a_m_file_lib_8h.html#aeb3e97aa241f7b5fb9db4ce914859481">RAMFileLib.h</a>
+: <a class="el" href="_r_a_m_file_lib_8h.html#aeb3e97aa241f7b5fb9db4ce914859481">RAMFileLib.h</a>
+, <a class="el" href="_r_a_m_file_lib_8cpp.html#ab63f9f2f683b02fe582bfa34f7b00e32">RAMFileLib.cpp</a>
 </li>
-<li>READ
-: <a class="el" href="defines_8h.html#ada74e7db007a68e763f20c17f2985356">defines.h</a>
+<li>readFileName()
+: <a class="el" href="ramdisk__ioctl_8c.html#a141938c96079a53ebfdde763b974aaee">ramdisk_ioctl.c</a>
 </li>
-<li>READDIR
-: <a class="el" href="defines_8h.html#a82f77fa5f9c3fa9e1f3521bbb2cfad6a">defines.h</a>
-</li>
-<li>ROOT_DIR
-: <a class="el" href="defines_8h.html#a62b075ec29b7b301c68f539d8aafd029">defines.h</a>
+<li>readFromFile()
+: <a class="el" href="ramdisk__ioctl_8c.html#a33f5aa9f2aa10268d9ddc8d390845404">ramdisk_ioctl.c</a>
 </li>
 <li>ROOT_INDEX_NODE
 : <a class="el" href="defines_8h.html#a1c40273eaeeaee04089b6a60b541c5bf">defines.h</a>
@@ -338,8 +544,14 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 
 <h3><a class="anchor" id="index_s"></a>- s -</h3><ul>
+<li>setBit()
+: <a class="el" href="ramdisk__ioctl_8c.html#a9ca0242af058ca3177c5910028f5e539">ramdisk_ioctl.c</a>
+</li>
 <li>SINGLE_INDIR
 : <a class="el" href="defines_8h.html#aeaf02f5499e1df5d26d49a0869abcad8">defines.h</a>
+</li>
+<li>stringContainsChar()
+: <a class="el" href="ramdisk__ioctl_8c.html#a07611c240172061713a83fceb233145d">ramdisk_ioctl.c</a>
 </li>
 <li>SUPERBLOCK_OFFSET
 : <a class="el" href="defines_8h.html#ae9e5bed110d8e9128d5d07f8cbe9896b">defines.h</a>
@@ -349,47 +561,68 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <h3><a class="anchor" id="index_t"></a>- t -</h3><ul>
 <li>TEST1
-: <a class="el" href="test__file_8c.html#aef8471770769d5643c8d0e9d49de0678">test_file.c</a>
+: <a class="el" href="test__file_8cpp.html#aef8471770769d5643c8d0e9d49de0678">test_file.cpp</a>
 </li>
 <li>TEST2
-: <a class="el" href="test__file_8c.html#a1b5997c11166c594b80d44bfde1cfa9c">test_file.c</a>
+: <a class="el" href="test__file_8cpp.html#a1b5997c11166c594b80d44bfde1cfa9c">test_file.cpp</a>
 </li>
 <li>TEST3
-: <a class="el" href="test__file_8c.html#a4671cc5352089a85a3b62399fd09099d">test_file.c</a>
+: <a class="el" href="test__file_8cpp.html#a4671cc5352089a85a3b62399fd09099d">test_file.cpp</a>
 </li>
 <li>TEST4
-: <a class="el" href="test__file_8c.html#a48a5cfeeedd2a33c0cc9bf96155603fe">test_file.c</a>
+: <a class="el" href="test__file_8cpp.html#a48a5cfeeedd2a33c0cc9bf96155603fe">test_file.cpp</a>
 </li>
 <li>TEST5
-: <a class="el" href="test__file_8c.html#ad4a724344bcd74cd04df6fe59720b44f">test_file.c</a>
+: <a class="el" href="test__file_8cpp.html#ad4a724344bcd74cd04df6fe59720b44f">test_file.cpp</a>
 </li>
 <li>TEST_DOUBLE_INDIRECT
-: <a class="el" href="test__file_8c.html#a8a17092d7c5c4dc8e6b825dfc80da558">test_file.c</a>
+: <a class="el" href="test__file_8cpp.html#a8a17092d7c5c4dc8e6b825dfc80da558">test_file.cpp</a>
 </li>
 <li>TEST_SINGLE_INDIRECT
-: <a class="el" href="test__file_8c.html#a50cae46453ec7fc3c1afcd8f94dc3172">test_file.c</a>
+: <a class="el" href="test__file_8cpp.html#a50cae46453ec7fc3c1afcd8f94dc3172">test_file.cpp</a>
 </li>
-</ul>
-
-
-<h3><a class="anchor" id="index_u"></a>- u -</h3><ul>
-<li>UNLINK
-: <a class="el" href="defines_8h.html#a70c455687eb4a0f89b7bd0a5ea3ef6bf">defines.h</a>
+<li>testDirCreation()
+: <a class="el" href="ramdisk__ioctl_8c.html#ad9078ce38c4b40bcfabb6655a593da2b">ramdisk_ioctl.c</a>
+</li>
+<li>testFileCreation()
+: <a class="el" href="ramdisk__ioctl_8c.html#a4d50d67dd9008e391f75cd5216ccb8f0">ramdisk_ioctl.c</a>
+</li>
+<li>testFileDeletion()
+: <a class="el" href="ramdisk__ioctl_8c.html#a18b9439422de5a38fdf3bd9ddce24442">ramdisk_ioctl.c</a>
+</li>
+<li>testReadDir()
+: <a class="el" href="ramdisk__ioctl_8c.html#a03b4a83ccc10aeb35570e8123656119c">ramdisk_ioctl.c</a>
+</li>
+<li>testReadFromFile()
+: <a class="el" href="ramdisk__ioctl_8c.html#a4b61b6aa04dc3806cd9686460fb82287">ramdisk_ioctl.c</a>
+</li>
+<li>TOT_AVAILABLE_BLOCKS
+: <a class="el" href="defines_8h.html#ab6c1c960cedf8ee643e3688711dc7ed2">defines.h</a>
 </li>
 </ul>
 
 
 <h3><a class="anchor" id="index_w"></a>- w -</h3><ul>
-<li>WRITE
-: <a class="el" href="defines_8h.html#aa10f470e996d0f51210d24f442d25e1e">defines.h</a>
+<li>writeToFile()
+: <a class="el" href="ramdisk__ioctl_8c.html#a6268b05a277a309f32b9705f907b181c">ramdisk_ioctl.c</a>
+</li>
+</ul>
+
+
+<h3><a class="anchor" id="index_z"></a>- z -</h3><ul>
+<li>zeroBlock()
+: <a class="el" href="ramdisk__ioctl_8c.html#a3db03e531c3c195859d4976f8e744b09">ramdisk_ioctl.c</a>
 </li>
 </ul>
 </div><!-- contents -->
+</div><!-- doc-content -->
 <!-- start footer part -->
-<hr class="footer"/><address class="footer"><small>
-Generated on Tue Dec 4 2012 21:03:09 for My Project by &#160;<a href="http://www.doxygen.org/index.html">
-<img class="footer" src="doxygen.png" alt="doxygen"/>
-</a> 1.8.2
-</small></address>
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="footer">Generated on Sun Dec 16 2012 16:55:08 for My Project by
+    <a href="http://www.doxygen.org/index.html">
+    <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.2 </li>
+  </ul>
+</div>
 </body>
 </html>

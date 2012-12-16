@@ -7,6 +7,12 @@
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<script type="text/javascript">
+  $(document).ready(initResizable);
+</script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="search/search.js"></script>
 <script type="text/javascript">
@@ -63,6 +69,21 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
       <li><a href="globals.html"><span>File&#160;Members</span></a></li>
     </ul>
   </div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+$(document).ready(function(){initNavTree('defines_8h.html','');});
+</script>
+<div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -77,103 +98,73 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </iframe>
 </div>
 
-</div><!-- top -->
 <div class="header">
   <div class="summary">
-<a href="#nested-classes">Classes</a> &#124;
 <a href="#define-members">Macros</a> &#124;
 <a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
 <div class="title">defines.h File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &lt;linux/module.h&gt;</code><br/>
-<code>#include &lt;linux/errno.h&gt;</code><br/>
-<code>#include &lt;linux/proc_fs.h&gt;</code><br/>
-<code>#include &lt;asm/uaccess.h&gt;</code><br/>
-<code>#include &lt;linux/tty.h&gt;</code><br/>
-<code>#include &lt;linux/sched.h&gt;</code><br/>
-<code>#include &lt;linux/interrupt.h&gt;</code><br/>
+<div class="textblock"><code>#include &lt;stdio.h&gt;</code><br/>
+<code>#include &lt;stdlib.h&gt;</code><br/>
+<code>#include &lt;string.h&gt;</code><br/>
+<code>#include &quot;<a class="el" href="structs_8h_source.html">structs.h</a>&quot;</code><br/>
 </div>
 <p><a href="defines_8h_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
-Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structpath.html">path</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structfile.html">file</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structaccess_file.html">accessFile</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
 Macros</h2></td></tr>
-<tr class="memitem:a4c6b87853cbaf189fe1e484706ae1875"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="defines_8h.html#a4c6b87853cbaf189fe1e484706ae1875">CREATE</a>&#160;&#160;&#160;_IORW(0, 6, struct <a class="el" href="structpath.html">path</a>)</td></tr>
-<tr class="separator:a4c6b87853cbaf189fe1e484706ae1875"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9165713ff17c8ca8fc2951e82d1a6e57"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="defines_8h.html#a9165713ff17c8ca8fc2951e82d1a6e57">MKDIR</a>&#160;&#160;&#160;_IORW(1, 7, struct <a class="el" href="structpath.html">path</a>)</td></tr>
-<tr class="separator:a9165713ff17c8ca8fc2951e82d1a6e57"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1354b70ac6803a06beebe84f61b5f95b"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="defines_8h.html#a1354b70ac6803a06beebe84f61b5f95b">OPEN</a>&#160;&#160;&#160;_IORW(1, 8, struct <a class="el" href="structpath.html">path</a>)</td></tr>
-<tr class="separator:a1354b70ac6803a06beebe84f61b5f95b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0e29f488071372aa0530842e60b64511"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="defines_8h.html#a0e29f488071372aa0530842e60b64511">CLOSE</a>&#160;&#160;&#160;_IORW(1, 9, struct <a class="el" href="structfile.html">file</a>)</td></tr>
-<tr class="separator:a0e29f488071372aa0530842e60b64511"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ada74e7db007a68e763f20c17f2985356"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="defines_8h.html#ada74e7db007a68e763f20c17f2985356">READ</a>&#160;&#160;&#160;_IORW(1, 10, struct <a class="el" href="structaccess_file.html">accessFile</a>)</td></tr>
-<tr class="separator:ada74e7db007a68e763f20c17f2985356"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa10f470e996d0f51210d24f442d25e1e"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="defines_8h.html#aa10f470e996d0f51210d24f442d25e1e">WRITE</a>&#160;&#160;&#160;_IORW(1, 11, struct <a class="el" href="structaccess_file.html">accessFile</a>)</td></tr>
-<tr class="separator:aa10f470e996d0f51210d24f442d25e1e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad9ef8c774e19ef27832f682082179824"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="defines_8h.html#ad9ef8c774e19ef27832f682082179824">LSEEK</a>&#160;&#160;&#160;_IORW(1, 12, struct <a class="el" href="structfile.html">file</a>)</td></tr>
-<tr class="separator:ad9ef8c774e19ef27832f682082179824"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a70c455687eb4a0f89b7bd0a5ea3ef6bf"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="defines_8h.html#a70c455687eb4a0f89b7bd0a5ea3ef6bf">UNLINK</a>&#160;&#160;&#160;_IORW(1, 13, struct <a class="el" href="structpath.html">path</a>)</td></tr>
-<tr class="separator:a70c455687eb4a0f89b7bd0a5ea3ef6bf"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a82f77fa5f9c3fa9e1f3521bbb2cfad6a"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="defines_8h.html#a82f77fa5f9c3fa9e1f3521bbb2cfad6a">READDIR</a>&#160;&#160;&#160;_IORW(1, 14, struct <a class="el" href="structaccess_file.html">accessFile</a>)</td></tr>
-<tr class="separator:a82f77fa5f9c3fa9e1f3521bbb2cfad6a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad72dbcf6d0153db1b8d8a58001feed83"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="defines_8h.html#ad72dbcf6d0153db1b8d8a58001feed83">DEBUG</a>&#160;&#160;&#160;/* For now, while developing on mac */</td></tr>
+<tr class="separator:ad72dbcf6d0153db1b8d8a58001feed83"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8b43bafee90b30676faae508c21cb8d7"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="defines_8h.html#a8b43bafee90b30676faae508c21cb8d7">PRINT</a>&#160;&#160;&#160;printf</td></tr>
+<tr class="separator:a8b43bafee90b30676faae508c21cb8d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3167e1c51bc79684fdfb78c181075d11"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="defines_8h.html#a3167e1c51bc79684fdfb78c181075d11">FS_SIZE</a>&#160;&#160;&#160;2097152</td></tr>
 <tr class="separator:a3167e1c51bc79684fdfb78c181075d11"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad51ded0bbd705f02f73fc60c0b721ced"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="defines_8h.html#ad51ded0bbd705f02f73fc60c0b721ced">BLOCK_SIZE</a>&#160;&#160;&#160;256</td></tr>
-<tr class="separator:ad51ded0bbd705f02f73fc60c0b721ced"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a649ad5274d988d17a275a3cead056746"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="defines_8h.html#a649ad5274d988d17a275a3cead056746">MAX_FILE_SIZE</a>&#160;&#160;&#160;1067008</td></tr>
+<tr class="separator:a649ad5274d988d17a275a3cead056746"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a71b835e5a2ed06d647c7e74dafca5625"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="defines_8h.html#a71b835e5a2ed06d647c7e74dafca5625">RAM_BLOCK_SIZE</a>&#160;&#160;&#160;256</td></tr>
+<tr class="separator:a71b835e5a2ed06d647c7e74dafca5625"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a629824d26fc98ae1a4a7e33c08903410"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="defines_8h.html#a629824d26fc98ae1a4a7e33c08903410">INDEX_NODE_SIZE</a>&#160;&#160;&#160;64</td></tr>
 <tr class="separator:a629824d26fc98ae1a4a7e33c08903410"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abebe0858f8264d8a3f9bd90687ed2c4c"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="defines_8h.html#abebe0858f8264d8a3f9bd90687ed2c4c">INDEX_NODE_ARRAY_LENGTH</a>&#160;&#160;&#160;256</td></tr>
 <tr class="separator:abebe0858f8264d8a3f9bd90687ed2c4c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa176c9f94fa2316acb019041f495d100"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="defines_8h.html#aa176c9f94fa2316acb019041f495d100">INDEX_NODE_COUNT</a>&#160;&#160;&#160;<a class="el" href="defines_8h.html#abebe0858f8264d8a3f9bd90687ed2c4c">INDEX_NODE_ARRAY_LENGTH</a>*(<a class="el" href="defines_8h.html#abebe0858f8264d8a3f9bd90687ed2c4c">INDEX_NODE_ARRAY_LENGTH</a>/<a class="el" href="defines_8h.html#a629824d26fc98ae1a4a7e33c08903410">INDEX_NODE_SIZE</a>)</td></tr>
+<tr class="memitem:aa176c9f94fa2316acb019041f495d100"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="defines_8h.html#aa176c9f94fa2316acb019041f495d100">INDEX_NODE_COUNT</a>&#160;&#160;&#160;<a class="el" href="defines_8h.html#abebe0858f8264d8a3f9bd90687ed2c4c">INDEX_NODE_ARRAY_LENGTH</a>*(<a class="el" href="defines_8h.html#a71b835e5a2ed06d647c7e74dafca5625">RAM_BLOCK_SIZE</a>/<a class="el" href="defines_8h.html#a629824d26fc98ae1a4a7e33c08903410">INDEX_NODE_SIZE</a>)</td></tr>
 <tr class="separator:aa176c9f94fa2316acb019041f495d100"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a53c9b2f427bfb998d4b820209cca03cd"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="defines_8h.html#a53c9b2f427bfb998d4b820209cca03cd">BLOCK_BITMAP_SIZE</a>&#160;&#160;&#160;4*<a class="el" href="defines_8h.html#ad51ded0bbd705f02f73fc60c0b721ced">BLOCK_SIZE</a></td></tr>
+<tr class="memitem:a53c9b2f427bfb998d4b820209cca03cd"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="defines_8h.html#a53c9b2f427bfb998d4b820209cca03cd">BLOCK_BITMAP_SIZE</a>&#160;&#160;&#160;4*<a class="el" href="defines_8h.html#a71b835e5a2ed06d647c7e74dafca5625">RAM_BLOCK_SIZE</a></td></tr>
 <tr class="separator:a53c9b2f427bfb998d4b820209cca03cd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac5d5ca797fd94b950d89e52868fe5386"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="defines_8h.html#ac5d5ca797fd94b950d89e52868fe5386">BLOCK_BITMAP_BLOCK_COUNT</a>&#160;&#160;&#160;4</td></tr>
+<tr class="separator:ac5d5ca797fd94b950d89e52868fe5386"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae9e5bed110d8e9128d5d07f8cbe9896b"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="defines_8h.html#ae9e5bed110d8e9128d5d07f8cbe9896b">SUPERBLOCK_OFFSET</a>&#160;&#160;&#160;0</td></tr>
 <tr class="separator:ae9e5bed110d8e9128d5d07f8cbe9896b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6ffbc015c0f283f08a80ed7979f5b9c2"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="defines_8h.html#a6ffbc015c0f283f08a80ed7979f5b9c2">INDEX_NODE_ARRAY_OFFSET</a>&#160;&#160;&#160;<a class="el" href="defines_8h.html#ad51ded0bbd705f02f73fc60c0b721ced">BLOCK_SIZE</a></td></tr>
+<tr class="memitem:a0749774409574d1c22c248aafe8cb8f1"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="defines_8h.html#a0749774409574d1c22c248aafe8cb8f1">INODE_COUNT_OFFSET</a>&#160;&#160;&#160;4</td></tr>
+<tr class="separator:a0749774409574d1c22c248aafe8cb8f1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6ffbc015c0f283f08a80ed7979f5b9c2"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="defines_8h.html#a6ffbc015c0f283f08a80ed7979f5b9c2">INDEX_NODE_ARRAY_OFFSET</a>&#160;&#160;&#160;<a class="el" href="defines_8h.html#a71b835e5a2ed06d647c7e74dafca5625">RAM_BLOCK_SIZE</a></td></tr>
 <tr class="separator:a6ffbc015c0f283f08a80ed7979f5b9c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab9b6f109a6de8a02776f531652006296"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="defines_8h.html#ab9b6f109a6de8a02776f531652006296">BLOCK_BITMAP_OFFSET</a>&#160;&#160;&#160;(<a class="el" href="defines_8h.html#abebe0858f8264d8a3f9bd90687ed2c4c">INDEX_NODE_ARRAY_LENGTH</a>+1)*<a class="el" href="defines_8h.html#ad51ded0bbd705f02f73fc60c0b721ced">BLOCK_SIZE</a></td></tr>
+<tr class="memitem:ab9b6f109a6de8a02776f531652006296"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="defines_8h.html#ab9b6f109a6de8a02776f531652006296">BLOCK_BITMAP_OFFSET</a>&#160;&#160;&#160;<a class="el" href="defines_8h.html#a71b835e5a2ed06d647c7e74dafca5625">RAM_BLOCK_SIZE</a>*(<a class="el" href="defines_8h.html#abebe0858f8264d8a3f9bd90687ed2c4c">INDEX_NODE_ARRAY_LENGTH</a>+1)</td></tr>
 <tr class="separator:ab9b6f109a6de8a02776f531652006296"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a62b075ec29b7b301c68f539d8aafd029"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="defines_8h.html#a62b075ec29b7b301c68f539d8aafd029">ROOT_DIR</a>&#160;&#160;&#160;<a class="el" href="defines_8h.html#ad51ded0bbd705f02f73fc60c0b721ced">BLOCK_SIZE</a>*(<a class="el" href="defines_8h.html#ab9b6f109a6de8a02776f531652006296">BLOCK_BITMAP_OFFSET</a>+<a class="el" href="defines_8h.html#a53c9b2f427bfb998d4b820209cca03cd">BLOCK_BITMAP_SIZE</a>)</td></tr>
-<tr class="separator:a62b075ec29b7b301c68f539d8aafd029"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6a4bc429928537956bef270e1505de40"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="defines_8h.html#a6a4bc429928537956bef270e1505de40">DATA_BLOCKS_OFFSET</a>&#160;&#160;&#160;<a class="el" href="defines_8h.html#ab9b6f109a6de8a02776f531652006296">BLOCK_BITMAP_OFFSET</a>+<a class="el" href="defines_8h.html#a53c9b2f427bfb998d4b820209cca03cd">BLOCK_BITMAP_SIZE</a></td></tr>
+<tr class="separator:a6a4bc429928537956bef270e1505de40"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1c40273eaeeaee04089b6a60b541c5bf"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="defines_8h.html#a1c40273eaeeaee04089b6a60b541c5bf">ROOT_INDEX_NODE</a>&#160;&#160;&#160;0</td></tr>
 <tr class="separator:a1c40273eaeeaee04089b6a60b541c5bf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab6c1c960cedf8ee643e3688711dc7ed2"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="defines_8h.html#ab6c1c960cedf8ee643e3688711dc7ed2">TOT_AVAILABLE_BLOCKS</a>&#160;&#160;&#160;<a class="el" href="defines_8h.html#a3167e1c51bc79684fdfb78c181075d11">FS_SIZE</a>/<a class="el" href="defines_8h.html#a71b835e5a2ed06d647c7e74dafca5625">RAM_BLOCK_SIZE</a>-1-<a class="el" href="defines_8h.html#abebe0858f8264d8a3f9bd90687ed2c4c">INDEX_NODE_ARRAY_LENGTH</a>-<a class="el" href="defines_8h.html#ac5d5ca797fd94b950d89e52868fe5386">BLOCK_BITMAP_BLOCK_COUNT</a></td></tr>
+<tr class="separator:ab6c1c960cedf8ee643e3688711dc7ed2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2a16acd83cf3a56116f8cbf882d34bb8"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="defines_8h.html#a2a16acd83cf3a56116f8cbf882d34bb8">MAX_BLOCKS_ALLOCATABLE</a>&#160;&#160;&#160;4168</td></tr>
+<tr class="separator:a2a16acd83cf3a56116f8cbf882d34bb8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5837260343c8eaf0f7e8a2ee8123129e"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="defines_8h.html#a5837260343c8eaf0f7e8a2ee8123129e">INODE_TYPE</a>&#160;&#160;&#160;0</td></tr>
 <tr class="separator:a5837260343c8eaf0f7e8a2ee8123129e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a34a3a3e2e3a4bd30b993bce5b19f3d73"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="defines_8h.html#a34a3a3e2e3a4bd30b993bce5b19f3d73">INODE_SIZE</a>&#160;&#160;&#160;4</td></tr>
 <tr class="separator:a34a3a3e2e3a4bd30b993bce5b19f3d73"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a905598653bf870e3e958acf0380a77e7"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="defines_8h.html#a905598653bf870e3e958acf0380a77e7">DIRECT_1</a>&#160;&#160;&#160;8</td></tr>
 <tr class="separator:a905598653bf870e3e958acf0380a77e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a965f8604e02513e91ef6c9162742d810"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="defines_8h.html#a965f8604e02513e91ef6c9162742d810">DIRECT_2</a>&#160;&#160;&#160;12</td></tr>
-<tr class="separator:a965f8604e02513e91ef6c9162742d810"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0dfbc44dec94b531056459343fba8503"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="defines_8h.html#a0dfbc44dec94b531056459343fba8503">DIRECT_3</a>&#160;&#160;&#160;16</td></tr>
-<tr class="separator:a0dfbc44dec94b531056459343fba8503"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6839369f1b71648927c5cbb54f6be24c"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="defines_8h.html#a6839369f1b71648927c5cbb54f6be24c">DIRECT_4</a>&#160;&#160;&#160;20</td></tr>
-<tr class="separator:a6839369f1b71648927c5cbb54f6be24c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af5e65433e08cbbd9a613d1a3cd6d9b22"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="defines_8h.html#af5e65433e08cbbd9a613d1a3cd6d9b22">DIRECT_5</a>&#160;&#160;&#160;24</td></tr>
-<tr class="separator:af5e65433e08cbbd9a613d1a3cd6d9b22"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa2445e929732869089d3081276d1ddc1"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="defines_8h.html#aa2445e929732869089d3081276d1ddc1">DIRECT_6</a>&#160;&#160;&#160;28</td></tr>
-<tr class="separator:aa2445e929732869089d3081276d1ddc1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adbdb5fb58f757840cdaef27b7866e49d"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="defines_8h.html#adbdb5fb58f757840cdaef27b7866e49d">DIRECT_7</a>&#160;&#160;&#160;32</td></tr>
-<tr class="separator:adbdb5fb58f757840cdaef27b7866e49d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a43cc89a83d10925c225b325f7e5d3a00"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="defines_8h.html#a43cc89a83d10925c225b325f7e5d3a00">DIRECT_8</a>&#160;&#160;&#160;36</td></tr>
-<tr class="separator:a43cc89a83d10925c225b325f7e5d3a00"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aeaf02f5499e1df5d26d49a0869abcad8"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="defines_8h.html#aeaf02f5499e1df5d26d49a0869abcad8">SINGLE_INDIR</a>&#160;&#160;&#160;40</td></tr>
 <tr class="separator:aeaf02f5499e1df5d26d49a0869abcad8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2a129c797c5e972e51d89a0c6cf6d1bd"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="defines_8h.html#a2a129c797c5e972e51d89a0c6cf6d1bd">DOUBLE_INDIR</a>&#160;&#160;&#160;44</td></tr>
 <tr class="separator:a2a129c797c5e972e51d89a0c6cf6d1bd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7ee3b243ddbfbae35ee2b5af95e069b5"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="defines_8h.html#a7ee3b243ddbfbae35ee2b5af95e069b5">FILE_COUNT</a>&#160;&#160;&#160;48</td></tr>
-<tr class="separator:a7ee3b243ddbfbae35ee2b5af95e069b5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa817d070d33ea842616102d3a9b3cac6"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="defines_8h.html#aa817d070d33ea842616102d3a9b3cac6">NUM_DIRECT</a>&#160;&#160;&#160;8</td></tr>
+<tr class="separator:aa817d070d33ea842616102d3a9b3cac6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa7dde50fbcf897662fa0dcd25a27e43e"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="defines_8h.html#aa7dde50fbcf897662fa0dcd25a27e43e">INODE_FILE_COUNT</a>&#160;&#160;&#160;48</td></tr>
+<tr class="separator:aa7dde50fbcf897662fa0dcd25a27e43e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab2643d41f4160853e5744931081850ff"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="defines_8h.html#ab2643d41f4160853e5744931081850ff">INODE_FILE_NAME</a>&#160;&#160;&#160;50</td></tr>
 <tr class="separator:ab2643d41f4160853e5744931081850ff"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9c3c179c039c3f784e9effdf15399e28"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="defines_8h.html#a9c3c179c039c3f784e9effdf15399e28">FILE_INFO_SIZE</a>&#160;&#160;&#160;16</td></tr>
@@ -183,37 +174,55 @@ Macros</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a4d520ed004364b7547281ea486543812"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="defines_8h.html#a4d520ed004364b7547281ea486543812">kr_creat</a> (struct <a class="el" href="structpath.html">path</a> input)</td></tr>
-<tr class="separator:a4d520ed004364b7547281ea486543812"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5f0208c8df29095bd437b706444bcf18"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="defines_8h.html#a5f0208c8df29095bd437b706444bcf18">kr_mkdir</a> (struct <a class="el" href="structpath.html">path</a> input)</td></tr>
-<tr class="separator:a5f0208c8df29095bd437b706444bcf18"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa682788ce8cedeb98e7116ab13e9495a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="defines_8h.html#aa682788ce8cedeb98e7116ab13e9495a">kr_open</a> (struct <a class="el" href="structpath.html">path</a> input)</td></tr>
-<tr class="separator:aa682788ce8cedeb98e7116ab13e9495a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a858ad5c03d98c58c2b0436294e7751c4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="defines_8h.html#a858ad5c03d98c58c2b0436294e7751c4">kr_close</a> (struct <a class="el" href="structfile.html">file</a> input)</td></tr>
-<tr class="separator:a858ad5c03d98c58c2b0436294e7751c4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa37a477f0706105b89f31b85d7eff168"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="defines_8h.html#aa37a477f0706105b89f31b85d7eff168">kr_read</a> (struct <a class="el" href="structaccess_file.html">accessFile</a> input)</td></tr>
-<tr class="separator:aa37a477f0706105b89f31b85d7eff168"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8167e0d644cb94348065bd8378a7110b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="defines_8h.html#a8167e0d644cb94348065bd8378a7110b">kr_write</a> (struct <a class="el" href="structaccess_file.html">accessFile</a> input)</td></tr>
-<tr class="separator:a8167e0d644cb94348065bd8378a7110b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aabf3deda604b85c2788f5feccd2ddd54"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="defines_8h.html#aabf3deda604b85c2788f5feccd2ddd54">kr_lseek</a> (struct <a class="el" href="structfile.html">file</a> input)</td></tr>
-<tr class="separator:aabf3deda604b85c2788f5feccd2ddd54"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac8b7c76f76baf1d4b417d907ddcedcd6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="defines_8h.html#ac8b7c76f76baf1d4b417d907ddcedcd6">kr_unlink</a> (struct <a class="el" href="structpath.html">path</a> input)</td></tr>
-<tr class="separator:ac8b7c76f76baf1d4b417d907ddcedcd6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad023ce5575b1ed90d42110b1e5cf9792"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="defines_8h.html#ad023ce5575b1ed90d42110b1e5cf9792">kr_readdir</a> (struct <a class="el" href="structaccess_file.html">accessFile</a> input)</td></tr>
-<tr class="separator:ad023ce5575b1ed90d42110b1e5cf9792"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa837de32c6a6c1381d2684177520b8f1"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="defines_8h.html#aa837de32c6a6c1381d2684177520b8f1">allocBlockForNode</a> (int indexNode, int currentSize)</td></tr>
+<tr class="separator:aa837de32c6a6c1381d2684177520b8f1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5c2c1ddb13c40a740f5584468eed23a6"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="defines_8h.html#a5c2c1ddb13c40a740f5584468eed23a6">getFreeBlock</a> (void)</td></tr>
+<tr class="separator:a5c2c1ddb13c40a740f5584468eed23a6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa67b077799f8bce89efca38502b55cf2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="defines_8h.html#aa67b077799f8bce89efca38502b55cf2">freeBlock</a> (int blockindex)</td></tr>
+<tr class="separator:aa67b077799f8bce89efca38502b55cf2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5cbf1cbdddf2b848e566c95ff2831f17"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="defines_8h.html#a5cbf1cbdddf2b848e566c95ff2831f17">allocMemoryForIndexNode</a> (int indexNodeNumber, int numberOfBlocks)</td></tr>
+<tr class="separator:a5cbf1cbdddf2b848e566c95ff2831f17"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8c3a51079cc4f7345b2a44e11473a95e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="defines_8h.html#a8c3a51079cc4f7345b2a44e11473a95e">negateIndexNodePointers</a> (int indexNodeNumber)</td></tr>
+<tr class="separator:a8c3a51079cc4f7345b2a44e11473a95e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a31eb316a0b5fa0f802d4d8be5e98a811"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="defines_8h.html#a31eb316a0b5fa0f802d4d8be5e98a811">createIndexNode</a> (char *type, char *pathname, int memorysize)</td></tr>
+<tr class="separator:a31eb316a0b5fa0f802d4d8be5e98a811"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abed9bc66c41f05c25f859ec3da324c43"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="defines_8h.html#abed9bc66c41f05c25f859ec3da324c43">getIndexNodeNumberFromPathname</a> (char *pathname, int dirFlag)</td></tr>
+<tr class="separator:abed9bc66c41f05c25f859ec3da324c43"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a27c39b76cb81f341e5e99a09c60f2a62"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="defines_8h.html#a27c39b76cb81f341e5e99a09c60f2a62">insertFileIntoDirectoryNode</a> (int directoryNodeNum, int fileNodeNum, char *filename)</td></tr>
+<tr class="separator:a27c39b76cb81f341e5e99a09c60f2a62"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a33a5a36b52d624bee5d9f1571c58317c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="defines_8h.html#a33a5a36b52d624bee5d9f1571c58317c">printIndexNode</a> (int nodeIndex)</td></tr>
+<tr class="separator:a33a5a36b52d624bee5d9f1571c58317c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acd7641577f5df3e67204cb88e963a3a5"><td class="memItemLeft" align="right" valign="top">char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="defines_8h.html#acd7641577f5df3e67204cb88e963a3a5">getFileNameFromPath</a> (char *pathname)</td></tr>
+<tr class="separator:acd7641577f5df3e67204cb88e963a3a5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0a277ce5803161d4f63b76fc12a634a8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="defines_8h.html#a0a277ce5803161d4f63b76fc12a634a8">printSuperblock</a> (void)</td></tr>
+<tr class="separator:a0a277ce5803161d4f63b76fc12a634a8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Macro Definition Documentation</h2>
+<a class="anchor" id="ac5d5ca797fd94b950d89e52868fe5386"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define BLOCK_BITMAP_BLOCK_COUNT&#160;&#160;&#160;4</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="defines_8h_source.html#l00041">41</a> of file <a class="el" href="defines_8h_source.html">defines.h</a>.</p>
+
+</div>
+</div>
 <a class="anchor" id="ab9b6f109a6de8a02776f531652006296"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define BLOCK_BITMAP_OFFSET&#160;&#160;&#160;(<a class="el" href="defines_8h.html#abebe0858f8264d8a3f9bd90687ed2c4c">INDEX_NODE_ARRAY_LENGTH</a>+1)*<a class="el" href="defines_8h.html#ad51ded0bbd705f02f73fc60c0b721ced">BLOCK_SIZE</a></td>
+          <td class="memname">#define BLOCK_BITMAP_OFFSET&#160;&#160;&#160;<a class="el" href="defines_8h.html#a71b835e5a2ed06d647c7e74dafca5625">RAM_BLOCK_SIZE</a>*(<a class="el" href="defines_8h.html#abebe0858f8264d8a3f9bd90687ed2c4c">INDEX_NODE_ARRAY_LENGTH</a>+1)</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="defines_8h_source.html#l00035">35</a> of file <a class="el" href="defines_8h_source.html">defines.h</a>.</p>
+<p>Definition at line <a class="el" href="defines_8h_source.html#l00048">48</a> of file <a class="el" href="defines_8h_source.html">defines.h</a>.</p>
 
 </div>
 </div>
@@ -222,55 +231,40 @@ Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define BLOCK_BITMAP_SIZE&#160;&#160;&#160;4*<a class="el" href="defines_8h.html#ad51ded0bbd705f02f73fc60c0b721ced">BLOCK_SIZE</a></td>
+          <td class="memname">#define BLOCK_BITMAP_SIZE&#160;&#160;&#160;4*<a class="el" href="defines_8h.html#a71b835e5a2ed06d647c7e74dafca5625">RAM_BLOCK_SIZE</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="defines_8h_source.html#l00029">29</a> of file <a class="el" href="defines_8h_source.html">defines.h</a>.</p>
+<p>Definition at line <a class="el" href="defines_8h_source.html#l00040">40</a> of file <a class="el" href="defines_8h_source.html">defines.h</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="ad51ded0bbd705f02f73fc60c0b721ced"></a>
+<a class="anchor" id="a6a4bc429928537956bef270e1505de40"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define BLOCK_SIZE&#160;&#160;&#160;256</td>
+          <td class="memname">#define DATA_BLOCKS_OFFSET&#160;&#160;&#160;<a class="el" href="defines_8h.html#ab9b6f109a6de8a02776f531652006296">BLOCK_BITMAP_OFFSET</a>+<a class="el" href="defines_8h.html#a53c9b2f427bfb998d4b820209cca03cd">BLOCK_BITMAP_SIZE</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="defines_8h_source.html#l00025">25</a> of file <a class="el" href="defines_8h_source.html">defines.h</a>.</p>
+<p>Definition at line <a class="el" href="defines_8h_source.html#l00051">51</a> of file <a class="el" href="defines_8h_source.html">defines.h</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="a0e29f488071372aa0530842e60b64511"></a>
+<a class="anchor" id="ad72dbcf6d0153db1b8d8a58001feed83"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define CLOSE&#160;&#160;&#160;_IORW(1, 9, struct <a class="el" href="structfile.html">file</a>)</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000001">Todo:</a></b></dt><dd>Close may not need a kernel call? </dd></dl>
-
-<p>Definition at line <a class="el" href="defines_8h_source.html#l00015">15</a> of file <a class="el" href="defines_8h_source.html">defines.h</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a4c6b87853cbaf189fe1e484706ae1875"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define CREATE&#160;&#160;&#160;_IORW(0, 6, struct <a class="el" href="structpath.html">path</a>)</td>
+          <td class="memname">#define DEBUG&#160;&#160;&#160;/* For now, while developing on mac */</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="defines_8h_source.html#l00011">11</a> of file <a class="el" href="defines_8h_source.html">defines.h</a>.</p>
+<p>Definition at line <a class="el" href="defines_8h_source.html#l00001">1</a> of file <a class="el" href="defines_8h_source.html">defines.h</a>.</p>
 
 </div>
 </div>
@@ -284,105 +278,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="defines_8h_source.html#l00047">47</a> of file <a class="el" href="defines_8h_source.html">defines.h</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a965f8604e02513e91ef6c9162742d810"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define DIRECT_2&#160;&#160;&#160;12</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Definition at line <a class="el" href="defines_8h_source.html#l00048">48</a> of file <a class="el" href="defines_8h_source.html">defines.h</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a0dfbc44dec94b531056459343fba8503"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define DIRECT_3&#160;&#160;&#160;16</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Definition at line <a class="el" href="defines_8h_source.html#l00049">49</a> of file <a class="el" href="defines_8h_source.html">defines.h</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a6839369f1b71648927c5cbb54f6be24c"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define DIRECT_4&#160;&#160;&#160;20</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Definition at line <a class="el" href="defines_8h_source.html#l00050">50</a> of file <a class="el" href="defines_8h_source.html">defines.h</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="af5e65433e08cbbd9a613d1a3cd6d9b22"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define DIRECT_5&#160;&#160;&#160;24</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Definition at line <a class="el" href="defines_8h_source.html#l00051">51</a> of file <a class="el" href="defines_8h_source.html">defines.h</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="aa2445e929732869089d3081276d1ddc1"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define DIRECT_6&#160;&#160;&#160;28</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Definition at line <a class="el" href="defines_8h_source.html#l00052">52</a> of file <a class="el" href="defines_8h_source.html">defines.h</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="adbdb5fb58f757840cdaef27b7866e49d"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define DIRECT_7&#160;&#160;&#160;32</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Definition at line <a class="el" href="defines_8h_source.html#l00053">53</a> of file <a class="el" href="defines_8h_source.html">defines.h</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a43cc89a83d10925c225b325f7e5d3a00"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define DIRECT_8&#160;&#160;&#160;36</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Definition at line <a class="el" href="defines_8h_source.html#l00054">54</a> of file <a class="el" href="defines_8h_source.html">defines.h</a>.</p>
+<p>Definition at line <a class="el" href="defines_8h_source.html#l00065">65</a> of file <a class="el" href="defines_8h_source.html">defines.h</a>.</p>
 
 </div>
 </div>
@@ -396,21 +292,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="defines_8h_source.html#l00056">56</a> of file <a class="el" href="defines_8h_source.html">defines.h</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a7ee3b243ddbfbae35ee2b5af95e069b5"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define FILE_COUNT&#160;&#160;&#160;48</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Definition at line <a class="el" href="defines_8h_source.html#l00060">60</a> of file <a class="el" href="defines_8h_source.html">defines.h</a>.</p>
+<p>Definition at line <a class="el" href="defines_8h_source.html#l00067">67</a> of file <a class="el" href="defines_8h_source.html">defines.h</a>.</p>
 
 </div>
 </div>
@@ -424,7 +306,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="defines_8h_source.html#l00071">71</a> of file <a class="el" href="defines_8h_source.html">defines.h</a>.</p>
+<p>Definition at line <a class="el" href="defines_8h_source.html#l00084">84</a> of file <a class="el" href="defines_8h_source.html">defines.h</a>.</p>
 
 </div>
 </div>
@@ -438,7 +320,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="defines_8h_source.html#l00023">23</a> of file <a class="el" href="defines_8h_source.html">defines.h</a>.</p>
+<p>Definition at line <a class="el" href="defines_8h_source.html#l00032">32</a> of file <a class="el" href="defines_8h_source.html">defines.h</a>.</p>
 
 </div>
 </div>
@@ -452,7 +334,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="defines_8h_source.html#l00027">27</a> of file <a class="el" href="defines_8h_source.html">defines.h</a>.</p>
+<p>Definition at line <a class="el" href="defines_8h_source.html#l00038">38</a> of file <a class="el" href="defines_8h_source.html">defines.h</a>.</p>
 
 </div>
 </div>
@@ -461,12 +343,12 @@ Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define INDEX_NODE_ARRAY_OFFSET&#160;&#160;&#160;<a class="el" href="defines_8h.html#ad51ded0bbd705f02f73fc60c0b721ced">BLOCK_SIZE</a></td>
+          <td class="memname">#define INDEX_NODE_ARRAY_OFFSET&#160;&#160;&#160;<a class="el" href="defines_8h.html#a71b835e5a2ed06d647c7e74dafca5625">RAM_BLOCK_SIZE</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="defines_8h_source.html#l00032">32</a> of file <a class="el" href="defines_8h_source.html">defines.h</a>.</p>
+<p>Definition at line <a class="el" href="defines_8h_source.html#l00045">45</a> of file <a class="el" href="defines_8h_source.html">defines.h</a>.</p>
 
 </div>
 </div>
@@ -475,12 +357,12 @@ Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define INDEX_NODE_COUNT&#160;&#160;&#160;<a class="el" href="defines_8h.html#abebe0858f8264d8a3f9bd90687ed2c4c">INDEX_NODE_ARRAY_LENGTH</a>*(<a class="el" href="defines_8h.html#abebe0858f8264d8a3f9bd90687ed2c4c">INDEX_NODE_ARRAY_LENGTH</a>/<a class="el" href="defines_8h.html#a629824d26fc98ae1a4a7e33c08903410">INDEX_NODE_SIZE</a>)</td>
+          <td class="memname">#define INDEX_NODE_COUNT&#160;&#160;&#160;<a class="el" href="defines_8h.html#abebe0858f8264d8a3f9bd90687ed2c4c">INDEX_NODE_ARRAY_LENGTH</a>*(<a class="el" href="defines_8h.html#a71b835e5a2ed06d647c7e74dafca5625">RAM_BLOCK_SIZE</a>/<a class="el" href="defines_8h.html#a629824d26fc98ae1a4a7e33c08903410">INDEX_NODE_SIZE</a>)</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="defines_8h_source.html#l00028">28</a> of file <a class="el" href="defines_8h_source.html">defines.h</a>.</p>
+<p>Definition at line <a class="el" href="defines_8h_source.html#l00039">39</a> of file <a class="el" href="defines_8h_source.html">defines.h</a>.</p>
 
 </div>
 </div>
@@ -494,7 +376,35 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="defines_8h_source.html#l00026">26</a> of file <a class="el" href="defines_8h_source.html">defines.h</a>.</p>
+<p>Definition at line <a class="el" href="defines_8h_source.html#l00037">37</a> of file <a class="el" href="defines_8h_source.html">defines.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a0749774409574d1c22c248aafe8cb8f1"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define INODE_COUNT_OFFSET&#160;&#160;&#160;4</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="defines_8h_source.html#l00044">44</a> of file <a class="el" href="defines_8h_source.html">defines.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="aa7dde50fbcf897662fa0dcd25a27e43e"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define INODE_FILE_COUNT&#160;&#160;&#160;48</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="defines_8h_source.html#l00073">73</a> of file <a class="el" href="defines_8h_source.html">defines.h</a>.</p>
 
 </div>
 </div>
@@ -508,7 +418,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="defines_8h_source.html#l00064">64</a> of file <a class="el" href="defines_8h_source.html">defines.h</a>.</p>
+<p>Definition at line <a class="el" href="defines_8h_source.html#l00077">77</a> of file <a class="el" href="defines_8h_source.html">defines.h</a>.</p>
 
 </div>
 </div>
@@ -522,7 +432,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="defines_8h_source.html#l00072">72</a> of file <a class="el" href="defines_8h_source.html">defines.h</a>.</p>
+<p>Definition at line <a class="el" href="defines_8h_source.html#l00085">85</a> of file <a class="el" href="defines_8h_source.html">defines.h</a>.</p>
 
 </div>
 </div>
@@ -536,7 +446,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="defines_8h_source.html#l00046">46</a> of file <a class="el" href="defines_8h_source.html">defines.h</a>.</p>
+<p>Definition at line <a class="el" href="defines_8h_source.html#l00064">64</a> of file <a class="el" href="defines_8h_source.html">defines.h</a>.</p>
 
 </div>
 </div>
@@ -550,91 +460,77 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="defines_8h_source.html#l00045">45</a> of file <a class="el" href="defines_8h_source.html">defines.h</a>.</p>
+<p>Definition at line <a class="el" href="defines_8h_source.html#l00063">63</a> of file <a class="el" href="defines_8h_source.html">defines.h</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="ad9ef8c774e19ef27832f682082179824"></a>
+<a class="anchor" id="a2a16acd83cf3a56116f8cbf882d34bb8"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define LSEEK&#160;&#160;&#160;_IORW(1, 12, struct <a class="el" href="structfile.html">file</a>)</td>
+          <td class="memname">#define MAX_BLOCKS_ALLOCATABLE&#160;&#160;&#160;4168</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="defines_8h_source.html#l00018">18</a> of file <a class="el" href="defines_8h_source.html">defines.h</a>.</p>
+<p>Definition at line <a class="el" href="defines_8h_source.html#l00057">57</a> of file <a class="el" href="defines_8h_source.html">defines.h</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="a9165713ff17c8ca8fc2951e82d1a6e57"></a>
+<a class="anchor" id="a649ad5274d988d17a275a3cead056746"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define MKDIR&#160;&#160;&#160;_IORW(1, 7, struct <a class="el" href="structpath.html">path</a>)</td>
+          <td class="memname">#define MAX_FILE_SIZE&#160;&#160;&#160;1067008</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="defines_8h_source.html#l00012">12</a> of file <a class="el" href="defines_8h_source.html">defines.h</a>.</p>
+<p>Definition at line <a class="el" href="defines_8h_source.html#l00033">33</a> of file <a class="el" href="defines_8h_source.html">defines.h</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="a1354b70ac6803a06beebe84f61b5f95b"></a>
+<a class="anchor" id="aa817d070d33ea842616102d3a9b3cac6"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define OPEN&#160;&#160;&#160;_IORW(1, 8, struct <a class="el" href="structpath.html">path</a>)</td>
+          <td class="memname">#define NUM_DIRECT&#160;&#160;&#160;8</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="defines_8h_source.html#l00013">13</a> of file <a class="el" href="defines_8h_source.html">defines.h</a>.</p>
+<p>Definition at line <a class="el" href="defines_8h_source.html#l00069">69</a> of file <a class="el" href="defines_8h_source.html">defines.h</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="ada74e7db007a68e763f20c17f2985356"></a>
+<a class="anchor" id="a8b43bafee90b30676faae508c21cb8d7"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define READ&#160;&#160;&#160;_IORW(1, 10, struct <a class="el" href="structaccess_file.html">accessFile</a>)</td>
+          <td class="memname">#define PRINT&#160;&#160;&#160;printf</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="defines_8h_source.html#l00016">16</a> of file <a class="el" href="defines_8h_source.html">defines.h</a>.</p>
+<p>Definition at line <a class="el" href="defines_8h_source.html#l00007">7</a> of file <a class="el" href="defines_8h_source.html">defines.h</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="a82f77fa5f9c3fa9e1f3521bbb2cfad6a"></a>
+<a class="anchor" id="a71b835e5a2ed06d647c7e74dafca5625"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define READDIR&#160;&#160;&#160;_IORW(1, 14, struct <a class="el" href="structaccess_file.html">accessFile</a>)</td>
+          <td class="memname">#define RAM_BLOCK_SIZE&#160;&#160;&#160;256</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="defines_8h_source.html#l00020">20</a> of file <a class="el" href="defines_8h_source.html">defines.h</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a62b075ec29b7b301c68f539d8aafd029"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define ROOT_DIR&#160;&#160;&#160;<a class="el" href="defines_8h.html#ad51ded0bbd705f02f73fc60c0b721ced">BLOCK_SIZE</a>*(<a class="el" href="defines_8h.html#ab9b6f109a6de8a02776f531652006296">BLOCK_BITMAP_OFFSET</a>+<a class="el" href="defines_8h.html#a53c9b2f427bfb998d4b820209cca03cd">BLOCK_BITMAP_SIZE</a>)</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Definition at line <a class="el" href="defines_8h_source.html#l00038">38</a> of file <a class="el" href="defines_8h_source.html">defines.h</a>.</p>
+<p>Definition at line <a class="el" href="defines_8h_source.html#l00035">35</a> of file <a class="el" href="defines_8h_source.html">defines.h</a>.</p>
 
 </div>
 </div>
@@ -648,7 +544,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="defines_8h_source.html#l00039">39</a> of file <a class="el" href="defines_8h_source.html">defines.h</a>.</p>
+<p>Definition at line <a class="el" href="defines_8h_source.html#l00052">52</a> of file <a class="el" href="defines_8h_source.html">defines.h</a>.</p>
 
 </div>
 </div>
@@ -662,7 +558,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="defines_8h_source.html#l00055">55</a> of file <a class="el" href="defines_8h_source.html">defines.h</a>.</p>
+<p>Definition at line <a class="el" href="defines_8h_source.html#l00066">66</a> of file <a class="el" href="defines_8h_source.html">defines.h</a>.</p>
 
 </div>
 </div>
@@ -676,253 +572,351 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="defines_8h_source.html#l00031">31</a> of file <a class="el" href="defines_8h_source.html">defines.h</a>.</p>
+<p>Definition at line <a class="el" href="defines_8h_source.html#l00043">43</a> of file <a class="el" href="defines_8h_source.html">defines.h</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="a70c455687eb4a0f89b7bd0a5ea3ef6bf"></a>
+<a class="anchor" id="ab6c1c960cedf8ee643e3688711dc7ed2"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define UNLINK&#160;&#160;&#160;_IORW(1, 13, struct <a class="el" href="structpath.html">path</a>)</td>
+          <td class="memname">#define TOT_AVAILABLE_BLOCKS&#160;&#160;&#160;<a class="el" href="defines_8h.html#a3167e1c51bc79684fdfb78c181075d11">FS_SIZE</a>/<a class="el" href="defines_8h.html#a71b835e5a2ed06d647c7e74dafca5625">RAM_BLOCK_SIZE</a>-1-<a class="el" href="defines_8h.html#abebe0858f8264d8a3f9bd90687ed2c4c">INDEX_NODE_ARRAY_LENGTH</a>-<a class="el" href="defines_8h.html#ac5d5ca797fd94b950d89e52868fe5386">BLOCK_BITMAP_BLOCK_COUNT</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="defines_8h_source.html#l00019">19</a> of file <a class="el" href="defines_8h_source.html">defines.h</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="aa10f470e996d0f51210d24f442d25e1e"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define WRITE&#160;&#160;&#160;_IORW(1, 11, struct <a class="el" href="structaccess_file.html">accessFile</a>)</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Definition at line <a class="el" href="defines_8h_source.html#l00017">17</a> of file <a class="el" href="defines_8h_source.html">defines.h</a>.</p>
+<p>Definition at line <a class="el" href="defines_8h_source.html#l00055">55</a> of file <a class="el" href="defines_8h_source.html">defines.h</a>.</p>
 
 </div>
 </div>
 <h2 class="groupheader">Function Documentation</h2>
-<a class="anchor" id="a858ad5c03d98c58c2b0436294e7751c4"></a>
+<a class="anchor" id="aa837de32c6a6c1381d2684177520b8f1"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void kr_close </td>
+          <td class="memname">int allocBlockForNode </td>
           <td>(</td>
-          <td class="paramtype">struct <a class="el" href="structfile.html">file</a>&#160;</td>
-          <td class="paramname"><em>input</em></td><td>)</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>indexNode</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>currentSize</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Kernel pair for closing a file </p>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000002">Todo:</a></b></dt><dd>may not be necessary, not sure yet</dd></dl>
+<p>Get free block from memory region</p>
+<dl class="section return"><dt>Returns</dt><dd>blocknumber</dd></dl>
+<p>Function that allocates a new data block for a given index node</p>
+<dl class="section return"><dt>Returns</dt><dd>int -1 if there is no more room available in the filesystem, the new block number otherwise </dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">input</td><td>The file struct for closing the file </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">indexNode</td><td>the indexNode to expand </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">current</td><td>the current number of index nodes allocated </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000001">Todo:</a></b></dt><dd>Special Case where we have to allocated an indirect block as well (must num available blocks in order to not leak a block by accident) </dd></dl>
+
+<p>Definition at line <a class="el" href="ramdisk__ioctl_8c_source.html#l01357">1357</a> of file <a class="el" href="ramdisk__ioctl_8c_source.html">ramdisk_ioctl.c</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a5cbf1cbdddf2b848e566c95ff2831f17"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void allocMemoryForIndexNode </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>indexNodeNumber</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>numberOfBlocks</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Allocate memory for index Node given the number of blocks. This should be done depending on allocation size</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">indexNodeNumber</td><td>- reference to the index node </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">numberOfBlocks</td><td>- number of blocks to allocate for </td></tr>
   </table>
   </dd>
 </dl>
 
+<p>Definition at line <a class="el" href="ramdisk__ioctl_8c_source.html#l00948">948</a> of file <a class="el" href="ramdisk__ioctl_8c_source.html">ramdisk_ioctl.c</a>.</p>
+
 </div>
 </div>
-<a class="anchor" id="a4d520ed004364b7547281ea486543812"></a>
+<a class="anchor" id="a31eb316a0b5fa0f802d4d8be5e98a811"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void kr_creat </td>
+          <td class="memname">int createIndexNode </td>
           <td>(</td>
-          <td class="paramtype">struct <a class="el" href="structpath.html">path</a>&#160;</td>
-          <td class="paramname"><em>input</em></td><td>)</td>
+          <td class="paramtype">char *&#160;</td>
+          <td class="paramname"><em>type</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">char *&#160;</td>
+          <td class="paramname"><em>pathname</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>memorysize</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Kernel pair for the create function</p>
+<p>Creates a new index node</p>
+<dl class="section return"><dt>Returns</dt><dd>type description </dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">input</td><td>The path struct for creating the file </td></tr>
+    <tr><td class="paramname">in-out]</td><td>type type of the node, 'dir' or 'reg' </td></tr>
+    <tr><td class="paramname">in-out]</td><td>filename name of the file or dir, 'dir' or 'reg' </td></tr>
+    <tr><td class="paramname">in-out]</td><td>memorysize size of the file or dir in bytes </td></tr>
   </table>
   </dd>
 </dl>
 
+<p>Definition at line <a class="el" href="ramdisk__ioctl_8c_source.html#l00575">575</a> of file <a class="el" href="ramdisk__ioctl_8c_source.html">ramdisk_ioctl.c</a>.</p>
+
 </div>
 </div>
-<a class="anchor" id="aabf3deda604b85c2788f5feccd2ddd54"></a>
+<a class="anchor" id="aa67b077799f8bce89efca38502b55cf2"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void kr_lseek </td>
+          <td class="memname">void freeBlock </td>
           <td>(</td>
-          <td class="paramtype">struct <a class="el" href="structfile.html">file</a>&#160;</td>
-          <td class="paramname"><em>input</em></td><td>)</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>blockindex</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Kernel pair for the seeking function</p>
+
+<p>Definition at line <a class="el" href="ramdisk__ioctl_8c_source.html#l01571">1571</a> of file <a class="el" href="ramdisk__ioctl_8c_source.html">ramdisk_ioctl.c</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="acd7641577f5df3e67204cb88e963a3a5"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">char* getFileNameFromPath </td>
+          <td>(</td>
+          <td class="paramtype">char *&#160;</td>
+          <td class="paramname"><em>pathname</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="ramdisk__ioctl_8c_source.html#l00693">693</a> of file <a class="el" href="ramdisk__ioctl_8c_source.html">ramdisk_ioctl.c</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a5c2c1ddb13c40a740f5584468eed23a6"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int getFreeBlock </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="ramdisk__ioctl_8c_source.html#l01543">1543</a> of file <a class="el" href="ramdisk__ioctl_8c_source.html">ramdisk_ioctl.c</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="abed9bc66c41f05c25f859ec3da324c43"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int getIndexNodeNumberFromPathname </td>
+          <td>(</td>
+          <td class="paramtype">char *&#160;</td>
+          <td class="paramname"><em>pathname</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>dirFlag</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Get the index Node number for a file from the pathname</p>
+<dl class="section return"><dt>Returns</dt><dd>the index node number of the directory that holds the specified file or dir, or -1 if file doesn't exist, or a dir holding it doesn't exist If the dirFlag is not 0, then it returns the index node of the directory of the file, else it returns the index node of the file itself </dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">input</td><td>input, use offset in here to index into file </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">pathname</td><td>the pathname to parse  pathname must NOT have a trailing '/' </td></tr>
   </table>
   </dd>
 </dl>
 
+<p>Definition at line <a class="el" href="ramdisk__ioctl_8c_source.html#l00314">314</a> of file <a class="el" href="ramdisk__ioctl_8c_source.html">ramdisk_ioctl.c</a>.</p>
+
 </div>
 </div>
-<a class="anchor" id="a5f0208c8df29095bd437b706444bcf18"></a>
+<a class="anchor" id="a27c39b76cb81f341e5e99a09c60f2a62"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void kr_mkdir </td>
+          <td class="memname">int insertFileIntoDirectoryNode </td>
           <td>(</td>
-          <td class="paramtype">struct <a class="el" href="structpath.html">path</a>&#160;</td>
-          <td class="paramname"><em>input</em></td><td>)</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>directoryNodeNum</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>fileNodeNum</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">char *&#160;</td>
+          <td class="paramname"><em>filename</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Kernel pair for making a new directory</p>
+<p>Inserts a file into a directory node</p>
+<dl class="section return"><dt>Returns</dt><dd>int -1 on fail, 0 on success </dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">input</td><td>The path struct for creating the file </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">directoryNodeNum</td><td>the indexnode number for the directory </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">fileNodeNum</td><td>the indexNode of the file to insert(must be generated already) </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">filename</td><td>the filename of the file to insert </td></tr>
   </table>
   </dd>
 </dl>
 
+<p>Definition at line <a class="el" href="ramdisk__ioctl_8c_source.html#l00757">757</a> of file <a class="el" href="ramdisk__ioctl_8c_source.html">ramdisk_ioctl.c</a>.</p>
+
 </div>
 </div>
-<a class="anchor" id="aa682788ce8cedeb98e7116ab13e9495a"></a>
+<a class="anchor" id="a8c3a51079cc4f7345b2a44e11473a95e"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void kr_open </td>
+          <td class="memname">void negateIndexNodePointers </td>
           <td>(</td>
-          <td class="paramtype">struct <a class="el" href="structpath.html">path</a>&#160;</td>
-          <td class="paramname"><em>input</em></td><td>)</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>indexNodeNumber</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Kernel pair for opening a file</p>
+<p>Helper function for setting memory region to -1 for easier tracking Set Direct 1-8, single indirect 9 and double indirect 10 byte to -1</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">input</td><td>The path struct for opening the file </td></tr>
+    <tr><td class="paramname">in-out]</td><td>indexNodeNumber - id of the index number </td></tr>
   </table>
   </dd>
 </dl>
 
-</div>
-</div>
-<a class="anchor" id="aa37a477f0706105b89f31b85d7eff168"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void kr_read </td>
-          <td>(</td>
-          <td class="paramtype">struct <a class="el" href="structaccess_file.html">accessFile</a>&#160;</td>
-          <td class="paramname"><em>input</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>Kernel pair for reading a file</p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">input</td><td>The accessfile struct. Output read is placed into this struct </td></tr>
-  </table>
-  </dd>
-</dl>
+<p>Definition at line <a class="el" href="ramdisk__ioctl_8c_source.html#l00528">528</a> of file <a class="el" href="ramdisk__ioctl_8c_source.html">ramdisk_ioctl.c</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="ad023ce5575b1ed90d42110b1e5cf9792"></a>
+<a class="anchor" id="a33a5a36b52d624bee5d9f1571c58317c"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void kr_readdir </td>
+          <td class="memname">void printIndexNode </td>
           <td>(</td>
-          <td class="paramtype">struct <a class="el" href="structaccess_file.html">accessFile</a>&#160;</td>
-          <td class="paramname"><em>input</em></td><td>)</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>nodeIndex</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Kernel pair for the readdir function</p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">input</td><td>Accessfile struct. Used to read the relevant directory </td></tr>
-  </table>
-  </dd>
-</dl>
+
+<p>Definition at line <a class="el" href="ramdisk__ioctl_8c_source.html#l01628">1628</a> of file <a class="el" href="ramdisk__ioctl_8c_source.html">ramdisk_ioctl.c</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="ac8b7c76f76baf1d4b417d907ddcedcd6"></a>
+<a class="anchor" id="a0a277ce5803161d4f63b76fc12a634a8"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void kr_unlink </td>
+          <td class="memname">void printSuperblock </td>
           <td>(</td>
-          <td class="paramtype">struct <a class="el" href="structpath.html">path</a>&#160;</td>
-          <td class="paramname"><em>input</em></td><td>)</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
           <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Kernel pair for unlinking a file from the filesystem</p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">input</td><td>Path struct. Will delete file at the desired path </td></tr>
-  </table>
-  </dd>
-</dl>
+<p>Prints out the superblock </p>
 
-</div>
-</div>
-<a class="anchor" id="a8167e0d644cb94348065bd8378a7110b"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void kr_write </td>
-          <td>(</td>
-          <td class="paramtype">struct <a class="el" href="structaccess_file.html">accessFile</a>&#160;</td>
-          <td class="paramname"><em>input</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>Kernel pair for the write function</p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">input</td><td>The accessfile struct. Input for writing is in this struct </td></tr>
-  </table>
-  </dd>
-</dl>
+<p>Definition at line <a class="el" href="ramdisk__ioctl_8c_source.html#l01589">1589</a> of file <a class="el" href="ramdisk__ioctl_8c_source.html">ramdisk_ioctl.c</a>.</p>
 
 </div>
 </div>
 </div><!-- contents -->
+</div><!-- doc-content -->
 <!-- start footer part -->
-<hr class="footer"/><address class="footer"><small>
-Generated on Tue Dec 4 2012 21:03:09 for My Project by &#160;<a href="http://www.doxygen.org/index.html">
-<img class="footer" src="doxygen.png" alt="doxygen"/>
-</a> 1.8.2
-</small></address>
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="defines_8h.html">defines.h</a></li>
+    <li class="footer">Generated on Sun Dec 16 2012 16:55:08 for My Project by
+    <a href="http://www.doxygen.org/index.html">
+    <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.2 </li>
+  </ul>
+</div>
 </body>
 </html>

@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['write',['WRITE',['../defines_8h.html#aa10f470e996d0f51210d24f442d25e1e',1,'defines.h']]]
+  ['writetofile',['writeToFile',['../ramdisk__ioctl_8c.html#a6268b05a277a309f32b9705f907b181c',1,'ramdisk_ioctl.c']]]
 ];

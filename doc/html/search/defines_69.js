@@ -4,8 +4,11 @@ var searchData=
   ['index_5fnode_5farray_5foffset',['INDEX_NODE_ARRAY_OFFSET',['../defines_8h.html#a6ffbc015c0f283f08a80ed7979f5b9c2',1,'defines.h']]],
   ['index_5fnode_5fcount',['INDEX_NODE_COUNT',['../defines_8h.html#aa176c9f94fa2316acb019041f495d100',1,'defines.h']]],
   ['index_5fnode_5fsize',['INDEX_NODE_SIZE',['../defines_8h.html#a629824d26fc98ae1a4a7e33c08903410',1,'defines.h']]],
+  ['inode_5fcount_5foffset',['INODE_COUNT_OFFSET',['../defines_8h.html#a0749774409574d1c22c248aafe8cb8f1',1,'defines.h']]],
+  ['inode_5ffile_5fcount',['INODE_FILE_COUNT',['../defines_8h.html#aa7dde50fbcf897662fa0dcd25a27e43e',1,'defines.h']]],
   ['inode_5ffile_5fname',['INODE_FILE_NAME',['../defines_8h.html#ab2643d41f4160853e5744931081850ff',1,'defines.h']]],
   ['inode_5fnum_5foffset',['INODE_NUM_OFFSET',['../defines_8h.html#af6ab1d1a545490ed2f61a7e04c1b0a5b',1,'defines.h']]],
   ['inode_5fsize',['INODE_SIZE',['../defines_8h.html#a34a3a3e2e3a4bd30b993bce5b19f3d73',1,'defines.h']]],
-  ['inode_5ftype',['INODE_TYPE',['../defines_8h.html#a5837260343c8eaf0f7e8a2ee8123129e',1,'defines.h']]]
+  ['inode_5ftype',['INODE_TYPE',['../defines_8h.html#a5837260343c8eaf0f7e8a2ee8123129e',1,'defines.h']]],
+  ['ioctl_5ftest',['IOCTL_TEST',['../ioctl__module_8c.html#a37364d2334ea38bd379cbce9fa2333ff',1,'IOCTL_TEST():&#160;ioctl_module.c'],['../ioctl__test_8c.html#a37364d2334ea38bd379cbce9fa2333ff',1,'IOCTL_TEST():&#160;ioctl_test.c']]]
 ];

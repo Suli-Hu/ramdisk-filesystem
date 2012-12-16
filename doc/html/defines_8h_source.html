@@ -7,6 +7,12 @@
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<script type="text/javascript">
+  $(document).ready(initResizable);
+</script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="search/search.js"></script>
 <script type="text/javascript">
@@ -64,6 +70,20 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
     </ul>
   </div>
 </div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+$(document).ready(function(){initNavTree('defines_8h_source.html','');});
+</script>
+<div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -83,124 +103,125 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="title">defines.h</div>  </div>
 </div><!--header-->
 <div class="contents">
-<a href="defines_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#include &lt;linux/module.h&gt;</span></div>
-<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="preprocessor">#include &lt;linux/errno.h&gt;</span> <span class="comment">/* error codes */</span></div>
-<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="preprocessor">#include &lt;linux/proc_fs.h&gt;</span></div>
-<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#include &lt;asm/uaccess.h&gt;</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#include &lt;linux/tty.h&gt;</span></div>
-<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="preprocessor">#include &lt;linux/sched.h&gt;</span></div>
-<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="preprocessor">#include &lt;linux/interrupt.h&gt;</span></div>
-<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;</div>
-<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="comment">/****************************IOCTL DECLARATIONS*******************************/</span></div>
-<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;</div>
-<div class="line"><a name="l00011"></a><span class="lineno"><a class="code" href="defines_8h.html#a4c6b87853cbaf189fe1e484706ae1875">   11</a></span>&#160;<span class="preprocessor">#define CREATE _IORW(0, 6, struct path)</span></div>
-<div class="line"><a name="l00012"></a><span class="lineno"><a class="code" href="defines_8h.html#a9165713ff17c8ca8fc2951e82d1a6e57">   12</a></span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define MKDIR _IORW(1, 7, struct path)</span></div>
-<div class="line"><a name="l00013"></a><span class="lineno"><a class="code" href="defines_8h.html#a1354b70ac6803a06beebe84f61b5f95b">   13</a></span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define OPEN _IORW(1, 8, struct path)</span></div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00015"></a><span class="lineno"><a class="code" href="defines_8h.html#a0e29f488071372aa0530842e60b64511">   15</a></span>&#160;<span class="preprocessor">#define CLOSE _IORW(1, 9, struct file)</span></div>
-<div class="line"><a name="l00016"></a><span class="lineno"><a class="code" href="defines_8h.html#ada74e7db007a68e763f20c17f2985356">   16</a></span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define READ _IORW(1, 10, struct accessFile)</span></div>
-<div class="line"><a name="l00017"></a><span class="lineno"><a class="code" href="defines_8h.html#aa10f470e996d0f51210d24f442d25e1e">   17</a></span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define WRITE _IORW(1, 11, struct accessFile)</span></div>
-<div class="line"><a name="l00018"></a><span class="lineno"><a class="code" href="defines_8h.html#ad9ef8c774e19ef27832f682082179824">   18</a></span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define LSEEK _IORW(1, 12, struct file)</span></div>
-<div class="line"><a name="l00019"></a><span class="lineno"><a class="code" href="defines_8h.html#a70c455687eb4a0f89b7bd0a5ea3ef6bf">   19</a></span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define UNLINK _IORW(1, 13, struct path)</span></div>
-<div class="line"><a name="l00020"></a><span class="lineno"><a class="code" href="defines_8h.html#a82f77fa5f9c3fa9e1f3521bbb2cfad6a">   20</a></span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define READDIR _IORW(1, 14, struct accessFile)</span></div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="comment">/*********************FILE SYSTEM STRUCTURE************************/</span></div>
-<div class="line"><a name="l00023"></a><span class="lineno"><a class="code" href="defines_8h.html#a3167e1c51bc79684fdfb78c181075d11">   23</a></span>&#160;<span class="preprocessor">#define FS_SIZE 2097152 // Exactly 2 MB</span></div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00025"></a><span class="lineno"><a class="code" href="defines_8h.html#ad51ded0bbd705f02f73fc60c0b721ced">   25</a></span>&#160;<span class="preprocessor">#define BLOCK_SIZE 256  // Size in bytes</span></div>
-<div class="line"><a name="l00026"></a><span class="lineno"><a class="code" href="defines_8h.html#a629824d26fc98ae1a4a7e33c08903410">   26</a></span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define INDEX_NODE_SIZE 64  // Size in bytes</span></div>
-<div class="line"><a name="l00027"></a><span class="lineno"><a class="code" href="defines_8h.html#abebe0858f8264d8a3f9bd90687ed2c4c">   27</a></span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define INDEX_NODE_ARRAY_LENGTH 256  // Number of blocks</span></div>
-<div class="line"><a name="l00028"></a><span class="lineno"><a class="code" href="defines_8h.html#aa176c9f94fa2316acb019041f495d100">   28</a></span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define INDEX_NODE_COUNT INDEX_NODE_ARRAY_LENGTH*(INDEX_NODE_ARRAY_LENGTH/INDEX_NODE_SIZE)</span></div>
-<div class="line"><a name="l00029"></a><span class="lineno"><a class="code" href="defines_8h.html#a53c9b2f427bfb998d4b820209cca03cd">   29</a></span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define BLOCK_BITMAP_SIZE 4*BLOCK_SIZE</span></div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00031"></a><span class="lineno"><a class="code" href="defines_8h.html#ae9e5bed110d8e9128d5d07f8cbe9896b">   31</a></span>&#160;<span class="preprocessor">#define SUPERBLOCK_OFFSET 0</span></div>
-<div class="line"><a name="l00032"></a><span class="lineno"><a class="code" href="defines_8h.html#a6ffbc015c0f283f08a80ed7979f5b9c2">   32</a></span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define INDEX_NODE_ARRAY_OFFSET BLOCK_SIZE</span></div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="comment">// I&#39;m indexing the fs via block size</span></div>
-<div class="line"><a name="l00035"></a><span class="lineno"><a class="code" href="defines_8h.html#ab9b6f109a6de8a02776f531652006296">   35</a></span>&#160;<span class="preprocessor">#define BLOCK_BITMAP_OFFSET (INDEX_NODE_ARRAY_LENGTH+1)*BLOCK_SIZE</span></div>
+<a href="defines_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno"><a class="code" href="defines_8h.html#ad72dbcf6d0153db1b8d8a58001feed83">    1</a></span>&#160;<span class="preprocessor">#define DEBUG  </span><span class="comment">/* For now, while developing on mac */</span><span class="preprocessor"></span></div>
+<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#ifdef DEBUG</span></div>
+<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">    #include &lt;stdio.h&gt;</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">    #include &lt;stdlib.h&gt;</span></div>
+<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="preprocessor">    #include &lt;string.h&gt;</span></div>
+<div class="line"><a name="l00007"></a><span class="lineno"><a class="code" href="defines_8h.html#a8b43bafee90b30676faae508c21cb8d7">    7</a></span>&#160;<span class="preprocessor">    #define PRINT printf</span></div>
+<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="preprocessor">#else</span></div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="preprocessor">    #include &lt;linux/module.h&gt;</span></div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="preprocessor">    #include &lt;linux/kernel.h&gt;</span></div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="preprocessor">    #include &lt;linux/init.h&gt;</span></div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="preprocessor">    #include &lt;linux/vmalloc.h&gt;</span></div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="preprocessor">    #include &lt;linux/errno.h&gt;</span> <span class="comment">/* error codes */</span></div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="preprocessor">    #include &lt;linux/proc_fs.h&gt;</span></div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="preprocessor">    #include &lt;asm/uaccess.h&gt;</span></div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="preprocessor">    #include &lt;linux/tty.h&gt;</span></div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="preprocessor">    #include &lt;linux/sched.h&gt;</span></div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="preprocessor">    #include &lt;linux/string.h&gt;</span></div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="preprocessor">    #include &lt;linux/interrupt.h&gt;</span></div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="preprocessor">    #include &lt;linux/semaphore.h&gt;</span></div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="preprocessor">    #define PRINT printk</span></div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="structs_8h.html">structs.h</a>&quot;</span></div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="comment">/*********************FILE SYSTEM STRUCTURE************************/</span></div>
+<div class="line"><a name="l00032"></a><span class="lineno"><a class="code" href="defines_8h.html#a3167e1c51bc79684fdfb78c181075d11">   32</a></span>&#160;<span class="preprocessor">#define FS_SIZE 2097152 // Exactly 2 MB</span></div>
+<div class="line"><a name="l00033"></a><span class="lineno"><a class="code" href="defines_8h.html#a649ad5274d988d17a275a3cead056746">   33</a></span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define MAX_FILE_SIZE 1067008</span></div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00035"></a><span class="lineno"><a class="code" href="defines_8h.html#a71b835e5a2ed06d647c7e74dafca5625">   35</a></span>&#160;<span class="preprocessor">#define RAM_BLOCK_SIZE 256  // Size in bytes</span></div>
 <div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="comment">// This is the index into the root dir in bytes</span></div>
-<div class="line"><a name="l00038"></a><span class="lineno"><a class="code" href="defines_8h.html#a62b075ec29b7b301c68f539d8aafd029">   38</a></span>&#160;<span class="preprocessor">#define ROOT_DIR BLOCK_SIZE*(BLOCK_BITMAP_OFFSET+BLOCK_BITMAP_SIZE)</span></div>
-<div class="line"><a name="l00039"></a><span class="lineno"><a class="code" href="defines_8h.html#a1c40273eaeeaee04089b6a60b541c5bf">   39</a></span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define ROOT_INDEX_NODE 0 // Simply to make this access clearer</span></div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="comment">/*********************INDEX NODE STRUCTURE************************/</span></div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="comment">// Indexes into an inode are in bytes, must be cast into an int or pointer</span></div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="comment">// before used, but I don&#39;t take that into account here.  To access these</span></div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="comment">// elements, get the inode offset, and then add in these values</span></div>
-<div class="line"><a name="l00045"></a><span class="lineno"><a class="code" href="defines_8h.html#a5837260343c8eaf0f7e8a2ee8123129e">   45</a></span>&#160;<span class="preprocessor">#define INODE_TYPE 0</span></div>
-<div class="line"><a name="l00046"></a><span class="lineno"><a class="code" href="defines_8h.html#a34a3a3e2e3a4bd30b993bce5b19f3d73">   46</a></span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define INODE_SIZE 4</span></div>
-<div class="line"><a name="l00047"></a><span class="lineno"><a class="code" href="defines_8h.html#a905598653bf870e3e958acf0380a77e7">   47</a></span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define DIRECT_1 8</span></div>
-<div class="line"><a name="l00048"></a><span class="lineno"><a class="code" href="defines_8h.html#a965f8604e02513e91ef6c9162742d810">   48</a></span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define DIRECT_2 12</span></div>
-<div class="line"><a name="l00049"></a><span class="lineno"><a class="code" href="defines_8h.html#a0dfbc44dec94b531056459343fba8503">   49</a></span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define DIRECT_3 16</span></div>
-<div class="line"><a name="l00050"></a><span class="lineno"><a class="code" href="defines_8h.html#a6839369f1b71648927c5cbb54f6be24c">   50</a></span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define DIRECT_4 20</span></div>
-<div class="line"><a name="l00051"></a><span class="lineno"><a class="code" href="defines_8h.html#af5e65433e08cbbd9a613d1a3cd6d9b22">   51</a></span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define DIRECT_5 24</span></div>
-<div class="line"><a name="l00052"></a><span class="lineno"><a class="code" href="defines_8h.html#aa2445e929732869089d3081276d1ddc1">   52</a></span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define DIRECT_6 28</span></div>
-<div class="line"><a name="l00053"></a><span class="lineno"><a class="code" href="defines_8h.html#adbdb5fb58f757840cdaef27b7866e49d">   53</a></span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define DIRECT_7 32</span></div>
-<div class="line"><a name="l00054"></a><span class="lineno"><a class="code" href="defines_8h.html#a43cc89a83d10925c225b325f7e5d3a00">   54</a></span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define DIRECT_8 36</span></div>
-<div class="line"><a name="l00055"></a><span class="lineno"><a class="code" href="defines_8h.html#aeaf02f5499e1df5d26d49a0869abcad8">   55</a></span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define SINGLE_INDIR 40</span></div>
-<div class="line"><a name="l00056"></a><span class="lineno"><a class="code" href="defines_8h.html#a2a129c797c5e972e51d89a0c6cf6d1bd">   56</a></span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define DOUBLE_INDIR 44</span></div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;<span class="comment">// I add this custom value to keep track of directory file count</span></div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;<span class="comment">// I use 2 bytes ( a short ) for this</span></div>
-<div class="line"><a name="l00060"></a><span class="lineno"><a class="code" href="defines_8h.html#a7ee3b243ddbfbae35ee2b5af95e069b5">   60</a></span>&#160;<span class="preprocessor">#define FILE_COUNT 48</span></div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;<span class="comment">// I also keep within here the filename for convenience, so that it</span></div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;<span class="comment">// isn&#39;t necessary to view memory to access current files name</span></div>
-<div class="line"><a name="l00064"></a><span class="lineno"><a class="code" href="defines_8h.html#ab2643d41f4160853e5744931081850ff">   64</a></span>&#160;<span class="preprocessor">#define INODE_FILE_NAME 50</span></div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;<span class="comment">/*********************FILE SYSTEM DIRECTORY STRUCTURE************************/</span></div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;<span class="comment">// Files are just raw data pointed to from the index node, directories on the </span></div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;<span class="comment">// othere hand are groups of 16 byte &quot;structs&quot;, where 14 bytes is filename and</span></div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;<span class="comment">// 2 bytes index node number</span></div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;</div>
-<div class="line"><a name="l00071"></a><span class="lineno"><a class="code" href="defines_8h.html#a9c3c179c039c3f784e9effdf15399e28">   71</a></span>&#160;<span class="preprocessor">#define FILE_INFO_SIZE 16</span></div>
-<div class="line"><a name="l00072"></a><span class="lineno"><a class="code" href="defines_8h.html#af6ab1d1a545490ed2f61a7e04c1b0a5b">   72</a></span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define INODE_NUM_OFFSET 14 // Offset in file_info to get the inode</span></div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;<span class="comment">/*****************************IOCTL STRUCTURES*******************************/</span></div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;</div>
-<div class="line"><a name="l00076"></a><span class="lineno"><a class="code" href="structpath.html">   76</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structpath.html">path</a>{</div>
-<div class="line"><a name="l00077"></a><span class="lineno"><a class="code" href="structpath.html#a90b4e69e79ffcab58317188012e7da1f">   77</a></span>&#160;    <span class="keywordtype">char</span> *<a class="code" href="structpath.html#a90b4e69e79ffcab58317188012e7da1f">name</a>;  </div>
-<div class="line"><a name="l00078"></a><span class="lineno"><a class="code" href="structpath.html#a458da1607fd2ddce96c794a6876ddd6f">   78</a></span>&#160;    <span class="keywordtype">int</span> <a class="code" href="structpath.html#a458da1607fd2ddce96c794a6876ddd6f">ret</a>;          </div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;};</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;</div>
-<div class="line"><a name="l00081"></a><span class="lineno"><a class="code" href="structfile.html">   81</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structfile.html">file</a> {</div>
-<div class="line"><a name="l00082"></a><span class="lineno"><a class="code" href="structfile.html#abcdc3058fcb2b789cd4ce5f62f274363">   82</a></span>&#160;    <span class="keywordtype">int</span> <a class="code" href="structfile.html#abcdc3058fcb2b789cd4ce5f62f274363">fd</a>;       </div>
-<div class="line"><a name="l00083"></a><span class="lineno"><a class="code" href="structfile.html#ad056d2081f3cab9ed4668689a02acaaf">   83</a></span>&#160;    <span class="keywordtype">int</span> <a class="code" href="structfile.html#ad056d2081f3cab9ed4668689a02acaaf">offset</a>;  </div>
-<div class="line"><a name="l00084"></a><span class="lineno"><a class="code" href="structfile.html#a6d285b7a32eb853a1dcb00014942d8ae">   84</a></span>&#160;    <span class="keywordtype">int</span> <a class="code" href="structfile.html#a6d285b7a32eb853a1dcb00014942d8ae">ret</a>;      </div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;};</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;</div>
-<div class="line"><a name="l00087"></a><span class="lineno"><a class="code" href="structaccess_file.html">   87</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structaccess_file.html">accessFile</a> {</div>
-<div class="line"><a name="l00088"></a><span class="lineno"><a class="code" href="structaccess_file.html#a9ab395b069b2bd43673532852db9fc08">   88</a></span>&#160;    <span class="keywordtype">int</span> <a class="code" href="structaccess_file.html#a9ab395b069b2bd43673532852db9fc08">fd</a>;               </div>
-<div class="line"><a name="l00089"></a><span class="lineno"><a class="code" href="structaccess_file.html#a8703e8c02cbe832f83766a84ec60679e">   89</a></span>&#160;    <span class="keywordtype">char</span> *<a class="code" href="structaccess_file.html#a8703e8c02cbe832f83766a84ec60679e">address</a>;  </div>
-<div class="line"><a name="l00090"></a><span class="lineno"><a class="code" href="structaccess_file.html#a88da95f58ee0db9eff5d9fae8d94585f">   90</a></span>&#160;    <span class="keywordtype">int</span> <a class="code" href="structaccess_file.html#a88da95f58ee0db9eff5d9fae8d94585f">numBytes</a>;    </div>
-<div class="line"><a name="l00091"></a><span class="lineno"><a class="code" href="structaccess_file.html#af78cfca94c3c5287dd6b843953eb1052">   91</a></span>&#160;    <span class="keywordtype">int</span> <a class="code" href="structaccess_file.html#af78cfca94c3c5287dd6b843953eb1052">ret</a>;              </div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;};</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;</div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;<span class="comment">/***************************KERNEL FS FUNCTION PROTOTYPES********************/</span></div>
+<div class="line"><a name="l00037"></a><span class="lineno"><a class="code" href="defines_8h.html#a629824d26fc98ae1a4a7e33c08903410">   37</a></span>&#160;<span class="preprocessor">#define INDEX_NODE_SIZE 64  // Size in bytes</span></div>
+<div class="line"><a name="l00038"></a><span class="lineno"><a class="code" href="defines_8h.html#abebe0858f8264d8a3f9bd90687ed2c4c">   38</a></span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define INDEX_NODE_ARRAY_LENGTH 256  // Number of blocks</span></div>
+<div class="line"><a name="l00039"></a><span class="lineno"><a class="code" href="defines_8h.html#aa176c9f94fa2316acb019041f495d100">   39</a></span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define INDEX_NODE_COUNT INDEX_NODE_ARRAY_LENGTH*(RAM_BLOCK_SIZE/INDEX_NODE_SIZE)</span></div>
+<div class="line"><a name="l00040"></a><span class="lineno"><a class="code" href="defines_8h.html#a53c9b2f427bfb998d4b820209cca03cd">   40</a></span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define BLOCK_BITMAP_SIZE 4*RAM_BLOCK_SIZE</span></div>
+<div class="line"><a name="l00041"></a><span class="lineno"><a class="code" href="defines_8h.html#ac5d5ca797fd94b950d89e52868fe5386">   41</a></span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define BLOCK_BITMAP_BLOCK_COUNT 4</span></div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00043"></a><span class="lineno"><a class="code" href="defines_8h.html#ae9e5bed110d8e9128d5d07f8cbe9896b">   43</a></span>&#160;<span class="preprocessor">#define SUPERBLOCK_OFFSET 0</span></div>
+<div class="line"><a name="l00044"></a><span class="lineno"><a class="code" href="defines_8h.html#a0749774409574d1c22c248aafe8cb8f1">   44</a></span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define INODE_COUNT_OFFSET 4</span></div>
+<div class="line"><a name="l00045"></a><span class="lineno"><a class="code" href="defines_8h.html#a6ffbc015c0f283f08a80ed7979f5b9c2">   45</a></span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define INDEX_NODE_ARRAY_OFFSET RAM_BLOCK_SIZE</span></div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="comment">// I&#39;m indexing the fs via block size</span></div>
+<div class="line"><a name="l00048"></a><span class="lineno"><a class="code" href="defines_8h.html#ab9b6f109a6de8a02776f531652006296">   48</a></span>&#160;<span class="preprocessor">#define BLOCK_BITMAP_OFFSET RAM_BLOCK_SIZE*(INDEX_NODE_ARRAY_LENGTH+1)</span></div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<span class="comment">// This is the index into the root dir in bytes, or the first data block in the ramdisk</span></div>
+<div class="line"><a name="l00051"></a><span class="lineno"><a class="code" href="defines_8h.html#a6a4bc429928537956bef270e1505de40">   51</a></span>&#160;<span class="preprocessor">#define DATA_BLOCKS_OFFSET BLOCK_BITMAP_OFFSET+BLOCK_BITMAP_SIZE</span></div>
+<div class="line"><a name="l00052"></a><span class="lineno"><a class="code" href="defines_8h.html#a1c40273eaeeaee04089b6a60b541c5bf">   52</a></span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define ROOT_INDEX_NODE 0 // Simply to make this access clearer</span></div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<span class="comment">// The total number of available blocks in the filesystem, excluding the Root Dir since that is always occupied</span></div>
+<div class="line"><a name="l00055"></a><span class="lineno"><a class="code" href="defines_8h.html#ab6c1c960cedf8ee643e3688711dc7ed2">   55</a></span>&#160;<span class="preprocessor">#define TOT_AVAILABLE_BLOCKS FS_SIZE/RAM_BLOCK_SIZE-1-INDEX_NODE_ARRAY_LENGTH-BLOCK_BITMAP_BLOCK_COUNT</span></div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00057"></a><span class="lineno"><a class="code" href="defines_8h.html#a2a16acd83cf3a56116f8cbf882d34bb8">   57</a></span>&#160;<span class="preprocessor">#define MAX_BLOCKS_ALLOCATABLE 4168</span></div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;<span class="comment">/*********************INDEX NODE STRUCTURE************************/</span></div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;<span class="comment">// Indexes into an inode are in bytes, must be cast into an int or pointer</span></div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;<span class="comment">// before used, but I don&#39;t take that into account here.  To access these</span></div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;<span class="comment">// elements, get the inode offset, and then add in these values</span></div>
+<div class="line"><a name="l00063"></a><span class="lineno"><a class="code" href="defines_8h.html#a5837260343c8eaf0f7e8a2ee8123129e">   63</a></span>&#160;<span class="preprocessor">#define INODE_TYPE 0</span></div>
+<div class="line"><a name="l00064"></a><span class="lineno"><a class="code" href="defines_8h.html#a34a3a3e2e3a4bd30b993bce5b19f3d73">   64</a></span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define INODE_SIZE 4</span></div>
+<div class="line"><a name="l00065"></a><span class="lineno"><a class="code" href="defines_8h.html#a905598653bf870e3e958acf0380a77e7">   65</a></span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define DIRECT_1 8</span></div>
+<div class="line"><a name="l00066"></a><span class="lineno"><a class="code" href="defines_8h.html#aeaf02f5499e1df5d26d49a0869abcad8">   66</a></span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define SINGLE_INDIR 40</span></div>
+<div class="line"><a name="l00067"></a><span class="lineno"><a class="code" href="defines_8h.html#a2a129c797c5e972e51d89a0c6cf6d1bd">   67</a></span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define DOUBLE_INDIR 44</span></div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00069"></a><span class="lineno"><a class="code" href="defines_8h.html#aa817d070d33ea842616102d3a9b3cac6">   69</a></span>&#160;<span class="preprocessor">#define NUM_DIRECT 8</span></div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;<span class="comment">// I add this custom value to keep track of directory file count</span></div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;<span class="comment">// I use 2 bytes ( a short ) for this</span></div>
+<div class="line"><a name="l00073"></a><span class="lineno"><a class="code" href="defines_8h.html#aa7dde50fbcf897662fa0dcd25a27e43e">   73</a></span>&#160;<span class="preprocessor">#define INODE_FILE_COUNT 48</span></div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;<span class="comment">// I also keep within here the filename for convenience, so that it</span></div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;<span class="comment">// isn&#39;t necessary to view memory to access current files name</span></div>
+<div class="line"><a name="l00077"></a><span class="lineno"><a class="code" href="defines_8h.html#ab2643d41f4160853e5744931081850ff">   77</a></span>&#160;<span class="preprocessor">#define INODE_FILE_NAME 50</span></div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;<span class="comment">/*********************FILE SYSTEM DIRECTORY STRUCTURE************************/</span></div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;<span class="comment">// Files are just raw data pointed to from the index node, directories on the</span></div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;<span class="comment">// othere hand are groups of 16 byte &quot;structs&quot;, where 14 bytes is filename and</span></div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;<span class="comment">// 2 bytes index node number</span></div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;</div>
+<div class="line"><a name="l00084"></a><span class="lineno"><a class="code" href="defines_8h.html#a9c3c179c039c3f784e9effdf15399e28">   84</a></span>&#160;<span class="preprocessor">#define FILE_INFO_SIZE 16</span></div>
+<div class="line"><a name="l00085"></a><span class="lineno"><a class="code" href="defines_8h.html#af6ab1d1a545490ed2f61a7e04c1b0a5b">   85</a></span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define INODE_NUM_OFFSET 14 // Offset in file_info to get the inode</span></div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;<span class="keywordtype">int</span> <a class="code" href="defines_8h.html#aa837de32c6a6c1381d2684177520b8f1">allocBlockForNode</a>(<span class="keywordtype">int</span> indexNode, <span class="keywordtype">int</span> currentSize);</div>
 <div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;</div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;<span class="keywordtype">void</span> <a class="code" href="defines_8h.html#a4d520ed004364b7547281ea486543812">kr_creat</a>(<span class="keyword">struct</span> <a class="code" href="structpath.html">path</a> input);</div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;</div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;<span class="keywordtype">void</span> <a class="code" href="defines_8h.html#a5f0208c8df29095bd437b706444bcf18">kr_mkdir</a>(<span class="keyword">struct</span> <a class="code" href="structpath.html">path</a> input);</div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;<span class="keywordtype">int</span> <a class="code" href="defines_8h.html#a5c2c1ddb13c40a740f5584468eed23a6">getFreeBlock</a>(<span class="keywordtype">void</span>);</div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;<span class="keywordtype">void</span> <a class="code" href="defines_8h.html#aa67b077799f8bce89efca38502b55cf2">freeBlock</a>(<span class="keywordtype">int</span> blockindex);</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;</div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;<span class="keywordtype">void</span> <a class="code" href="defines_8h.html#a5cbf1cbdddf2b848e566c95ff2831f17">allocMemoryForIndexNode</a>(<span class="keywordtype">int</span> indexNodeNumber, <span class="keywordtype">int</span> numberOfBlocks);</div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;</div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;<span class="keywordtype">void</span> <a class="code" href="defines_8h.html#a8c3a51079cc4f7345b2a44e11473a95e">negateIndexNodePointers</a>(<span class="keywordtype">int</span> indexNodeNumber);</div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;</div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;<span class="keywordtype">int</span> <a class="code" href="defines_8h.html#a31eb316a0b5fa0f802d4d8be5e98a811">createIndexNode</a>(<span class="keywordtype">char</span> *type, <span class="keywordtype">char</span> *pathname, <span class="keywordtype">int</span> memorysize);</div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;</div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;<span class="keywordtype">int</span> <a class="code" href="defines_8h.html#abed9bc66c41f05c25f859ec3da324c43">getIndexNodeNumberFromPathname</a>(<span class="keywordtype">char</span> *pathname, <span class="keywordtype">int</span> dirFlag);</div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;</div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;<span class="keywordtype">int</span> <a class="code" href="defines_8h.html#a27c39b76cb81f341e5e99a09c60f2a62">insertFileIntoDirectoryNode</a>(<span class="keywordtype">int</span> directoryNodeNum, <span class="keywordtype">int</span> fileNodeNum, <span class="keywordtype">char</span> *filename);</div>
 <div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;</div>
-<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;<span class="keywordtype">void</span> <a class="code" href="defines_8h.html#aa682788ce8cedeb98e7116ab13e9495a">kr_open</a>(<span class="keyword">struct</span> <a class="code" href="structpath.html">path</a> input);</div>
-<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;</div>
-<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;<span class="keywordtype">void</span> <a class="code" href="defines_8h.html#a858ad5c03d98c58c2b0436294e7751c4">kr_close</a>(<span class="keyword">struct</span> <a class="code" href="structfile.html">file</a> input);</div>
-<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;</div>
-<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;<span class="keywordtype">void</span> <a class="code" href="defines_8h.html#aa37a477f0706105b89f31b85d7eff168">kr_read</a>(<span class="keyword">struct</span> <a class="code" href="structaccess_file.html">accessFile</a> input);</div>
-<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;</div>
-<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;<span class="keywordtype">void</span> <a class="code" href="defines_8h.html#a8167e0d644cb94348065bd8378a7110b">kr_write</a>(<span class="keyword">struct</span> <a class="code" href="structaccess_file.html">accessFile</a> input);</div>
-<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;</div>
-<div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160;<span class="keywordtype">void</span> <a class="code" href="defines_8h.html#aabf3deda604b85c2788f5feccd2ddd54">kr_lseek</a>(<span class="keyword">struct</span> <a class="code" href="structfile.html">file</a> input);</div>
-<div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;</div>
-<div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;<span class="keywordtype">void</span> <a class="code" href="defines_8h.html#ac8b7c76f76baf1d4b417d907ddcedcd6">kr_unlink</a>(<span class="keyword">struct</span> <a class="code" href="structpath.html">path</a> input);</div>
-<div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;</div>
-<div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160;<span class="keywordtype">void</span> <a class="code" href="defines_8h.html#ad023ce5575b1ed90d42110b1e5cf9792">kr_readdir</a>(<span class="keyword">struct</span> <a class="code" href="structaccess_file.html">accessFile</a> input);</div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;<span class="keywordtype">void</span> <a class="code" href="defines_8h.html#a33a5a36b52d624bee5d9f1571c58317c">printIndexNode</a>(<span class="keywordtype">int</span> nodeIndex);</div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;</div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;<span class="keywordtype">char</span> *<a class="code" href="defines_8h.html#acd7641577f5df3e67204cb88e963a3a5">getFileNameFromPath</a>(<span class="keywordtype">char</span> *pathname);</div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;</div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;<span class="keywordtype">void</span> <a class="code" href="defines_8h.html#a0a277ce5803161d4f63b76fc12a634a8">printSuperblock</a>(<span class="keywordtype">void</span>);</div>
 </div><!-- fragment --></div><!-- contents -->
+</div><!-- doc-content -->
 <!-- start footer part -->
-<hr class="footer"/><address class="footer"><small>
-Generated on Tue Dec 4 2012 21:03:09 for My Project by &#160;<a href="http://www.doxygen.org/index.html">
-<img class="footer" src="doxygen.png" alt="doxygen"/>
-</a> 1.8.2
-</small></address>
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="defines_8h.html">defines.h</a></li>
+    <li class="footer">Generated on Sun Dec 16 2012 16:55:08 for My Project by
+    <a href="http://www.doxygen.org/index.html">
+    <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.2 </li>
+  </ul>
+</div>
 </body>
 </html>

@@ -1,6 +1,14 @@
 \hypertarget{_r_a_m_file_lib_8h}{\section{R\-A\-M\-File\-Lib.\-h File Reference}
 \label{_r_a_m_file_lib_8h}\index{R\-A\-M\-File\-Lib.\-h@{R\-A\-M\-File\-Lib.\-h}}
 }
+{\ttfamily \#include $<$sys/ioctl.\-h$>$}\\*
+{\ttfamily \#include $<$stdio.\-h$>$}\\*
+{\ttfamily \#include $<$fcntl.\-h$>$}\\*
+{\ttfamily \#include $<$stdlib.\-h$>$}\\*
+{\ttfamily \#include $<$unistd.\-h$>$}\\*
+{\ttfamily \#include $<$string.\-h$>$}\\*
+{\ttfamily \#include \char`\"{}structs.\-h\char`\"{}}\\*
+{\ttfamily \#include $<$vector$>$}\\*
 \subsection*{Functions}
 \begin{DoxyCompactItemize}
 \item 
@@ -9,8 +17,6 @@ int \hyperlink{_r_a_m_file_lib_8h_ac8cd9a3d1c4fab64e86551fa48117d06}{rd\-\_\-cre
 int \hyperlink{_r_a_m_file_lib_8h_a2f8c14cce1d9a12e84394f5d0a7e90d9}{rd\-\_\-mkdir} (char $\ast$pathname)
 \item 
 int \hyperlink{_r_a_m_file_lib_8h_acae117c51314a3d124c2e080b1202c33}{rd\-\_\-open} (char $\ast$pathname)
-\item 
-int \hyperlink{_r_a_m_file_lib_8h_a66fefb5d0f64c8373ed98fe3517c91e4}{rd\-\_\-close} (int fd)
 \item 
 int \hyperlink{_r_a_m_file_lib_8h_a23d1eacc3a020171c538d8b3b82f3cc0}{rd\-\_\-read} (int fd, char $\ast$address, int num\-\_\-bytes)
 \item 
@@ -21,6 +27,8 @@ int \hyperlink{_r_a_m_file_lib_8h_a20fb7e3a4e0a85ef953bbfcf9d8924f1}{rd\-\_\-lse
 int \hyperlink{_r_a_m_file_lib_8h_af4213a21e51f92e48a75e743740a9b46}{rd\-\_\-unlink} (char $\ast$pathname)
 \item 
 int \hyperlink{_r_a_m_file_lib_8h_a95fff0fc11f82df031e1fb7462eb8687}{rd\-\_\-readdir} (int fd, char $\ast$address)
+\item 
+int \hyperlink{_r_a_m_file_lib_8h_a66fefb5d0f64c8373ed98fe3517c91e4}{rd\-\_\-close} (int fd)
 \end{DoxyCompactItemize}
 
 
@@ -32,22 +40,9 @@ int \hyperlink{_r_a_m_file_lib_8h_a95fff0fc11f82df031e1fb7462eb8687}{rd\-\_\-rea
 \item[{int}]{fd}
 \end{DoxyParamCaption}
 )}}\label{_r_a_m_file_lib_8h_a66fefb5d0f64c8373ed98fe3517c91e4}
-Close a currently opened file
-
-\begin{DoxyReturn}{Returns}
-int 0 on success, -\/1 on error 
-\end{DoxyReturn}
-
-\begin{DoxyParams}[1]{Parameters}
-\mbox{\tt in}  & {\em fd} & the file descriptor of the file to close \\
-\hline
-\end{DoxyParams}
-\begin{DoxyRemark}{Remarks}
-Fails if file descriptor is not valid 
-\end{DoxyRemark}
 
 
-Definition at line 15 of file R\-A\-M\-File\-Lib.\-c.
+Definition at line 112 of file R\-A\-M\-File\-Lib.\-cpp.
 
 \hypertarget{_r_a_m_file_lib_8h_ac8cd9a3d1c4fab64e86551fa48117d06}{\index{R\-A\-M\-File\-Lib.\-h@{R\-A\-M\-File\-Lib.\-h}!rd\-\_\-creat@{rd\-\_\-creat}}
 \index{rd\-\_\-creat@{rd\-\_\-creat}!RAMFileLib.h@{R\-A\-M\-File\-Lib.\-h}}
@@ -76,7 +71,7 @@ Fails if directory for new file does not exist
 \end{DoxyRemark}
 
 
-Definition at line 3 of file R\-A\-M\-File\-Lib.\-c.
+Definition at line 27 of file R\-A\-M\-File\-Lib.\-cpp.
 
 \hypertarget{_r_a_m_file_lib_8h_a20fb7e3a4e0a85ef953bbfcf9d8924f1}{\index{R\-A\-M\-File\-Lib.\-h@{R\-A\-M\-File\-Lib.\-h}!rd\-\_\-lseek@{rd\-\_\-lseek}}
 \index{rd\-\_\-lseek@{rd\-\_\-lseek}!RAMFileLib.h@{R\-A\-M\-File\-Lib.\-h}}
@@ -95,7 +90,7 @@ int 0 on success, -\/1 on failure
 \begin{DoxyParams}[1]{Parameters}
 \mbox{\tt in}  & {\em fd} & file descriptor of the file to seek into \\
 \hline
- & {\em int\mbox{]}} & offset offset into file desired \\
+\mbox{\tt in}  & {\em offset} & offset into file desired \\
 \hline
 \end{DoxyParams}
 \begin{DoxyRemark}{Remarks}
@@ -103,7 +98,7 @@ sets file position to E\-O\-F if offset larger than remaining size
 \end{DoxyRemark}
 
 
-Definition at line 27 of file R\-A\-M\-File\-Lib.\-c.
+Definition at line 183 of file R\-A\-M\-File\-Lib.\-cpp.
 
 \hypertarget{_r_a_m_file_lib_8h_a2f8c14cce1d9a12e84394f5d0a7e90d9}{\index{R\-A\-M\-File\-Lib.\-h@{R\-A\-M\-File\-Lib.\-h}!rd\-\_\-mkdir@{rd\-\_\-mkdir}}
 \index{rd\-\_\-mkdir@{rd\-\_\-mkdir}!RAMFileLib.h@{R\-A\-M\-File\-Lib.\-h}}
@@ -127,7 +122,7 @@ Fails if directory for new directory does not exist
 \end{DoxyRemark}
 
 
-Definition at line 7 of file R\-A\-M\-File\-Lib.\-c.
+Definition at line 46 of file R\-A\-M\-File\-Lib.\-cpp.
 
 \hypertarget{_r_a_m_file_lib_8h_acae117c51314a3d124c2e080b1202c33}{\index{R\-A\-M\-File\-Lib.\-h@{R\-A\-M\-File\-Lib.\-h}!rd\-\_\-open@{rd\-\_\-open}}
 \index{rd\-\_\-open@{rd\-\_\-open}!RAMFileLib.h@{R\-A\-M\-File\-Lib.\-h}}
@@ -151,7 +146,7 @@ Fails if file does not exist
 \end{DoxyRemark}
 
 
-Definition at line 11 of file R\-A\-M\-File\-Lib.\-c.
+Definition at line 69 of file R\-A\-M\-File\-Lib.\-cpp.
 
 \hypertarget{_r_a_m_file_lib_8h_a23d1eacc3a020171c538d8b3b82f3cc0}{\index{R\-A\-M\-File\-Lib.\-h@{R\-A\-M\-File\-Lib.\-h}!rd\-\_\-read@{rd\-\_\-read}}
 \index{rd\-\_\-read@{rd\-\_\-read}!RAMFileLib.h@{R\-A\-M\-File\-Lib.\-h}}
@@ -181,7 +176,7 @@ Fails if file descriptor is invalid or a directory
 \end{DoxyRemark}
 
 
-Definition at line 19 of file R\-A\-M\-File\-Lib.\-c.
+Definition at line 120 of file R\-A\-M\-File\-Lib.\-cpp.
 
 \hypertarget{_r_a_m_file_lib_8h_a95fff0fc11f82df031e1fb7462eb8687}{\index{R\-A\-M\-File\-Lib.\-h@{R\-A\-M\-File\-Lib.\-h}!rd\-\_\-readdir@{rd\-\_\-readdir}}
 \index{rd\-\_\-readdir@{rd\-\_\-readdir}!RAMFileLib.h@{R\-A\-M\-File\-Lib.\-h}}
@@ -208,7 +203,7 @@ Fails if fd is a regular file. On each call, file position of fd incremented by 
 \end{DoxyRemark}
 
 
-Definition at line 35 of file R\-A\-M\-File\-Lib.\-c.
+Definition at line 238 of file R\-A\-M\-File\-Lib.\-cpp.
 
 \hypertarget{_r_a_m_file_lib_8h_af4213a21e51f92e48a75e743740a9b46}{\index{R\-A\-M\-File\-Lib.\-h@{R\-A\-M\-File\-Lib.\-h}!rd\-\_\-unlink@{rd\-\_\-unlink}}
 \index{rd\-\_\-unlink@{rd\-\_\-unlink}!RAMFileLib.h@{R\-A\-M\-File\-Lib.\-h}}
@@ -232,7 +227,7 @@ Error occurs if file does not exist, file is open, file is a directory, or file 
 \end{DoxyRemark}
 
 
-Definition at line 31 of file R\-A\-M\-File\-Lib.\-c.
+Definition at line 214 of file R\-A\-M\-File\-Lib.\-cpp.
 
 \hypertarget{_r_a_m_file_lib_8h_aeb3e97aa241f7b5fb9db4ce914859481}{\index{R\-A\-M\-File\-Lib.\-h@{R\-A\-M\-File\-Lib.\-h}!rd\-\_\-write@{rd\-\_\-write}}
 \index{rd\-\_\-write@{rd\-\_\-write}!RAMFileLib.h@{R\-A\-M\-File\-Lib.\-h}}
@@ -262,5 +257,5 @@ Fails if file descriptor is invalid or a directory
 \end{DoxyRemark}
 
 
-Definition at line 23 of file R\-A\-M\-File\-Lib.\-c.
+Definition at line 151 of file R\-A\-M\-File\-Lib.\-cpp.
 
