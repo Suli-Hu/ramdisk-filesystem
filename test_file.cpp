@@ -361,7 +361,7 @@ int main () {
 
 #endif // TEST5
 
-
+  rd_open("/\0");
   fprintf(stdout, "Congratulations,  you have passed all tests!!\n");
 
   return 0;
