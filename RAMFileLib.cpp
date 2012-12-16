@@ -50,6 +50,7 @@ int rd_mkdir(char *pathname)
 
     // Concat / to end of pathname
     pathname = concatDirToPath(pathname);
+    rampath.name = pathname;
     char *filename;
     filename = getFileNameFromPath(pathname);
     printf("Filename out of mkdir is %s\n", filename);
@@ -57,6 +58,7 @@ int rd_mkdir(char *pathname)
         printf("Error: filename too long, dir must be less than 14 chars\n");
         return -1;
     }
+
 
 #if 1
     ioctl (proc, RAM_MKDIR, &rampath);
@@ -259,7 +261,7 @@ int rd_readdir(int file_fd, char *address)
     // If the number of files pointer have exceeded total num of files, reset it
     entry->numOfFiles = file.numOfFiles;
     entry->dirIndex = entry->dirIndex + 1;
-    if (entry->dirIndex == (entry->numOfFiles - 1)) {
+    if (entry->dirIndex == (entry->numOfFiles + 1)) {
         entry->dirIndex = 0;
         return 0;
     }
