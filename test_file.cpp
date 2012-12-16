@@ -198,7 +198,7 @@ int main () {
     exit (1);
   }
   /* Should be all 1s here... */
-  printf ("Data at addr: %s\n", addr);
+  printf ("Data at addr: %c\n", addr[0]);
 
 #ifdef TEST_SINGLE_INDIRECT
 
@@ -212,7 +212,7 @@ int main () {
     exit (1);
   }
   /* Should be all 2s here... */
-  printf ("Data at addr: %s\n", addr);
+  printf ("Data at addr: %c\n", addr[0]);
 
 #ifdef TEST_DOUBLE_INDIRECT
 
@@ -227,9 +227,7 @@ int main () {
   }
 
   /* Should be all 3s here... */
-  printf ("Data at addr: %s\n", addr);
-  printf("Exiting early\n");
-  return 0;
+  printf ("Data at addr: %c\n", addr[0]);
 
 #endif // TEST_DOUBLE_INDIRECT
 
@@ -244,6 +242,8 @@ int main () {
 
     exit (1);
   }
+  printf("Exiting early\n");
+  return 0;
 
   /* Remove the biggest file */
 

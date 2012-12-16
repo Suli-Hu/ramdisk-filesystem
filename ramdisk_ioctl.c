@@ -1307,7 +1307,7 @@ int readFromFile(int indexNode, char *data, int size, int offset)
     }
 
     // If we have reached this point, we have read enough bytes, place null and return
-    memcpy(&(data[bytesRead-1]), &null, sizeof(char));
+    memcpy(&(data[bytesRead]), &null, sizeof(char));
     return bytesRead;
 }
 
