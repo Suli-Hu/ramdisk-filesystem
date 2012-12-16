@@ -605,10 +605,16 @@ int createIndexNode(char *type, char *pathname, int memorysize)
         return -1;
     }
 
+    if (strcmp("/\0", pathname) == 0)
+    {
+        PRINT("Can't remake root\n");
+        return -1;
+    }
+
     /* Check if the file already exists */
     existance = getIndexNodeNumberFromPathname(pathname, 0);
     PRINT("%s %d\n", pathname, existance);
-    if (existance != -1)
+    if (existance < 0)
     {
         PRINT("File already exists\n");
         return -1;
