@@ -116,6 +116,7 @@ int main () {
 
   
   /* Generate one LARGEST file */
+  printf("Starting test 2\n");
   retval = rd_creat ("/bigfile");
 
   if (retval < 0) {
