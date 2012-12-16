@@ -36,6 +36,8 @@ and the test script will run and verify that the filesystem is working correctly
 Remarks
 ==================
 
+We have HTML formatted documentation available for viewing within the doc folder, this documents all of the functions used within each individual file.  
+
 When looking at the commit history, the reason for the absurd number of commits in a short time span is because when developing the module, most debugging was done in mac, but when it was necessary to load and test, github and git was used to transfer all of the updates onto a linux virtual machine.  We apologize if this make it hard to look at how the module changed over development, though you may be entertained by some of the commit messages!
 
 
