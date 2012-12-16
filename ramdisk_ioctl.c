@@ -1997,8 +1997,8 @@ static int ramdisk_ioctl(struct inode *inode, struct file *file,
     struct RAM_file ramFile;
     struct RAM_accessFile access;
 
-    while (down_interruptible(&FS_mutex));
-    PRINT("PAST MUTEX");
+    // while (down_interruptible(&FS_mutex));
+    // PRINT("PAST MUTEX");
 
     switch (cmd)
     {
@@ -2089,7 +2089,7 @@ static int ramdisk_ioctl(struct inode *inode, struct file *file,
     }
 
     /* Release the mutex */
-    up(&FS_mutex);
+    // up(&FS_mutex);
 
     return 0;
 }
