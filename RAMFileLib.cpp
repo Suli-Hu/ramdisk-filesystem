@@ -470,7 +470,6 @@ int main ()
     exit (1);
   }
 
-#ifdef TEST_SINGLE_INDIRECT
   
   /* Try writing to all single-indirect data blocks */
   retval = rd_write (fd, data2, sizeof(data2));
@@ -482,7 +481,6 @@ int main ()
     exit (1);
   }
 
-#ifdef TEST_DOUBLE_INDIRECT
 
   /* Try writing to all double-indirect data blocks */
   retval = rd_write (fd, data3, sizeof(data3));
@@ -499,6 +497,6 @@ int main ()
 
   ///////////////////
 
-	printfdTable();
+    printfdTable();
     printf("We made it to the end!\n");
 }
