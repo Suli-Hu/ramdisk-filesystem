@@ -571,7 +571,7 @@ int stringContainsChar(char *string, char ourchar)
 int createIndexNode(char *type, char *pathname, int memorysize)
 {
     int indexNodeNumber;
-    int data;
+    int data, existance;
     int directoryNodeNum, retVal;
     int numberOfBlocksRequired, numBlocksPlusPointers, numBlocksDoubleIndir;
     int blocksAvailable;
@@ -605,8 +605,13 @@ int createIndexNode(char *type, char *pathname, int memorysize)
         return -1;
     }
 
-    // String parsing to get the file name and directory node
-
+    /* Check if the file already exists */
+    existance = getIndexNodeNumberFromPathname(pathname, 0);
+    if (existance != -1)
+    {
+        PRINT("File already exists\n");
+        return -1;
+    }
 
     /* Set the index node values */
     indexNodeNumber = getNewIndexNodeNumber();
