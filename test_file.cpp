@@ -326,6 +326,7 @@ int main () {
 
     /* Generate 300 regular files */
     for (i = 0; i < 300; i++) { 
+      printf("looping a");
       sprintf (pathname, "/file_p_%d", i);
       
       retval = rd_creat (pathname);
@@ -344,6 +345,7 @@ int main () {
   else {
     /* Generate 300 regular files */
     for (i = 0; i < 300; i++) { 
+      printf("looping b");
       sprintf (pathname, "/file_c_%d", i);
       
       retval = rd_creat (pathname);
