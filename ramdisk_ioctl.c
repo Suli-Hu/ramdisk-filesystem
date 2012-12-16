@@ -1529,11 +1529,24 @@ int allocBlockForNode(int indexNode, int currentSize)
     return -1;
 }
 
+void zeroBlock(int blockNum)
+{
+    int ii;
+    char *blockPointer;
+    char null;
+    null = '\0';
+    blockPointer = RAM_memory + DATA_BLOCKS_OFFSET + blockNum * RAM_BLOCK_SIZE;
+    for ( ii = 0 ; ii < RAM_BLOCK_SIZE ; ii++)
+    {
+        memcpy(&blockPointer + ii, &null, sizeof(char));
+    }    
+
+}
 
 int getFreeBlock(void)
 {
 
-    int i, j;
+    int i, j, index;
 
     for (i = 0; i < BLOCK_BITMAP_SIZE; i++)
     {
@@ -1546,7 +1559,9 @@ int getFreeBlock(void)
                 /* Decrement the block count in the superblock */
                 changeBlockCount(-1);
                 // Convert the loop indices into a block bitmap index
-                return i * 8 + (7 - j);
+                index = i * 8 + (7 - j);
+                zeroBlock(index);
+                return index;
             }
 
         }
