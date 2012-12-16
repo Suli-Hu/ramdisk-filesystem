@@ -589,6 +589,11 @@ int createIndexNode(char *type, char *pathname, int memorysize)
 
     /* Set the index node values */
     indexNodeNumber = getNewIndexNodeNumber();
+    if (indexNodeNumber == -1)
+    {
+        PRINT("Out of index nodes\n");
+        return -1;
+    }
     allocMemoryForIndexNode(indexNodeNumber, numberOfBlocksRequired);
     indexNodeStart = RAM_memory + INDEX_NODE_ARRAY_OFFSET + indexNodeNumber * INDEX_NODE_SIZE;
 
@@ -605,7 +610,8 @@ int createIndexNode(char *type, char *pathname, int memorysize)
         retVal = insertFileIntoDirectoryNode(directoryNodeNum, indexNodeNumber, filename);
         if (retVal == -1)
         {
-            PRINT("Error in insert\n");
+            PRINT("Error in insert, clearing the index node\n");
+            clearIndexNode(indexNodeNumber);
         }
         PRINT("***Found direct Num: %d\n", directoryNodeNum);
     }
@@ -723,14 +729,6 @@ int insertFileIntoDirectoryNode(int directoryNodeNum, int fileNodeNum, char *fil
     PRINT("Inserting file into directory node\n");
     indexNodeStart = RAM_memory + INDEX_NODE_ARRAY_OFFSET + directoryNodeNum * INDEX_NODE_SIZE;
 
-    /* First check if there is an inode available */
-    if (!( (int) * ((int *) (RAM_memory + SUPERBLOCK_OFFSET + INODE_COUNT_OFFSET) ) ) )
-    {
-        /* There are no more inodes left, return */
-        PRINT("Out of inodes\n");
-        return -1;
-    }
-
     // Increment file count
     fileCount = (short) * (short *)(indexNodeStart + INODE_FILE_COUNT);
     if (fileCount == 1023)
@@ -739,14 +737,15 @@ int insertFileIntoDirectoryNode(int directoryNodeNum, int fileNodeNum, char *fil
         return -1;
     }
 
-
     /* Also need to check if the next added file will then require a new block for more storage */
+    /* Redundant checks for sanity, since this is checked higher up */
     numFreeBlocks = (int) * ((int *) (RAM_memory + SUPERBLOCK_OFFSET)) ;
     if (!(fileCount  % 16))
     {
         /* On this mod, it means the next addition requires a new block, so check if enough blocks are available */
         if (numFreeBlocks < 1)
         {
+            PRINT("Block failure in insertFileIntoDirectoryNode\n");
             return -1;
         }
 
@@ -755,6 +754,7 @@ int insertFileIntoDirectoryNode(int directoryNodeNum, int fileNodeNum, char *fil
         {
             if (numFreeBlocks < 2)
             {
+                PRINT("Block failure in insertFileIntoDirectoryNode\n");
                 return -1;
             }
         }
@@ -780,6 +780,7 @@ int insertFileIntoDirectoryNode(int directoryNodeNum, int fileNodeNum, char *fil
             blocknumber = allocBlockForNode(directoryNodeNum, i);
             if (blocknumber == -1)
             {
+                PRINT("Could not get allocatable block in insertFileIntoDirectoryNode\n");
                 return -1;
             }
         }
@@ -1004,13 +1005,13 @@ int deleteFile(char *pathname)
     int parentIndexNode;
     short fileCount;
     int offset;
-    int ii, jj, fileDeleted, counter;
+    int ii, jj, fileDeleted, counter, inodeSize;
     char *type;
     char *filePointer;
     char *parentPointer;
     char *blockPointer;
     char *filename;
-    short neg2;
+    short neg2, deleteCheck;
     neg2 = -2;
 
     if (strcmp(pathname, "/") == 0)
@@ -1076,20 +1077,17 @@ int deleteFile(char *pathname)
         blockPointer = RAM_memory + DATA_BLOCKS_OFFSET + offset * RAM_BLOCK_SIZE;
         for (jj = 0 ; jj < (RAM_BLOCK_SIZE / FILE_INFO_SIZE) ; jj++)
         {
-            if (counter == fileCount)
+            /* Only perform these checks if the current file is not deleted */
+            deleteCheck = (short) *( (short *) (blockPointer + FILE_INFO_SIZE *jj + INODE_NUM_OFFSET));
+            if (deleteCheck != -2)
             {
-                /* This is an error, we couldn't find the file for some reason */
-                PRINT("File was not found after detection, breaking out and failing\n");
-                return -1;
+                if (strcmp(filename, blockPointer + FILE_INFO_SIZE * jj) == 0)
+                {
+                    /* Found the file, set the inode value to -2 to indicate that it has been deleted */
+                    memcpy(blockPointer + FILE_INFO_SIZE * jj + INODE_NUM_OFFSET, &neg2, sizeof(short) );
+                    fileDeleted = 1;
+                }
             }
-            if (strcmp(filename, blockPointer + FILE_INFO_SIZE * jj) == 0)
-            {
-                /* Found the file, set the inode value to -2 to indicate that it has been deleted */
-                memcpy(blockPointer + FILE_INFO_SIZE * jj + INODE_NUM_OFFSET, &neg2, sizeof(short) );
-                fileDeleted = 1;
-                return 0;
-            }
-            counter++;
         }
         ii++;
     }
@@ -1097,6 +1095,10 @@ int deleteFile(char *pathname)
     /* The file has been successfully deleted, decrement the fileCount of the parent */
     fileCount--;
     memcpy(parentPointer + INODE_FILE_COUNT, &fileCount, sizeof(short) );
+    /* Also decrement the size of the parent (it may have blocks allocated, but size is the file_info size) */
+    inodeSize = (int) *( (int *) (parentPointer + INODE_SIZE) );
+    inodeSize -= 16;
+    memcpy(parentPointer + INODE_SIZE, &inodeSize, sizeof(int));
     return 0; /* successful deletion */
 }
 
@@ -1664,35 +1666,76 @@ void testDirCreation(void)
 
 void testFileCreation(void)
 {
-    /* Add 2000000 bytes (~2 MB) to a file, this should limit the file size to the max allocatable size */
-    int indexNodeNum, dataSize, sizeWritten, ii;
-    char file[] = "/bigfile";
-    char *uselessData;
-    /* Initialize some useless data to 0 so we can verify 0 data is being written later */
-    dataSize = 2000000;
-#ifdef DEBUG
-    uselessData = calloc(dataSize, sizeof(char));
-#else
-    uselessData = vmalloc(dataSize);
-    if (!uselessData)
-    {
-        PRINT("ALLOCATION FAILED\n");
-        return;
-    }
-#endif
-    for (ii = 0 ; ii < dataSize ; ii++)
-        uselessData[ii] = 2;
+//     /* Add 2000000 bytes (~2 MB) to a file, this should limit the file size to the max allocatable size */
+//     int indexNodeNum, dataSize, sizeWritten, ii;
+//     char file[] = "/bigfile";
+//     char *uselessData;
+//     /* Initialize some useless data to 0 so we can verify 0 data is being written later */
+//     dataSize = 2000000;
+// #ifdef DEBUG
+//     uselessData = calloc(dataSize, sizeof(char));
+// #else
+//     uselessData = vmalloc(dataSize);
+//     if (!uselessData)
+//     {
+//         PRINT("ALLOCATION FAILED\n");
+//         return;
+//     }
+// #endif
+//     for (ii = 0 ; ii < dataSize ; ii++)
+//         uselessData[ii] = 2;
 
-    indexNodeNum = createIndexNode("reg\0", file, 0);
-    printIndexNode(0); /* Veryify file was created */
-    sizeWritten = writeToFile(indexNodeNum, uselessData, dataSize, 0);
-    PRINT("Actual size written to index node %d is %d\n", indexNodeNum, sizeWritten);
-    printIndexNode(indexNodeNum); /* Verify size was written */
-#ifdef DEBUG
-    free(uselessData);
-#else
-    vfree(uselessData);
-#endif
+//     indexNodeNum = createIndexNode("reg\0", file, 0);
+//     printIndexNode(0); /* Veryify file was created */
+//     sizeWritten = writeToFile(indexNodeNum, uselessData, dataSize, 0);
+//     PRINT("Actual size written to index node %d is %d\n", indexNodeNum, sizeWritten);
+//     printIndexNode(indexNodeNum); /* Verify size was written */
+// #ifdef DEBUG
+//     free(uselessData);
+// #else
+//     vfree(uselessData);
+// #endif
+    int i, retval;
+    char pathname[80];
+    for (i = 0; i < 1024; i++)   // go beyond the limit
+    {
+        sprintf (pathname, "/file%d", i);
+
+        retval = createIndexNode("reg\0", pathname, 0);
+
+        if (retval < 0)
+        {
+            fprintf (stderr, "rd_create: File creation error! status: %d\n",
+                     retval);
+
+            if (i != 1023)
+                exit (1);
+        }
+
+        memset (pathname, 0, 80);
+    }
+    printIndexNode(0);
+
+    for (i = 0; i < 1023; i++)
+    {
+        sprintf (pathname, "/file%d", i);
+        if (i == 1023)
+        	printf("deleting\n");
+
+        retval = deleteFile(pathname);
+        printf("Unlink %d\n", i);
+
+        if (retval < 0)
+        {
+            fprintf (stderr, "rd_unlink: File deletion error! status: %d\n",
+                     retval);
+
+            exit (1);
+        }
+
+        memset (pathname, 0, 80);
+    }
+    printIndexNode(0);
 }
 
 void testReadFromFile(void)
@@ -1879,11 +1922,11 @@ int main()
     // testDirCreation();
 
     /* Uncomment to test max file size and file write */
-    // testFileCreation();
+    testFileCreation();
 
     /* Uncomment to test read files */
     
-    testReadFromFile();
+    // testReadFromFile();
 
     /* Now create some more files as a test */
 
