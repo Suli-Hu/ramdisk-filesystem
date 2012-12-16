@@ -91,6 +91,7 @@ int main () {
     
     memset (pathname, 0, 80);
   }   
+  rd_open("/\0");
 
   /* Delete all the files created */
   for (i = 0; i < MAX_FILES; i++) { 
