@@ -1086,7 +1086,7 @@ int deleteFile(char *pathname)
 
     /* At this point, we should be able to delete this file, no problem, so we can clear it */
     clearIndexNode(indexNode);
-    print("Made it here!\n");
+    PRINT("Made it here!\n");
     return -1;
 
     /* Now we need to delete this file from the parent, not optimizing right now, so we just delete the file */
