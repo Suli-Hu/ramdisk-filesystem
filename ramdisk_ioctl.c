@@ -480,7 +480,7 @@ void clearIndexNode(int IndexNodeNumber)
         singleIndirectBlockStart =  RAM_memory + DATA_BLOCKS_OFFSET + (blocknumber * RAM_BLOCK_SIZE);
         freeBlock(blocknumber);
 
-        PRINT("Made it to past single indirect free\n");
+        PRINT("Made it to past double indirect check\n");
         return; 
 
         for (i = 0; i < 64; i++)
