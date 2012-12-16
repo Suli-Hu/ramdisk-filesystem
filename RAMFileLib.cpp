@@ -33,6 +33,14 @@ int rd_creat(char *pathname)
 {
     struct RAM_path rampath;
     rampath.name = pathname;
+
+    char *filename;
+    filename = getFileNameFromPath(pathname);
+    if (strlen(filename)>13) {
+    	printf("Error: filename too long, filename must be less than 14 chars\n");
+    	return -1;
+    }
+
 #if 1
     ioctl (fd, RAM_CREATE, &rampath);
 #endif
@@ -44,6 +52,13 @@ int rd_mkdir(char *pathname)
 {
     struct RAM_path rampath;
     rampath.name = pathname;
+    char *filename;
+    filename = getFileNameFromPath(pathname);
+    if (strlen(filename)>12) {
+    	printf("Error: filename too long, dir must be less than 14 chars\n");
+    	return -1;
+    }
+
 #if 1
     ioctl (fd, RAM_MKDIR, &rampath);
 #endif
@@ -138,7 +153,7 @@ int rd_write(int file_fd, char *address, int num_bytes)
         printf("fd does not exist in the file descriptor table.\n");
         return -1;
     }
-    printf("Trying to write\n");
+
     struct RAM_accessFile file;
 
     FD_entry *entry;
@@ -152,7 +167,6 @@ int rd_write(int file_fd, char *address, int num_bytes)
 
 #if 1
     ioctl (fd, RAM_WRITE, &file);
-    perror("testing\n");
 #endif
 
     // Update the offset after reading the file
@@ -229,8 +243,10 @@ int rd_readdir(int file_fd, char *address)
     // If the number of files pointer have exceeded total num of files, reset it
     entry->numOfFiles = file.numOfFiles;
     entry->dirIndex = entry->dirIndex + 1;
-    if (entry->dirIndex == (entry->numOfFiles - 1))
+    if (entry->dirIndex == (entry->numOfFiles - 1)) {
         entry->dirIndex = 0;
+        return 0;
+    }
 
     return file.ret;
 }
@@ -306,137 +322,171 @@ void deleteFileFromFDTable(int fd)
     }
 }
 
-// #define MAX_FILES 1023
-// #define BLK_SZ 256      /* Block size */
-// #define DIRECT 8        /* Direct pointers in location attribute */
-// #define PTR_SZ 4        /* 32-bit [relative] addressing */
-// #define PTRS_PB  (BLK_SZ / PTR_SZ) /* Pointers per index block */
+char *getFileNameFromPath(char *pathname)
+{
 
-// static char pathname[80];
+    char delim, temp, *returnFilename;
+    int delimPosition, index;
+    delim =  '/';
+    index = 0;
+    temp = pathname[index];
+    while (temp != '\0')
+    {
+        if (temp == delim)
+        {
+            if (pathname[index + 1] != '\0')
+                delimPosition = index;
+        }
+        index++;
+        temp = pathname[index];
+    }
 
-// static char data1[DIRECT *BLK_SZ]; /* Largest data directly accessible */
-// static char data2[PTRS_PB *BLK_SZ];    /* Single indirect data size */
-// static char data3[PTRS_PB *PTRS_PB *BLK_SZ]; /* Double indirect data size */
-// static char addr[PTRS_PB *PTRS_PB * BLK_SZ + 1]; /* Scratchpad memory */
+    returnFilename = pathname + delimPosition + 1;
+    return returnFilename;
+}
 
-// int main ()
-// {
 
-//     fd = open ("/proc/ramdisk", O_RDONLY);
-//     currentFdNum = 0;
-//     //  printf("Hello world\n");
+char* concatDirToPath(char *path) {
+    int length;
+    length = strlen(path);
+    char *newpath = (char *) malloc(sizeof(char)*(length+1));
+    strcpy(newpath, path);
+    newpath[length] = '/';
+    newpath[length+1] = '\0';
+    return newpath;
+}
 
-//     FD_entry entry;
-//     entry.indexNode = 1;
-//     entry.offset = 0;   // Default file pointer to the start of file
-//     entry.fileSize = 10; // -1 indicates the file does not have size yet
-//     entry.fd = 1;   // Set file descriptor
-//     //  fd_Table.push_back(entry);
+#define MAX_FILES 1023
+#define BLK_SZ 256      /* Block size */
+#define DIRECT 8        /* Direct pointers in location attribute */
+#define PTR_SZ 4        /* 32-bit [relative] addressing */
+#define PTRS_PB  (BLK_SZ / PTR_SZ) /* Pointers per index block */
 
-//     int inode, ret;
-//     // ret = rd_creat("/mytxt.txt");
-//     // printf("New Index Node: %d\n", inode);
+static char pathname[80];
 
-//     // printfdTable();
+static char data1[DIRECT *BLK_SZ]; /* Largest data directly accessible */
+static char data2[PTRS_PB *BLK_SZ];    /* Single indirect data size */
+static char data3[PTRS_PB *PTRS_PB *BLK_SZ]; /* Double indirect data size */
+static char addr[PTRS_PB *PTRS_PB * BLK_SZ + 1]; /* Scratchpad memory */
 
-//     // inode =rd_open("/mytxt.txt");
+int main ()
+{
 
-//     // printfdTable();
+    fd = open ("/proc/ramdisk", O_RDONLY);
+    currentFdNum = 0;
+    //  printf("Hello world\n");
 
-//     // printf("fd: %d\n", inode);
-//     // ret =rd_write(inode, "hello world\n", 10);
-//     // printf("Write ret: %d\n", ret);
-//     char output[12];
+    FD_entry entry;
+    entry.indexNode = 1;
+    entry.offset = 0;   // Default file pointer to the start of file
+    entry.fileSize = 10; // -1 indicates the file does not have size yet
+    entry.fd = 1;   // Set file descriptor
+    //  fd_Table.push_back(entry);
 
-//     // printfdTable();
-//     // ret = rd_read(inode, output, 10);
-//     // printf("Read data: %s inode: %d\n", output, inode);
+    int inode, ret;
+    // ret = rd_creat("/mytxt.txt");
+    // printf("New Index Node: %d\n", inode);
 
-//     // rd_creat("/mytxt.txt\0");
-//     // inode = rd_open("/mytxt.txt\0");
-//     // int dir = rd_open("/\0");
-//     // rd_mkdir("/folder/\0");
-//     // printfdTable();
-//     // rd_write(inode, "hello world\n", 12);
-//     // rd_read(inode, output, 12);
-//     // printf("The file has - %s\n", output);
-//     // rd_readdir(dir, output);
-//     // printf("The file in the dir - %s\n", output);
-//     // rd_readdir(dir, output);
-//     // printf("The file in the dir - %s\n", output);
-//     // rd_readdir(dir, output);
-//     // printf("The file in the dir - %s\n", output);
-//     // rd_unlink("/mytxt.txt\0");
+    // printfdTable();
 
-//     int retval, i;
-//     int fd;
-//     int index_node_number;
+    // inode =rd_open("/mytxt.txt");
 
-//     /* Some arbitrary data for our files */
-//     memset (data1, '1', sizeof (data1));
-//     memset (data2, '2', sizeof (data2));
-//     memset (data3, '3', sizeof (data3));
+    // printfdTable();
 
-//    /* ****TEST 2: LARGEST file size**** */
+    // printf("fd: %d\n", inode);
+    // ret =rd_write(inode, "hello world\n", 10);
+    // printf("Write ret: %d\n", ret);
+    char output[12];
 
+    // printfdTable();
+    // ret = rd_read(inode, output, 10);
+    // printf("Read data: %s inode: %d\n", output, inode);
+
+    // rd_creat("/mytxt.txt\0");
+    // inode = rd_open("/mytxt.txt\0");
+    // int dir = rd_open("/\0");
+    // rd_mkdir("/folder/\0");
+    // printfdTable();
+    // rd_write(inode, "hello world\n", 12);
+    // rd_read(inode, output, 12);
+    // printf("The file has - %s\n", output);
+    // rd_readdir(dir, output);
+    // printf("The file in the dir - %s\n", output);
+    // rd_readdir(dir, output);
+    // printf("The file in the dir - %s\n", output);
+    // rd_readdir(dir, output);
+    // printf("The file in the dir - %s\n", output);
+    // rd_unlink("/mytxt.txt\0");
+
+    int retval, i;
+    int fd;
+    int index_node_number;
+
+    /* Some arbitrary data for our files */
+    memset (data1, '1', sizeof (data1));
+    memset (data2, '2', sizeof (data2));
+    memset (data3, '3', sizeof (data3));
+
+
+/////////////////
   
-//   /* Generate one LARGEST file */
-//   retval = rd_creat ("/bigfile");
+  /* ****TEST 4: Make directory and read directory entries**** */
+  retval = rd_mkdir ("/dir1");
+    
+  if (retval < 0) {
+    fprintf (stderr, "rd_mkdir: Directory 1 creation error! status: %d\n", 
+	     retval);
 
-//   if (retval < 0) {
-//     fprintf (stderr, "rd_creat: File creation error! status: %d\n", 
-// 	     retval);
+    exit (1);
+  }
 
-//     exit (1);
-//   }
+  retval = rd_mkdir ("/dir1/dir2");
+    
+  if (retval < 0) {
+    fprintf (stderr, "rd_mkdir: Directory 2 creation error! status: %d\n", 
+	     retval);
 
-//   retval =  rd_open ("/bigfile"); /* Open file to write to it */
+    exit (1);
+  }
+
+  retval = rd_mkdir ("/dir1/dir3");
+    
+  if (retval < 0) {
+    fprintf (stderr, "rd_mkdir: Directory 3 creation error! status: %d\n", 
+	     retval);
+
+    exit (1);
+  }
+
+  retval =  rd_open ("/dir1"); /* Open directory file to read its entries */
   
-//   if (retval < 0) {
-//     fprintf (stderr, "rd_open: File open error! status: %d\n", 
-// 	     retval);
+  if (retval < 0) {
+    fprintf (stderr, "rd_open: Directory open error! status: %d\n", 
+	     retval);
 
-//     exit (1);
-//   }
+    exit (1);
+  }
 
-//   fd = retval;			/* Assign valid fd */
+  fd = retval;			/* Assign valid fd */
 
-//   /* Try writing to all direct data blocks */
-//   retval = rd_write (fd, data1, sizeof(data1));
-  
-//   if (retval < 0) {
-//     fprintf (stderr, "rd_write: File write STAGE1 error! status: %d\n", 
-// 	     retval);
+  memset (addr, 0, sizeof(addr)); /* Clear scratchpad memory */
 
-//     exit (1);
-//   }
+  while ((retval = rd_readdir (fd, addr))) { /* 0 indicates end-of-file */
 
-// 	printfdTable();
-// retval = rd_write (fd, data2, sizeof(data2));
-  
-//   if (retval < 0) {
-//     fprintf (stderr, "rd_write: File write STAGE2 error! status: %d\n", 
-// 	     retval);
+    if (retval < 0) {
+      fprintf (stderr, "rd_readdir: Directory read error! status: %d\n", 
+	       retval);
+      
+      exit (1);
+    }
 
-//     exit (1);
-//   }
+    index_node_number = atoi(&addr[14]);
+    printf ("Contents at addr: [%s,%d]\n", addr, index_node_number);
+  }
 
-// printfdTable();
 
-//   /* Try writing to all double-indirect data blocks */
-//   retval = rd_write (fd, data3, sizeof(data3));
-  
-//   if (retval < 0) {
-//     fprintf (stderr, "rd_write: File write STAGE3 error! status: %d\n", 
-// 	     retval);
+  ///////////////////
 
-//     exit (1);
-//   }
-
-// 	printfdTable();
-
-// 	rd_lseek(fd, 1000);
-
-// 	printfdTable();
-//     printf("We made it to the end!\n");
-// }
+	printfdTable();
+    printf("We made it to the end!\n");
+}
