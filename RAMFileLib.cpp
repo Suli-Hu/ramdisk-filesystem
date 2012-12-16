@@ -13,7 +13,7 @@ vector<FD_entry> fd_Table;
 
 
 #if 1
-int fd;
+int proc;
 #endif
 
 int currentFdNum;
@@ -42,7 +42,7 @@ int rd_creat(char *pathname)
     }
 
 #if 1
-    ioctl (fd, RAM_CREATE, &rampath);
+    ioctl (proc, RAM_CREATE, &rampath);
 #endif
 
     return rampath.ret;
@@ -65,7 +65,7 @@ int rd_mkdir(char *pathname)
     }
 
 #if 1
-    ioctl (fd, RAM_MKDIR, &rampath);
+    ioctl (proc, RAM_MKDIR, &rampath);
 #endif
     return rampath.ret;
 }
@@ -75,7 +75,7 @@ int rd_open(char *pathname)
     struct RAM_file file;
     file.name = pathname;
 #if 1
-    ioctl (fd, RAM_OPEN, &file);
+    ioctl (proc, RAM_OPEN, &file);
 #endif
 
     // If the file open failed, return an error
@@ -83,8 +83,6 @@ int rd_open(char *pathname)
     printfdTable();
     if (file.indexNode < 0)
         return file.indexNode;
-
-    printf("No error\n");
 
     // If this file is not currently open, create new entry
     FD_entry entry;
@@ -142,7 +140,7 @@ int rd_read(int file_fd, char *address, int num_bytes)
     file.offset = entry->offset;
 
 #if 1
-    ioctl (fd, RAM_READ, &file);
+    ioctl (proc, RAM_READ, &file);
 #endif
 
     // Update the offset after reading the file
@@ -173,7 +171,7 @@ int rd_write(int file_fd, char *address, int num_bytes)
     file.offset = entry->offset;
 
 #if 1
-    ioctl (fd, RAM_WRITE, &file);
+    ioctl (proc, RAM_WRITE, &file);
 #endif
 
     // Update the offset after reading the file
@@ -219,7 +217,7 @@ int rd_unlink(char *pathname)
     struct RAM_path rampath;
     rampath.name = pathname;
 #if 1
-    ioctl (fd, RAM_UNLINK, &rampath);
+    ioctl (proc, RAM_UNLINK, &rampath);
 #endif
     return rampath.ret;
 }
@@ -244,7 +242,7 @@ int rd_readdir(int file_fd, char *address)
     }
 
 #if 1
-    ioctl (fd, RAM_READDIR, &file);
+    ioctl (proc, RAM_READDIR, &file);
 #endif
 
     // If the number of files pointer have exceeded total num of files, reset it
@@ -304,7 +302,7 @@ int indexNodeFromfd(int fd) {
 	return -1;	
 }
 
-FD_entry *getEntryFromFd(int fd)
+FD_entry *getEntryFromFd(int fd_file)
 {
 
     FD_entry *entry;
@@ -313,7 +311,7 @@ FD_entry *getEntryFromFd(int fd)
     for (i = 0; i < fd_Table.size(); i++)
     {
         entry = &(fd_Table[i]);
-        if (entry->fd = fd)
+        if (entry->fd == fd_file)
             return entry;
     }
     return entry;

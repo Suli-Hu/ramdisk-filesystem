@@ -51,20 +51,21 @@ static char data2[PTRS_PB*BLK_SZ];     /* Single indirect data size */
 static char data3[PTRS_PB*PTRS_PB*BLK_SZ]; /* Double indirect data size */
 static char addr[PTRS_PB*PTRS_PB*BLK_SZ+1]; /* Scratchpad memory */
 
-extern int fd;
+extern int proc;
 extern int currentFdNum;
 extern std::vector<FD_entry> fd_Table;
 
 int main () {
     
   int retval, i;
-  fd = open ("/proc/ramdisk", O_RDONLY);
+  int fd; 
   int index_node_number;
 
   /* Some arbitrary data for our files */
   memset (data1, '1', sizeof (data1));
   memset (data2, '2', sizeof (data2));
   memset (data3, '3', sizeof (data3));
+  fd = open ("/proc/ramdisk", O_RDONLY);
 
 
 #ifdef TEST1
