@@ -115,7 +115,6 @@ int main () {
 
   
   /* Generate one LARGEST file */
-  printf("Starting test 2\n");
   retval = rd_creat ("/bigfile");
 
   if (retval < 0) {
@@ -177,7 +176,7 @@ int main () {
 #endif // TEST2
 
 #ifdef TEST3
-
+  printf("Starting test 3\n");
   /* ****TEST 3: Seek and Read file test**** */
   retval = rd_lseek (fd, 0);	/* Go back to the beginning of your file */
 
