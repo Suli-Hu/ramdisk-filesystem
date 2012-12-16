@@ -92,7 +92,6 @@ int main () {
     memset (pathname, 0, 80);
   }   
   retval = rd_open("/\0");
-  rd_close(retval);
 
   /* Delete all the files created */
   for (i = 0; i < 2; i++) { 
@@ -107,7 +106,6 @@ int main () {
       exit (1);
     }
       retval = rd_open("/\0");
-      rd_close(retval);
     
     memset (pathname, 0, 80);
   }
