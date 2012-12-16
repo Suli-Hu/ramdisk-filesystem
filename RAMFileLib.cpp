@@ -1,10 +1,4 @@
-#include <stdio.h>
-#include <stdlib.h>
 #include "RAMFileLib.h"
-#include "structs.h"
-#include <vector>
-#include <unistd.h>
-#include <string.h>
 
 using namespace std;
 
@@ -17,6 +11,7 @@ int proc;
 #endif
 
 int currentFdNum;
+
 
 void printfdTable ()
 {
@@ -138,7 +133,6 @@ int rd_read(int file_fd, char *address, int num_bytes)
     file.numBytes = num_bytes;
     file.indexNode = indexNodeFromfd(file_fd);
     file.offset = entry->offset;
-    printf("Old offset -> %d", file.offset);
 
 #if 1
     ioctl (proc, RAM_READ, &file);
@@ -146,7 +140,6 @@ int rd_read(int file_fd, char *address, int num_bytes)
 
     // Update the offset after reading the file
     entry->offset = file.offset;
-    printf("New offset -> %d", file.offset);
 
     return file.ret;
 }

@@ -20,17 +20,16 @@
 #include <unistd.h>
 #include <vector>
 #include "RAMFileLib.h"
-#include "structs.h"
 
 //#include <perror.h>
 // #define's to control what tests are performed,
 // comment out a test if you do not wish to perform it
 
-// #define TEST1
-//#define TEST2
-//#define TEST3
-#define TEST4
-// #define TEST5
+#define TEST1
+#define TEST2
+#define TEST3
+// #define TEST4
+#define TEST5
 
 // #define's to control whether single indirect or
 // double indirect block pointers are tested
@@ -116,7 +115,6 @@ int main () {
 
   
   /* Generate one LARGEST file */
-  printf("Starting test 2\n");
   retval = rd_creat ("/bigfile");
 
   if (retval < 0) {
@@ -178,7 +176,7 @@ int main () {
 #endif // TEST2
 
 #ifdef TEST3
-
+  printf("Starting test 3\n");
   /* ****TEST 3: Seek and Read file test**** */
   retval = rd_lseek (fd, 0);  /* Go back to the beginning of your file */
 
@@ -199,6 +197,7 @@ int main () {
     exit (1);
   }
   /* Should be all 1s here... */
+  // printf ("Data at addr: %s\n", addr);
   printf ("Data at addr: %c\n", addr[0]);
 
 #ifdef TEST_SINGLE_INDIRECT
@@ -213,6 +212,7 @@ int main () {
     exit (1);
   }
   /* Should be all 2s here... */
+  // printf ("Data at addr: %s\n", addr);
   printf ("Data at addr: %c\n", addr[0]);
 
 #ifdef TEST_DOUBLE_INDIRECT
@@ -228,6 +228,7 @@ int main () {
   }
 
   /* Should be all 3s here... */
+  // printf ("Data at addr: %s\n", addr);
   printf ("Data at addr: %c\n", addr[0]);
 
 #endif // TEST_DOUBLE_INDIRECT
@@ -243,13 +244,10 @@ int main () {
 
     exit (1);
   }
-  printf("Exiting early\n");
 
   /* Remove the biggest file */
-
   retval = rd_unlink ("/bigfile");
-  return 0;
-  
+	
   if (retval < 0) {
     fprintf (stderr, "rd_unlink: /bigfile file deletion error! status: %d\n", 
        retval);

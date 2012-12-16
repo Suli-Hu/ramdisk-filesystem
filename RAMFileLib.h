@@ -1,6 +1,12 @@
+
 #include <sys/ioctl.h>
 #include <stdio.h>
 #include <fcntl.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <string.h>
+#include "structs.h"
+#include <vector>
 
 /**
 *  RAM Filesystem Library for the ramdisk kernel module

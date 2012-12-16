@@ -17,6 +17,7 @@ static int ramdisk_ioctl(struct inode *inode, struct file *file, unsigned int cm
 static struct file_operations pseudo_dev_proc_operations;
 static struct proc_dir_entry *proc_entry;
 static DECLARE_MUTEX(FS_mutex);
+static int rootCreated;
 #endif
 
 // @var The ramdisk memory in the kernel */
@@ -123,6 +124,9 @@ void init_ramdisk(void)
 
     /****************Create the root directory******************/
     createIndexNode("dir\0", "/\0",  0);
+#ifndef DEBUG
+    rootCreated = 1;
+#endif
     printIndexNode(0);
     printSuperblock();
 
@@ -422,7 +426,6 @@ void clearIndexNode(int IndexNodeNumber)
 {
 
     int i, j, blocknumber, blocknumberInner;
-    int notDone;
     char *indexNodeStart;
     char *singleIndirectBlockStart;
     char *doubleIndirectBlockStart;
@@ -430,8 +433,7 @@ void clearIndexNode(int IndexNodeNumber)
     indexNodeStart = RAM_memory + INDEX_NODE_ARRAY_OFFSET + IndexNodeNumber * INDEX_NODE_SIZE;
 
     /****** Free memory used by index node *****/
-    notDone = 1;
-    while (notDone)
+    while (1)
     {
         // Direct memory freeing
         for (i = 0; i < NUM_DIRECT; i++)
@@ -480,9 +482,6 @@ void clearIndexNode(int IndexNodeNumber)
         singleIndirectBlockStart =  RAM_memory + DATA_BLOCKS_OFFSET + (blocknumber * RAM_BLOCK_SIZE);
         freeBlock(blocknumber);
 
-        PRINT("Made it to past double indirect check, ignoring last part to return\n");
-        break; 
-
         for (i = 0; i < 64; i++)
         {
             blocknumber = (int) * (int *)(singleIndirectBlockStart + i * 4);
@@ -504,8 +503,10 @@ void clearIndexNode(int IndexNodeNumber)
 
                 freeBlock(blocknumberInner);
             }
-            freeBlock(blocknumber);
+            freeBlock(blocknumber); 
         }
+        /* Made it to the end, so we always break */
+        break;
     }
 
     /****** End of Free memory used by index node *****/
@@ -574,7 +575,7 @@ int stringContainsChar(char *string, char ourchar)
 int createIndexNode(char *type, char *pathname, int memorysize)
 {
     int indexNodeNumber;
-    int data;
+    int data, existance;
     int directoryNodeNum, retVal;
     int numberOfBlocksRequired, numBlocksPlusPointers, numBlocksDoubleIndir;
     int blocksAvailable;
@@ -608,8 +609,22 @@ int createIndexNode(char *type, char *pathname, int memorysize)
         return -1;
     }
 
-    // String parsing to get the file name and directory node
+#ifndef DEBUG
+    if (strcmp("/\0", pathname) == 0 && rootCreated)
+    {
+        PRINT("Can't remake root\n");
+        return -1;
+    }
+#endif
 
+    /* Check if the file already exists */
+    existance = getIndexNodeNumberFromPathname(pathname, 0);
+    PRINT("%s %d\n", pathname, existance);
+    if (existance > 0)
+    {
+        PRINT("File already exists\n");
+        return -1;
+    }
 
     /* Set the index node values */
     indexNodeNumber = getNewIndexNodeNumber();
@@ -1140,6 +1155,7 @@ int deleteFile(char *pathname)
     inodeSize = (int) *( (int *) (parentPointer + INODE_SIZE) );
     inodeSize -= 16;
     memcpy(parentPointer + INODE_SIZE, &inodeSize, sizeof(int));
+    PRINT("Successful file deletion\n");
     return 0; /* successful deletion */
 }
 
@@ -2002,6 +2018,7 @@ int main()
 static int __init initialization_routine(void)
 {
     int indexNodeNum;
+    rootCreated = 0;
 
     PRINT("<1> Loading RAMDISK filesystem\n");
 
