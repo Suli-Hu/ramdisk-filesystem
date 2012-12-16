@@ -78,6 +78,7 @@ int checkBit(int index, int bit)
  */
 void changeBlockCount(int delta)
 {
+    printk("freeing block with %d ------\n");
     int blockCount;
     memcpy(&blockCount, RAM_memory, sizeof(int));
     blockCount += delta;
@@ -930,6 +931,8 @@ void allocMemoryForIndexNode(int indexNodeNumber, int numberOfBlocks)
 
     if (numberOfBlocks == 0)
     {
+        memcpy(indexNodeStart + SINGLE_INDIR, &noallocationFlag, sizeof(int));
+        memcpy(indexNodeStart + DOUBLE_INDIR, &noallocationFlag, sizeof(int));
         return;
     }
 
