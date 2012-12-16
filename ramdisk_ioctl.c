@@ -1072,7 +1072,6 @@ int deleteFile(char *pathname)
         {
             /* Sanity check, if this happened, some memory got corrupted from before to here */
             PRINT("Memory corruption detected, failed at deletion\n");
-            printIndexNode(0);
             return -1;
         }
 
@@ -2066,7 +2065,7 @@ static int ramdisk_ioctl(struct inode *inode, struct file *file,
         break;
 
     case RAM_UNLINK:
-        PRINT("Unlinking file...\n");
+        // PRINT("Unlinking file...\n");
 
         copy_from_user(&path, (struct RAM_path *)arg,
                        sizeof(struct RAM_path));
