@@ -91,10 +91,9 @@ int main () {
     
     memset (pathname, 0, 80);
   }   
-  rd_open("/\0");
 
   /* Delete all the files created */
-  for (i = 0; i < MAX_FILES; i++) { 
+  for (i = 0; i < 2; i++) { 
     sprintf (pathname, "/file%d", i);
     
     retval = rd_unlink (pathname);
@@ -105,6 +104,7 @@ int main () {
       
       exit (1);
     }
+      rd_open("/\0");
     
     memset (pathname, 0, 80);
   }
