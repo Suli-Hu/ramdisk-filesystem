@@ -434,17 +434,21 @@ void clearIndexNode(int IndexNodeNumber)
     for (i = 0; i < NUM_DIRECT; i++)
     {
         blocknumber = (int) * (indexNodeStart + DIRECT_1 + i * 4);
-        PRINT("Block number in delete is %d\n", blocknumber);
 
         // If we received an unallocated block, we are done freeing memory
         if (blocknumber <= 0)
-            break;
+            return;
 
         freeBlock(blocknumber);
     }
 
     // Single indirect memory freeing
     blocknumber = (int) * (int *)(indexNodeStart + SINGLE_INDIR);
+    if (blocknumber <= 0)
+    {
+        /* Check if we are done now */
+        return;
+    }
     singleIndirectBlockStart =  RAM_memory + DATA_BLOCKS_OFFSET + (blocknumber * RAM_BLOCK_SIZE);
     freeBlock(blocknumber);
 
@@ -454,13 +458,18 @@ void clearIndexNode(int IndexNodeNumber)
 
         // If we received an unallocated block, we are done freeing memory
         if (blocknumber == -1)
-            break;
+            return;
 
         freeBlock(blocknumber);
     }
 
     // Double indirect memory freeing
     blocknumber = (int) * (int *)(indexNodeStart + DOUBLE_INDIR);
+    if (blocknumber <= 0)
+    {
+        /* Check if we are done now */
+        return;
+    }
     singleIndirectBlockStart =  RAM_memory + DATA_BLOCKS_OFFSET + (blocknumber * RAM_BLOCK_SIZE);
     freeBlock(blocknumber);
 
@@ -470,7 +479,7 @@ void clearIndexNode(int IndexNodeNumber)
 
         // If we received an unallocated block, we are done freeing memory
         if (blocknumber <= 0)
-            break;
+            return;
 
         doubleIndirectBlockStart = RAM_memory + DATA_BLOCKS_OFFSET + (blocknumber * RAM_BLOCK_SIZE);
 
@@ -1065,7 +1074,9 @@ int deleteFile(char *pathname)
     }
 
     /* At this point, we should be able to delete this file, no problem, so we can clear it */
+    printSuperblock();
     clearIndexNode(indexNode);
+    printSuperblock();
 
     /* Now we need to delete this file from the parent, not optimizing right now, so we just delete the file */
     getAllocatedBlockNumbers(allocatedBlocks, parentIndexNode);
