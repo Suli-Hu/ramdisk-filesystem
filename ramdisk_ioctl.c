@@ -480,12 +480,11 @@ void clearIndexNode(int IndexNodeNumber)
         singleIndirectBlockStart =  RAM_memory + DATA_BLOCKS_OFFSET + (blocknumber * RAM_BLOCK_SIZE);
         freeBlock(blocknumber);
 
-        PRINT("Made it to past double indirect check, ignoring inner deletion\n");
+        PRINT("Made it to past double indirect check, ignoring inner deletion, %d\n", blocknumber);
 
         for (i = 0; i < 64; i++)
         {
-            blocknumber = (int) * (int *)(singleIndirectBlockStart + i * 4);
-            PRINT("%d\n", blocknumber);
+            // blocknumber = (int) * (int *)(singleIndirectBlockStart + i * 4);
 
             // If we received an unallocated block, we are done freeing memory
             // if (blocknumber <= 0)
