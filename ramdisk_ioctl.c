@@ -1986,7 +1986,7 @@ static int __init initialization_routine(void)
 */
 static void __exit cleanup_routine(void)
 {
-
+    printIndexNode(0);
     PRINT("<1> Dumping RAMDISK module\n");
     remove_proc_entry("ramdisk", NULL);
 
