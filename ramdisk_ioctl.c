@@ -423,6 +423,7 @@ void clearIndexNode(int IndexNodeNumber)
 {
 
     int i, j, blocknumber, blocknumberInner;
+    int notDone;
     char *indexNodeStart;
     char *singleIndirectBlockStart;
     char *doubleIndirectBlockStart;
@@ -430,80 +431,79 @@ void clearIndexNode(int IndexNodeNumber)
     indexNodeStart = RAM_memory + INDEX_NODE_ARRAY_OFFSET + IndexNodeNumber * INDEX_NODE_SIZE;
 
     /****** Free memory used by index node *****/
-    // Direct memory freeing
-    for (i = 0; i < NUM_DIRECT; i++)
+    notDone = 1;
+    while (notDone)
     {
-        blocknumber = (int) * (indexNodeStart + DIRECT_1 + i * 4);
-
-        // If we received an unallocated block, we are done freeing memory
-        if (blocknumber <= 0)
+        // Direct memory freeing
+        for (i = 0; i < NUM_DIRECT; i++)
         {
-            changeIndexNodeCount(1);
-            return;
-        }
+            blocknumber = (int) * (indexNodeStart + DIRECT_1 + i * 4);
 
-        freeBlock(blocknumber);
-    }
-
-    // Single indirect memory freeing
-    blocknumber = (int) * (int *)(indexNodeStart + SINGLE_INDIR);
-    if (blocknumber <= 0)
-    {
-        /* Check if we are done now */
-        changeIndexNodeCount(1);
-        return;
-    }
-    singleIndirectBlockStart =  RAM_memory + DATA_BLOCKS_OFFSET + (blocknumber * RAM_BLOCK_SIZE);
-    freeBlock(blocknumber);
-
-    for (i = 0; i < 64; i++)
-    {
-        blocknumber = (int) * (int *)(singleIndirectBlockStart + i * 4);
-
-        // If we received an unallocated block, we are done freeing memory
-        if (blocknumber == -1)
-        {
-            changeIndexNodeCount(1);
-            return;
-        }
-
-        freeBlock(blocknumber);
-    }
-
-    // Double indirect memory freeing
-    blocknumber = (int) * (int *)(indexNodeStart + DOUBLE_INDIR);
-    if (blocknumber <= 0)
-    {
-        /* Check if we are done now */
-        changeIndexNodeCount(1);
-        return;
-    }
-    singleIndirectBlockStart =  RAM_memory + DATA_BLOCKS_OFFSET + (blocknumber * RAM_BLOCK_SIZE);
-    freeBlock(blocknumber);
-
-    for (i = 0; i < 64; i++)
-    {
-        blocknumber = (int) * (int *)(singleIndirectBlockStart + i * 4);
-
-        // If we received an unallocated block, we are done freeing memory
-        if (blocknumber <= 0)
-        {
-            changeIndexNodeCount(1);
-            return;
-        }
-
-        doubleIndirectBlockStart = RAM_memory + DATA_BLOCKS_OFFSET + (blocknumber * RAM_BLOCK_SIZE);
-
-        for (j = 0; j < 64; j++)
-        {
-            blocknumberInner = (int) * (int *)(doubleIndirectBlockStart + j * 4);
-
-            if (blocknumberInner <= 0)
+            // If we received an unallocated block, we are done freeing memory
+            if (blocknumber <= 0)
+            {
                 break;
+            }
 
-            freeBlock(blocknumberInner);
+            freeBlock(blocknumber);
         }
+
+        // Single indirect memory freeing
+        blocknumber = (int) * (int *)(indexNodeStart + SINGLE_INDIR);
+        if (blocknumber <= 0)
+        {
+            /* Check if we are done now */
+            break;
+        }
+        singleIndirectBlockStart =  RAM_memory + DATA_BLOCKS_OFFSET + (blocknumber * RAM_BLOCK_SIZE);
         freeBlock(blocknumber);
+
+        for (i = 0; i < 64; i++)
+        {
+            blocknumber = (int) * (int *)(singleIndirectBlockStart + i * 4);
+
+            // If we received an unallocated block, we are done freeing memory
+            if (blocknumber == -1)
+            {
+                break;
+            }
+
+            freeBlock(blocknumber);
+        }
+
+        // Double indirect memory freeing
+        blocknumber = (int) * (int *)(indexNodeStart + DOUBLE_INDIR);
+        if (blocknumber <= 0)
+        {
+            /* Check if we are done now */
+            break;
+        }
+        singleIndirectBlockStart =  RAM_memory + DATA_BLOCKS_OFFSET + (blocknumber * RAM_BLOCK_SIZE);
+        freeBlock(blocknumber);
+
+        for (i = 0; i < 64; i++)
+        {
+            blocknumber = (int) * (int *)(singleIndirectBlockStart + i * 4);
+
+            // If we received an unallocated block, we are done freeing memory
+            if (blocknumber <= 0)
+            {
+                break;
+            }
+
+            doubleIndirectBlockStart = RAM_memory + DATA_BLOCKS_OFFSET + (blocknumber * RAM_BLOCK_SIZE);
+
+            for (j = 0; j < 64; j++)
+            {
+                blocknumberInner = (int) * (int *)(doubleIndirectBlockStart + j * 4);
+
+                if (blocknumberInner <= 0)
+                    break;
+
+                freeBlock(blocknumberInner);
+            }
+            freeBlock(blocknumber);
+        }
     }
 
     /****** End of Free memory used by index node *****/
