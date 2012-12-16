@@ -43,7 +43,6 @@ int rd_creat(char *pathname)
 
 #if 1
     ioctl (proc, RAM_CREATE, &rampath);
-    perror("Error:");
 #endif
 
     return rampath.ret;
