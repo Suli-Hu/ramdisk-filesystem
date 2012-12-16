@@ -234,7 +234,7 @@ int main () {
 #endif // TEST_SINGLE_INDIRECT
 
   /* Close the bigfile */
-  // retval = rd_close (fd);
+  retval = rd_close (fd);
   
   if (retval < 0) {
     fprintf (stderr, "rd_close: File close error! status: %d\n", 
