@@ -1051,6 +1051,7 @@ int deleteFile(char *pathname)
     }
 
     parentIndexNode = getIndexNodeNumberFromPathname(pathname, 1);
+    PRINT("Deleting from %d\n", parentIndexNode);
 
     if (parentIndexNode == -1)
     {
@@ -1059,6 +1060,8 @@ int deleteFile(char *pathname)
     }
 
     indexNode = getIndexNodeNumberFromPathname(pathname, 0);
+    PRINT("Delete %d\n", indexNode);
+    return -1;
 
 
     if (indexNode == -1)
