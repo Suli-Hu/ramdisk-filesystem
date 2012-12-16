@@ -78,7 +78,7 @@ int checkBit(int index, int bit)
  */
 void changeBlockCount(int delta)
 {
-    printk("freeing block with %d ------\n");
+    printk("freeing block with %d ------\n", delta);
     int blockCount;
     memcpy(&blockCount, RAM_memory, sizeof(int));
     blockCount += delta;
