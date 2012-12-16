@@ -1064,7 +1064,9 @@ int deleteFile(char *pathname)
     }
 
     /* At this point, we should be able to delete this file, no problem, so we can clear it */
+    printSuperblock();
     clearIndexNode(indexNode);
+    printSuperblock();
 
     /* Now we need to delete this file from the parent, not optimizing right now, so we just delete the file */
     getAllocatedBlockNumbers(allocatedBlocks, parentIndexNode);
