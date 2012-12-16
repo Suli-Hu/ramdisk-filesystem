@@ -138,7 +138,7 @@ int rd_write(int file_fd, char *address, int num_bytes)
         printf("fd does not exist in the file descriptor table.\n");
         return -1;
     }
-
+    printf("Trying to write\n");
     struct RAM_accessFile file;
 
     FD_entry *entry;
