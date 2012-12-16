@@ -197,6 +197,7 @@ int main () {
     exit (1);
   }
   /* Should be all 1s here... */
+  // printf ("Data at addr: %s\n", addr);
   printf ("Data at addr: %c\n", addr[0]);
 
 #ifdef TEST_SINGLE_INDIRECT
@@ -211,6 +212,7 @@ int main () {
     exit (1);
   }
   /* Should be all 2s here... */
+  // printf ("Data at addr: %s\n", addr);
   printf ("Data at addr: %c\n", addr[0]);
 
 #ifdef TEST_DOUBLE_INDIRECT
@@ -226,6 +228,7 @@ int main () {
   }
 
   /* Should be all 3s here... */
+  // printf ("Data at addr: %s\n", addr);
   printf ("Data at addr: %c\n", addr[0]);
 
 #endif // TEST_DOUBLE_INDIRECT
@@ -243,9 +246,7 @@ int main () {
   }
 
   /* Remove the biggest file */
-
   retval = rd_unlink ("/bigfile");
-  return 0;
 	
   if (retval < 0) {
     fprintf (stderr, "rd_unlink: /bigfile file deletion error! status: %d\n", 
@@ -253,7 +254,6 @@ int main () {
     
     exit (1);
   }
-  printf("Beat test3!\n");
 
 #endif // TEST3
 
