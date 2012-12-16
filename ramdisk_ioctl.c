@@ -1538,7 +1538,7 @@ void zeroBlock(int blockNum)
     blockPointer = RAM_memory + DATA_BLOCKS_OFFSET + blockNum * RAM_BLOCK_SIZE;
     for ( ii = 0 ; ii < RAM_BLOCK_SIZE ; ii++)
     {
-        memcpy(&blockPointer + ii, &null, sizeof(char));
+        memcpy(blockPointer + ii, &null, sizeof(char));
     }    
 
 }
