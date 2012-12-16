@@ -1067,8 +1067,6 @@ int deleteFile(char *pathname)
         PRINT("File does not exist\n");
         return -1; /* File does not exist */
     }
-    printIndexNode(1);
-    return -1;
 
     /* Now, check if the file is a dir itself */
     filePointer = RAM_memory + INDEX_NODE_ARRAY_OFFSET + indexNode * INDEX_NODE_SIZE;
@@ -1088,6 +1086,8 @@ int deleteFile(char *pathname)
 
     /* At this point, we should be able to delete this file, no problem, so we can clear it */
     clearIndexNode(indexNode);
+    print("Made it here!\n");
+    return -1;
 
     /* Now we need to delete this file from the parent, not optimizing right now, so we just delete the file */
     getAllocatedBlockNumbers(allocatedBlocks, parentIndexNode);
