@@ -65,7 +65,7 @@ int main () {
   memset (data1, '1', sizeof (data1));
   memset (data2, '2', sizeof (data2));
   memset (data3, '3', sizeof (data3));
-  fd = open ("/proc/ramdisk", O_RDONLY);
+  proc = open ("/proc/ramdisk", O_RDONLY);
 
 
 #ifdef TEST1
