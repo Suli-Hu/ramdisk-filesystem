@@ -46,6 +46,7 @@ int rd_creat(char *pathname)
 int rd_mkdir(char *pathname)
 {
     struct RAM_path rampath;
+    printf("Pathname given to mkdir is %s\n", pathname);
 
     // Concat / to end of pathname
     pathname = concatDirToPath(pathname);
