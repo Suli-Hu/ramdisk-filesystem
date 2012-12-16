@@ -1243,7 +1243,7 @@ int writeToFile(int indexNode, char *data, int size, int offset)
 
 /**
  * Read specify number of bytes to destinated location
- * Fails if file is a directory
+ * Fails if file is a directory. Assumes that data has size+1 elements in order to place a null
  *
  * @return    int    1=success -1=fail
  * @param[in]    indexNode    index node of the file to read from
@@ -1255,7 +1255,10 @@ int readFromFile(int indexNode, char *data, int size, int offset)
 {
     /* Declare all of the vars */
     char *indexNodePointer;
+    char null;
     int i, currentBlock, currentPosition, bytesRead, fileSize, absolutePosition;
+
+    null = '\0';
 
     // Make sure the indexNode is a file
     if (strcmp("dir\0", getIndexNodeType(indexNode)) == 0 || strcmp("error\0", getIndexNodeType(indexNode)) == 0)
@@ -1289,6 +1292,8 @@ int readFromFile(int indexNode, char *data, int size, int offset)
 
         // Make sure we dont read more bytes then the file size
         if (absolutePosition>fileSize) {
+            /* Place a null character in the proper position */
+            memcpy(&(data[bytesRead]), &null, sizeof(char));
             return bytesRead;
         }
 
@@ -1301,7 +1306,8 @@ int readFromFile(int indexNode, char *data, int size, int offset)
         indexNodePointer = RAM_memory + DATA_BLOCKS_OFFSET + allocatedBlocks[currentBlock] * RAM_BLOCK_SIZE + currentPosition;
     }
 
-    // If we have reached this point, we have read enough bytes, return
+    // If we have reached this point, we have read enough bytes, place null and return
+    memcpy(&(data[bytesRead]), &null, sizeof(char));
     return bytesRead;
 }
 
