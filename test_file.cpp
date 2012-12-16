@@ -214,9 +214,6 @@ int main () {
   /* Should be all 2s here... */
   printf ("Data at addr: %s\n", addr);
 
-  printf("Exiting early\n");
-  return 0;
-
 #ifdef TEST_DOUBLE_INDIRECT
 
   /* Try reading from all double-indirect data blocks */
@@ -228,6 +225,9 @@ int main () {
 
     exit (1);
   }
+
+  printf("Exiting early\n");
+  return 0;
   /* Should be all 3s here... */
   printf ("Data at addr: %s\n", addr);
 
