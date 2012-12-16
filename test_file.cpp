@@ -242,7 +242,6 @@ int main () {
 
     exit (1);
   }
-  printf("Exiting early\n");
 
   /* Remove the biggest file */
 
