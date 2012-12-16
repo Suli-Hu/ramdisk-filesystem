@@ -167,6 +167,7 @@ int rd_write(int file_fd, char *address, int num_bytes)
 
 #if 1
     ioctl (fd, RAM_WRITE, &file);
+    perror("Why\n");
 #endif
 
     // Update the offset after reading the file
