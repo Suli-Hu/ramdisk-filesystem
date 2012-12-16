@@ -602,7 +602,6 @@ int createIndexNode(char *type, char *pathname, int memorysize)
     filename = getFileNameFromPath(pathname);
     if (strcmp(pathname, "/\0"))
     {
-        PRINT("Using my new function\n");
         directoryNodeNum = getIndexNodeNumberFromPathname(pathname, 1);
 
         if (directoryNodeNum == -1)
@@ -614,7 +613,6 @@ int createIndexNode(char *type, char *pathname, int memorysize)
             PRINT("Error in insert, clearing the index node\n");
             clearIndexNode(indexNodeNumber);
         }
-        PRINT("***Found direct Num: %d\n", directoryNodeNum);
     }
 
     /* Set the index node values */
