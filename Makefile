@@ -9,8 +9,8 @@ debug:
 	gcc ramdisk_ioctl.c  -DDEBUG=1 -o ram -ggdb
 
 user:
-	# g++ test_file.cpp RAMFileLib.cpp  -DDEBUG=1 -o user -ggdb
-	g++ RAMFileLib.cpp  -DDEBUG=1 -o user -ggdb
+	g++ test_file.cpp RAMFileLib.cpp  -DDEBUG=1 -o user -ggdb
+	# g++ RAMFileLib.cpp  -DDEBUG=1 -o user -ggdb
 
 clean:
 	rm -f ramdisk_ioctl.k* ramdisk_ioctl.m* ramdisk_ioctl.o Module.* modules.* 
