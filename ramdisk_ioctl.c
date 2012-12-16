@@ -1863,12 +1863,10 @@ void kr_read(struct RAM_accessFile *input)
  */
 void kr_write(struct RAM_accessFile *input)
 {
-    printSuperblock();
     int ret;
     ret = writeToFile(input->indexNode, input->address, input->numBytes, input->offset);
     PRINT("Bytes written: %d\n", ret);
     input->ret = ret;
-    printSuperblock();
 }
 
 // This function is in user level
@@ -2156,13 +2154,11 @@ void kr_read(struct RAM_accessFile *input)
 void kr_write(struct RAM_accessFile *input)
 {
     int ret;
-    printk("%d, %ld, %d, %d\n", input->indexNode, input->address, input->numBytes, input->offset);
     // printIndexNode(input->indexNode);
     ret = writeToFile(input->indexNode, input->address, input->numBytes, input->offset);
     input->ret = ret;
     input->fileSize = getFileSize(input->indexNode);
     PRINT("Bytes written: %d\n", ret);
-    printIndexNode(input->indexNode);
 }
 
 // This function is in user level
