@@ -37,8 +37,8 @@ int rd_creat(char *pathname)
     char *filename;
     filename = getFileNameFromPath(pathname);
     if (strlen(filename)>13) {
-    	printf("Error: filename too long, filename must be less than 14 chars\n");
-    	return -1;
+        printf("Error: filename too long, filename must be less than 14 chars\n");
+        return -1;
     }
 
 #if 1
@@ -54,14 +54,11 @@ int rd_mkdir(char *pathname)
 
     // Concat / to end of pathname
     pathname = concatDirToPath(pathname);
-    printf("new path name: %s\n",pathname);
-
-    rampath.name = pathname;
     char *filename;
     filename = getFileNameFromPath(pathname);
     if (strlen(filename)>12) {
-    	printf("Error: filename too long, dir must be less than 14 chars\n");
-    	return -1;
+        printf("Error: filename too long, dir must be less than 14 chars\n");
+        return -1;
     }
 
 #if 1
@@ -74,48 +71,51 @@ int rd_open(char *pathname)
 {
     struct RAM_file file;
     file.name = pathname;
+printf("PATH: %s\n", pathname);
 #if 1
     ioctl (proc, RAM_OPEN, &file);
 #endif
 
     // If the file open failed, return an error
     printf("Index node - %d\n", file.indexNode);
-    printfdTable();
     if (file.indexNode < 0)
         return file.indexNode;
 
     // If this file is not currently open, create new entry
     FD_entry entry;
 
-	// If there is already an index node relating to this file, do not create new entry
-  	int fileAlreadyOpen;
-  	fileAlreadyOpen=checkIfIndexNodeAlreadyExists(file.indexNode);
-	
-	if (fileAlreadyOpen==-1) {
-		entry.indexNode = file.indexNode;
-		entry.offset = 0;	// Default file pointer to the start of file
-		entry.fd = currentFdNum++;	// Set file descriptor
-		entry.fileSize = file.fileSize;
-		entry.pathname = pathname;
-		entry.dirIndex = 0;	// Initially the file pointer is 0 (first file in dir)
-		fd_Table.push_back(entry);
+    // If there is already an index node relating to this file, do not create new entry
+    int fileAlreadyOpen;
+    fileAlreadyOpen=checkIfIndexNodeAlreadyExists(file.indexNode);
+    
+    if (fileAlreadyOpen==-1) {
+        entry.indexNode = file.indexNode;
+        entry.offset = 0;   // Default file pointer to the start of file
+        entry.fd = currentFdNum++;  // Set file descriptor
+        entry.fileSize = file.fileSize;
+        entry.pathname = pathname;
+        entry.dirIndex = 0; // Initially the file pointer is 0 (first file in dir)
+        fd_Table.push_back(entry);
 
-		printf("Inserting fd entry with fd=%d inode=%d\n", entry.fd, entry.indexNode);
-		return entry.fd;
-	}
-	else {
-  		entry.fd = fdFromIndexNode(file.indexNode);
-		printf("File already open\n");
-	}
+        printf("Inserting fd entry with fd=%d inode=%d\n", entry.fd, entry.indexNode);
+            printfdTable();
+        return entry.fd;
+    }
+    else {
+        entry.fd = fdFromIndexNode(file.indexNode);
+        printf("File already open\n");
+    }
 
-	return entry.fd;
+
+    return entry.fd;
 }
 
 int rd_close(int fd)
 {
 
     // Closing a file simply means removing a file from the FD table
-    deleteFileFromFDTable(fd);
+    return deleteFileFromFDTable(fd);
+
 }
 
 int rd_read(int file_fd, char *address, int num_bytes)
@@ -205,7 +205,7 @@ int rd_lseek(int file_fd, int offset)
     }
 
     if (offset<0)
-	offset = 0;
+    offset = 0;
 
     if (entry->offset < 0)
         return -1;
@@ -218,6 +218,17 @@ int rd_unlink(char *pathname)
 {
     struct RAM_path rampath;
     rampath.name = pathname;
+
+    // Make sure file not already open
+    vector<FD_entry>::iterator it;
+    for (it = fd_Table.begin() ; it != fd_Table.end() ; it++) 
+    {
+        // If the pathname is in a fd entry, we cannot delete an open file
+        if (strcmp(it->pathname,pathname)==0)
+            return -1;
+    }
+    
+
 #if 1
     ioctl (proc, RAM_UNLINK, &rampath);
 #endif
@@ -260,48 +271,48 @@ int rd_readdir(int file_fd, char *address)
 
 /******************* HELPER FUNCTION ********************/
 int checkIfFileExists(int file_fd) {
-	vector<FD_entry>::iterator it;
-	for (it = fd_Table.begin() ; it != fd_Table.end() ; it++) 
-	{
-		if (it->fd==file_fd) 
-			return 1;
-		
-	}	
-	return -1;
+    vector<FD_entry>::iterator it;
+    for (it = fd_Table.begin() ; it != fd_Table.end() ; it++) 
+    {
+        if (it->fd==file_fd) 
+            return 1;
+        
+    }   
+    return -1;
 }
 
 int checkIfIndexNodeAlreadyExists(int inode) {
 
-	vector<FD_entry>::iterator it;
-	for (it = fd_Table.begin() ; it != fd_Table.end() ; it++) 
-	{
-		if (it->indexNode==inode) 
-			return 1;
-		
-	}	
-	return -1;
+    vector<FD_entry>::iterator it;
+    for (it = fd_Table.begin() ; it != fd_Table.end() ; it++) 
+    {
+        if (it->indexNode==inode) 
+            return 1;
+        
+    }   
+    return -1;
 }
 
 int fdFromIndexNode(int indexNode) {
-	vector<FD_entry>::iterator it;
-	for (it = fd_Table.begin() ; it != fd_Table.end() ; it++) 
-	{
-		if (it->indexNode==indexNode) 
-			return it->fd;
-		
-	}	
-	return -1;	
+    vector<FD_entry>::iterator it;
+    for (it = fd_Table.begin() ; it != fd_Table.end() ; it++) 
+    {
+        if (it->indexNode==indexNode) 
+            return it->fd;
+        
+    }   
+    return -1;  
 }
 
 int indexNodeFromfd(int fd) {
-	vector<FD_entry>::iterator it;
-	for (it = fd_Table.begin() ; it != fd_Table.end() ; it++) 
-	{
-		if (it->fd==fd) 
-			return it->indexNode;
-		
-	}	
-	return -1;	
+    vector<FD_entry>::iterator it;
+    for (it = fd_Table.begin() ; it != fd_Table.end() ; it++) 
+    {
+        if (it->fd==fd) 
+            return it->indexNode;
+        
+    }   
+    return -1;  
 }
 
 FD_entry *getEntryFromFd(int fd_file)
@@ -324,8 +335,9 @@ int deleteFileFromFDTable(int fd)
     vector<FD_entry>::iterator it;
     for (it = fd_Table.begin() ; it != fd_Table.end() ; it++)
     {
-        fd_Table.erase(it);
-        return 0;
+        if (it->fd==fd)
+            fd_Table.erase(it);
+        return 1;
     }
     return -1;
 }
@@ -447,7 +459,7 @@ char* concatDirToPath(char *path) {
 
 //   if (retval < 0) {
 //     fprintf (stderr, "rd_creat: File creation error! status: %d\n", 
-// 	     retval);
+//       retval);
 
 //     exit (1);
 //   }
@@ -456,19 +468,19 @@ char* concatDirToPath(char *path) {
   
 //   if (retval < 0) {
 //     fprintf (stderr, "rd_open: File open error! status: %d\n", 
-// 	     retval);
+//       retval);
 
 //     exit (1);
 //   }
 
-//   fd = retval;			/* Assign valid fd */
+//   fd = retval;           /* Assign valid fd */
 
 //   /* Try writing to all direct data blocks */
 //   retval = rd_write (fd, data1, sizeof(data1));
   
 //   if (retval < 0) {
 //     fprintf (stderr, "rd_write: File write STAGE1 error! status: %d\n", 
-// 	     retval);
+//       retval);
 
 //     exit (1);
 //   }
@@ -479,7 +491,7 @@ char* concatDirToPath(char *path) {
   
 //   if (retval < 0) {
 //     fprintf (stderr, "rd_write: File write STAGE2 error! status: %d\n", 
-// 	     retval);
+//       retval);
 
 //     exit (1);
 //   }
@@ -490,7 +502,7 @@ char* concatDirToPath(char *path) {
   
 //   if (retval < 0) {
 //     fprintf (stderr, "rd_write: File write STAGE3 error! status: %d\n", 
-// 	     retval);
+//       retval);
 
 //     exit (1);
 //   }

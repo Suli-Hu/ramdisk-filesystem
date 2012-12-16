@@ -22,13 +22,14 @@
 #include "RAMFileLib.h"
 #include "structs.h"
 
+//#include <perror.h>
 // #define's to control what tests are performed,
 // comment out a test if you do not wish to perform it
 
 // #define TEST1
-#define TEST2
-#define TEST3
-// #define TEST4
+//#define TEST2
+//#define TEST3
+#define TEST4
 // #define TEST5
 
 // #define's to control whether single indirect or
@@ -39,9 +40,9 @@
 
 
 #define MAX_FILES 1023
-#define BLK_SZ 256		/* Block size */
-#define DIRECT 8		/* Direct pointers in location attribute */
-#define PTR_SZ 4		/* 32-bit [relative] addressing */
+#define BLK_SZ 256    /* Block size */
+#define DIRECT 8    /* Direct pointers in location attribute */
+#define PTR_SZ 4    /* 32-bit [relative] addressing */
 #define PTRS_PB  (BLK_SZ / PTR_SZ) /* Pointers per index block */
 
 static char pathname[80];
@@ -83,10 +84,10 @@ int main () {
     
     if (retval < 0) {
       fprintf (stderr, "rd_create: File creation error! status: %d\n", 
-	       retval);
+         retval);
       
       if (i != MAX_FILES)
-	exit (1);
+  exit (1);
     }
     
     memset (pathname, 0, 80);
@@ -100,7 +101,7 @@ int main () {
     
     if (retval < 0) {
       fprintf (stderr, "rd_unlink: File deletion error! status: %d\n", 
-	       retval);
+         retval);
       
       exit (1);
     }
@@ -120,7 +121,7 @@ int main () {
 
   if (retval < 0) {
     fprintf (stderr, "rd_creat: File creation error! status: %d\n", 
-	     retval);
+       retval);
 
     exit (1);
   }
@@ -129,19 +130,19 @@ int main () {
   
   if (retval < 0) {
     fprintf (stderr, "rd_open: File open error! status: %d\n", 
-	     retval);
+       retval);
 
     exit (1);
   }
 
-  fd = retval;			/* Assign valid fd */
+  fd = retval;      /* Assign valid fd */
 
   /* Try writing to all direct data blocks */
   retval = rd_write (fd, data1, sizeof(data1));
   
   if (retval < 0) {
     fprintf (stderr, "rd_write: File write STAGE1 error! status: %d\n", 
-	     retval);
+       retval);
 
     exit (1);
   }
@@ -153,7 +154,7 @@ int main () {
   
   if (retval < 0) {
     fprintf (stderr, "rd_write: File write STAGE2 error! status: %d\n", 
-	     retval);
+       retval);
 
     exit (1);
   }
@@ -165,7 +166,7 @@ int main () {
   
   if (retval < 0) {
     fprintf (stderr, "rd_write: File write STAGE3 error! status: %d\n", 
-	     retval);
+       retval);
 
     exit (1);
   }
@@ -179,11 +180,11 @@ int main () {
 #ifdef TEST3
 
   /* ****TEST 3: Seek and Read file test**** */
-  retval = rd_lseek (fd, 0);	/* Go back to the beginning of your file */
+  retval = rd_lseek (fd, 0);  /* Go back to the beginning of your file */
 
   if (retval < 0) {
     fprintf (stderr, "rd_lseek: File seek error! status: %d\n", 
-	     retval);
+       retval);
 
     exit (1);
   }
@@ -193,7 +194,7 @@ int main () {
   
   if (retval < 0) {
     fprintf (stderr, "rd_read: File read STAGE1 error! status: %d\n", 
-	     retval);
+       retval);
 
     exit (1);
   }
@@ -207,7 +208,7 @@ int main () {
   
   if (retval < 0) {
     fprintf (stderr, "rd_read: File read STAGE2 error! status: %d\n", 
-	     retval);
+       retval);
 
     exit (1);
   }
@@ -221,7 +222,7 @@ int main () {
   
   if (retval < 0) {
     fprintf (stderr, "rd_read: File read STAGE3 error! status: %d\n", 
-	     retval);
+       retval);
 
     exit (1);
   }
@@ -238,7 +239,7 @@ int main () {
   
   if (retval < 0) {
     fprintf (stderr, "rd_close: File close error! status: %d\n", 
-	     retval);
+       retval);
 
     exit (1);
   }
@@ -248,10 +249,10 @@ int main () {
 
   retval = rd_unlink ("/bigfile");
   return 0;
-	
+  
   if (retval < 0) {
     fprintf (stderr, "rd_unlink: /bigfile file deletion error! status: %d\n", 
-	     retval);
+       retval);
     
     exit (1);
   }
@@ -265,7 +266,7 @@ int main () {
     
   if (retval < 0) {
     fprintf (stderr, "rd_mkdir: Directory 1 creation error! status: %d\n", 
-	     retval);
+       retval);
 
     exit (1);
   }
@@ -274,7 +275,7 @@ int main () {
     
   if (retval < 0) {
     fprintf (stderr, "rd_mkdir: Directory 2 creation error! status: %d\n", 
-	     retval);
+       retval);
 
     exit (1);
   }
@@ -283,29 +284,30 @@ int main () {
     
   if (retval < 0) {
     fprintf (stderr, "rd_mkdir: Directory 3 creation error! status: %d\n", 
-	     retval);
+       retval);
 
     exit (1);
   }
 
-  retval =  rd_open ("/dir1"); /* Open directory file to read its entries */
+  retval =  rd_open ("/dir1/"); /* Open directory file to read its entries */
   
   if (retval < 0) {
     fprintf (stderr, "rd_open: Directory open error! status: %d\n", 
-	     retval);
+       retval);
 
     exit (1);
   }
 
-  fd = retval;			/* Assign valid fd */
+  fd = retval;      /* Assign valid fd */
 
   memset (addr, 0, sizeof(addr)); /* Clear scratchpad memory */
+
 
   while ((retval = rd_readdir (fd, addr))) { /* 0 indicates end-of-file */
 
     if (retval < 0) {
       fprintf (stderr, "rd_readdir: Directory read error! status: %d\n", 
-	       retval);
+         retval);
       
       exit (1);
     }
@@ -335,10 +337,10 @@ int main () {
       retval = rd_creat (pathname);
       
       if (retval < 0) {
-	fprintf (stderr, "(Parent) rd_create: File creation error! status: %d\n", 
-		 retval);
+  fprintf (stderr, "(Parent) rd_create: File creation error! status: %d\n", 
+     retval);
 
-	exit(1);
+  exit(1);
       }
     
       memset (pathname, 0, 80);
@@ -353,10 +355,10 @@ int main () {
       retval = rd_creat (pathname);
       
       if (retval < 0) {
-	fprintf (stderr, "(Child) rd_create: File creation error! status: %d\n", 
-		 retval);
+  fprintf (stderr, "(Child) rd_create: File creation error! status: %d\n", 
+     retval);
 
-	exit(1);
+  exit(1);
       }
     
       memset (pathname, 0, 80);

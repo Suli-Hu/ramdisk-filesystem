@@ -625,10 +625,13 @@ int createIndexNode(char *type, char *pathname, int memorysize)
     filename = getFileNameFromPath(pathname);
     if (strcmp(pathname, "/\0"))
     {
+        printIndexNode(0);
         directoryNodeNum = getIndexNodeNumberFromPathname(pathname, 1);
 
-        if (directoryNodeNum == -1)
+        if (directoryNodeNum == -1) {
+            PRINT("Directory of file does not exist\n");
             return -1; /* Directory of file does not exist */
+        }
 
         retVal = insertFileIntoDirectoryNode(directoryNodeNum, indexNodeNumber, filename);
         if (retVal == -1)
@@ -845,12 +848,13 @@ int readFileName(int indexNodeNum, char *address, int index)
 {
 
     char *indexNodeStart, *dirlistingstart, *filename;
-    int i, j, memoryblock, dirIndex, numOfFiles, k;
-    short inodeOfFile;
+    int i, j, memoryblock, dirIndex, k;
+    short inodeOfFile, numOfFiles;
     dirIndex = 0;
 
-    indexNodeStart = RAM_memory + INDEX_NODE_ARRAY_OFFSET + indexNodeNum * INODE_SIZE;
-    numOfFiles = (int) * (int *)(indexNodeStart + INODE_FILE_COUNT);
+    indexNodeStart = RAM_memory + INDEX_NODE_ARRAY_OFFSET + indexNodeNum * INDEX_NODE_SIZE;
+    numOfFiles = (short) * (short *)(indexNodeStart + INODE_FILE_COUNT);
+    printIndexNode(indexNodeNum);
 
     // Make sure the file index is not greater than the number of files
     if (index >= numOfFiles)
@@ -896,13 +900,13 @@ int readFileName(int indexNodeNum, char *address, int index)
                                 break;
                             k++;
                         }
-                        // memcpy(&(address[k]), &('\0'), sizeof(char));
-
+                        
+                        // Copy inode number of specified address
+                        // PRINT("INODE: %d\n", inodeOfFile);
+                        memcpy(&(address[14]), &(inodeOfFile), sizeof(short));
                         return numOfFiles;
                     }
 
-                    // Copy inode number of specified address
-                     memcpy(&(address[14]), &(inodeOfFile), sizeof(short));
 
                     dirIndex++;
                 }
@@ -917,6 +921,9 @@ int readFileName(int indexNodeNum, char *address, int index)
         PRINT("Error: File is not a directory.\n");
         return -1;
     }
+
+    return numOfFiles;
+
 }
 
 /**
@@ -1844,13 +1851,22 @@ void testReadDir(void)
 
     printIndexNode(indexNodeNum);
 
-    // ret = readFileName(input->indexNode, input->address, input->dirIndex);
-
     char blah[30];
-    readFileName(0, blah, 2);
+
     short inode;
+
+    // inode = atoi(&blah[14]);
+    readFileName(0, blah, 0);
     inode = (short)*(short*)(blah+14);    
     PRINT("Result: %s inode: %d\n", blah, inode);
+
+    readFileName(0, blah, 1);
+    inode = (short)*(short*)(blah+14);    
+    PRINT("Result: %s inode: %d\n", blah, inode);
+
+    readFileName(0, blah, 2);
+    inode = (short)*(short*)(blah+14);    
+    PRINT("Result: %s inode: %d\n", blah, inode);    
 
 
 
@@ -1957,7 +1973,7 @@ int main()
     /* Now create some more files as a test */
 
     // testFileDeletion();
-    // testReadDir();
+     testReadDir();
 
     // printIndexNode(indexNodeNum);
     // deleteFile("/folder\0");
@@ -2164,6 +2180,7 @@ void kr_mkdir(struct RAM_path *input)
 {
     int indexNodeNum;
     indexNodeNum = createIndexNode("dir\0", input->name, 0);
+    PRINT("New Dir made with INODE: %d\n",indexNodeNum);
     input->ret = indexNodeNum;
 }
 
@@ -2176,11 +2193,14 @@ void kr_open(struct RAM_file *input)
 {
     char *indexNodeStart;
     int indexNodeNum;
+
+    PRINT("Opening pathname: %s\n",input->name);
     indexNodeNum = getIndexNodeNumberFromPathname(input->name, 0);
 
     PRINT("INDEX NODE: %d\n", indexNodeNum);
     input->indexNode = indexNodeNum;
     input->fileSize = getFileSize(indexNodeNum);
+    // PRINT("FILE SIZE: %d\n", getFileSize(indexNodeNum));
 }
 
 void kr_read(struct RAM_accessFile *input)
@@ -2228,6 +2248,7 @@ void kr_readdir(struct RAM_accessFile *input)
     else
         input->ret = -1;
     input->numOfFiles = ret;
+    PRINT("num of files: %d\n", ret);
 }
 
 
