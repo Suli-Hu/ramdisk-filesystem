@@ -480,8 +480,7 @@ void clearIndexNode(int IndexNodeNumber)
         singleIndirectBlockStart =  RAM_memory + DATA_BLOCKS_OFFSET + (blocknumber * RAM_BLOCK_SIZE);
         freeBlock(blocknumber);
 
-        PRINT("Made it to past double indirect check, ignoring last part to return\n");
-        break; 
+        PRINT("Made it to past double indirect check, ignoring inner deletion\n");
 
         for (i = 0; i < 64; i++)
         {
@@ -495,15 +494,15 @@ void clearIndexNode(int IndexNodeNumber)
 
             doubleIndirectBlockStart = RAM_memory + DATA_BLOCKS_OFFSET + (blocknumber * RAM_BLOCK_SIZE);
 
-            for (j = 0; j < 64; j++)
-            {
-                blocknumberInner = (int) * (int *)(doubleIndirectBlockStart + j * 4);
+            // for (j = 0; j < 64; j++)
+            // {
+            //     blocknumberInner = (int) * (int *)(doubleIndirectBlockStart + j * 4);
 
-                if (blocknumberInner <= 0)
-                    break;
+            //     if (blocknumberInner <= 0)
+            //         break;
 
-                freeBlock(blocknumberInner);
-            }
+            //     freeBlock(blocknumberInner);
+            // }
             freeBlock(blocknumber);
         }
     }
