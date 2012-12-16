@@ -391,7 +391,7 @@ int getIndexNodeNumberFromPathname(char *pathname, int dirFlag)
 
 int getNewIndexNodeNumber(void)
 {
-
+    printSuperblock();
     int ii;
     char *indexNodeType;
 
