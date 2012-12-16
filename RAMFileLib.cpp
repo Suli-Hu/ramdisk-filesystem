@@ -81,8 +81,8 @@ int rd_open(char *pathname)
     // If the file open failed, return an error
     printf("Index node - %d\n", file.indexNode);
     printfdTable();
-    if (file.ret < 0)
-        return file.ret;
+    if (file.indexNode < 0)
+        return file.indexNode;
 
     printf("No error\n");
 
