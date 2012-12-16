@@ -20,7 +20,6 @@
 #include <unistd.h>
 #include <vector>
 #include "RAMFileLib.h"
-#include "structs.h"
 
 // #define's to control what tests are performed,
 // comment out a test if you do not wish to perform it

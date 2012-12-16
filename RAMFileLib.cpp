@@ -1,10 +1,4 @@
-#include <stdio.h>
-#include <stdlib.h>
 #include "RAMFileLib.h"
-#include "structs.h"
-#include <vector>
-#include <unistd.h>
-#include <string.h>
 
 using namespace std;
 
@@ -17,6 +11,7 @@ int proc;
 #endif
 
 int currentFdNum;
+
 
 void printfdTable ()
 {
