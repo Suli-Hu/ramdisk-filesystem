@@ -422,7 +422,6 @@ void clearIndexNode(int IndexNodeNumber)
 {
 
     int i, j, blocknumber, blocknumberInner;
-    int notDone;
     char *indexNodeStart;
     char *singleIndirectBlockStart;
     char *doubleIndirectBlockStart;
@@ -430,8 +429,7 @@ void clearIndexNode(int IndexNodeNumber)
     indexNodeStart = RAM_memory + INDEX_NODE_ARRAY_OFFSET + IndexNodeNumber * INDEX_NODE_SIZE;
 
     /****** Free memory used by index node *****/
-    notDone = 1;
-    while (notDone)
+    while (1)
     {
         // Direct memory freeing
         for (i = 0; i < NUM_DIRECT; i++)
@@ -480,31 +478,31 @@ void clearIndexNode(int IndexNodeNumber)
         singleIndirectBlockStart =  RAM_memory + DATA_BLOCKS_OFFSET + (blocknumber * RAM_BLOCK_SIZE);
         freeBlock(blocknumber);
 
-        PRINT("Made it to past double indirect check, ignoring inner deletion, %d\n", blocknumber);
-
         for (i = 0; i < 64; i++)
         {
-            // blocknumber = (int) * (int *)(singleIndirectBlockStart + i * 4);
+            blocknumber = (int) * (int *)(singleIndirectBlockStart + i * 4);
 
             // If we received an unallocated block, we are done freeing memory
-            // if (blocknumber <= 0)
-            // {
-            //     break;
-            // }
+            if (blocknumber <= 0)
+            {
+                break;
+            }
 
-            // doubleIndirectBlockStart = RAM_memory + DATA_BLOCKS_OFFSET + (blocknumber * RAM_BLOCK_SIZE);
+            doubleIndirectBlockStart = RAM_memory + DATA_BLOCKS_OFFSET + (blocknumber * RAM_BLOCK_SIZE);
 
-            // for (j = 0; j < 64; j++)
-            // {
-            //     blocknumberInner = (int) * (int *)(doubleIndirectBlockStart + j * 4);
+            for (j = 0; j < 64; j++)
+            {
+                blocknumberInner = (int) * (int *)(doubleIndirectBlockStart + j * 4);
 
-            //     if (blocknumberInner <= 0)
-            //         break;
+                if (blocknumberInner <= 0)
+                    break;
 
-            //     freeBlock(blocknumberInner);
-            // }
-            // freeBlock(blocknumber); 
+                freeBlock(blocknumberInner);
+            }
+            freeBlock(blocknumber); 
         }
+        /* Made it to the end, so we always break */
+        break;
     }
 
     /****** End of Free memory used by index node *****/
