@@ -18,7 +18,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <vector>
 #include "RAMFileLib.h"
+#include "structs.h"
 
 // #define's to control what tests are performed,
 // comment out a test if you do not wish to perform it
@@ -49,10 +51,14 @@ static char data2[PTRS_PB*BLK_SZ];     /* Single indirect data size */
 static char data3[PTRS_PB*PTRS_PB*BLK_SZ]; /* Double indirect data size */
 static char addr[PTRS_PB*PTRS_PB*BLK_SZ+1]; /* Scratchpad memory */
 
+extern int fd;
+extern int currentFdNum;
+extern std::vector<FD_entry> fd_Table;
+
 int main () {
     
   int retval, i;
-  int fd;
+  fd = open ("/proc/ramdisk", O_RDONLY);
   int index_node_number;
 
   /* Some arbitrary data for our files */

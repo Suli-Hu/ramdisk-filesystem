@@ -1118,7 +1118,7 @@ int writeToFile(int indexNode, char *data, int size, int offset)
     char *indexNodePointer, *blockPointer;
     int ii, jj, dataCounter;
     int currentSize, diff;
-    int currentBlock;
+    int currentBlock, nextSize;
     int startingBlock, startingOffset;
 
     /* Access the pointer for size information */
@@ -1140,7 +1140,8 @@ int writeToFile(int indexNode, char *data, int size, int offset)
         if (ii >= MAX_BLOCKS_ALLOCATABLE)
         {
             /* Trying to access a block past the max available, therefore, we break out now */
-            memcpy(indexNodePointer + INODE_SIZE, &dataCounter, sizeof(int));
+            nextSize = (dataCounter - diff + currentSize) > currentSize ? (dataCounter - diff + currentSize) : currentSize;
+            memcpy(indexNodePointer + INODE_SIZE, &nextSize, sizeof(int));
             return dataCounter;
         }
         currentBlock = allocatedBlocks[ii];
@@ -1151,7 +1152,8 @@ int writeToFile(int indexNode, char *data, int size, int offset)
             if (currentBlock == -1)
             {
                 /* could not allocate a new block, return the amount of data actually written */
-                memcpy(indexNodePointer + INODE_SIZE, &dataCounter, sizeof(int));
+                nextSize = (dataCounter - diff + currentSize) > currentSize ? (dataCounter - diff + currentSize) : currentSize;
+                memcpy(indexNodePointer + INODE_SIZE, &nextSize, sizeof(int));
                 return dataCounter;
             }
         }
@@ -1165,7 +1167,8 @@ int writeToFile(int indexNode, char *data, int size, int offset)
                 if (dataCounter == size)
                 {
                     /* Finished writing all the data, we are done */
-                    memcpy(indexNodePointer + INODE_SIZE, &size, sizeof(int));
+                    nextSize = (size - diff + currentSize) > currentSize ? (size - diff + currentSize) : currentSize;
+                    memcpy(indexNodePointer + INODE_SIZE, &nextSize, sizeof(int));
                     return size;
                 }
 
@@ -1181,7 +1184,8 @@ int writeToFile(int indexNode, char *data, int size, int offset)
                 if (dataCounter == size)
                 {
                     /* Finished writing all the data, we are done */
-                    memcpy(indexNodePointer + INODE_SIZE, &size, sizeof(int));
+                    nextSize = (size - diff + currentSize) > currentSize ? (size - diff + currentSize) : currentSize;
+                    memcpy(indexNodePointer + INODE_SIZE, &nextSize, sizeof(int));
                     return size;
                 }
                 // blockPointer[jj] = data[dataCounter];
@@ -1194,7 +1198,8 @@ int writeToFile(int indexNode, char *data, int size, int offset)
         if (dataCounter == size)
         {
             /* Finished writing all the data, we are done */
-            memcpy(indexNodePointer + INODE_SIZE, &size, sizeof(int));
+            nextSize = (size - diff + currentSize) > currentSize ? (size - diff + currentSize) : currentSize;
+            memcpy(indexNodePointer + INODE_SIZE, &nextSize, sizeof(int));
             return size;
         }
     }
