@@ -243,11 +243,11 @@ int main () {
     exit (1);
   }
   printf("Exiting early\n");
-  return 0;
 
   /* Remove the biggest file */
 
   retval = rd_unlink ("/bigfile");
+  return 0;
 	
   if (retval < 0) {
     fprintf (stderr, "rd_unlink: /bigfile file deletion error! status: %d\n", 
